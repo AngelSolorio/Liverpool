@@ -1,0 +1,29 @@
+//
+//  LoginParser.h
+//  CardReader
+//
+//  Created by Gonet on 09/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+@class LoginResponse;
+@interface LoginParser : NSObject <NSXMLParserDelegate> {
+
+	NSString *currentElement;
+	NSString *response;
+	LoginResponse* loginResponse;
+}
+@property (nonatomic,retain) 	NSString *currentElement;
+@property (nonatomic,retain) 	NSString *response;
+@property (nonatomic,retain) 	LoginResponse* loginResponse;
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict;
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName;
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string;
+- (void) startParser:(NSData*) data;
+-(BOOL) isLoginSuccesful;
+-(NSString*) returnErrorMessage;
+-(NSString*) returnName;
+
+@end

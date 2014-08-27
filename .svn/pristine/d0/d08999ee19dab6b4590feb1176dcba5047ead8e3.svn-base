@@ -1,0 +1,111 @@
+//
+//  Settings.m
+//  IOPhoneTest
+//
+//  Created by sdtpig on 8/12/09.
+//  Copyright 2009 Star Micronics Co., Ltd.. All rights reserved.
+//
+
+#import "Settings.h"
+#import "Styles.h"
+#import "Tools.h"
+@implementation Settings
+
+@synthesize btnOk;
+
+-(IBAction)Ok
+{
+	NSString* obj = textField_ipAddress.text;
+	NSString* obj2 = textField_portSettings.text;
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSData *myEncodedObject = [NSKeyedArchiver archivedDataWithRootObject:obj];
+	NSData *myEncodedObject2 = [NSKeyedArchiver archivedDataWithRootObject:obj2];
+		
+	
+	[defaults setObject:myEncodedObject forKey:@"programIPAddres"];
+	[defaults setObject:myEncodedObject2 forKey:@"programPortSettings"];
+	[defaults synchronize];
+	[textField_ipAddress resignFirstResponder];
+	[textField_portSettings resignFirstResponder];
+	[self dismissModalViewControllerAnimated:YES];
+	
+	[Tools displayAlert:@"Aviso" message:@"Impresora Configurada"];
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+/*
+ // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        // Custom initialization
+    }
+    return self;
+}
+*/
+
+/*
+// Implement loadView to create a view hierarchy programmatically, without using a nib.
+- (void)loadView {
+}
+*/
+
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+    [super viewDidLoad];
+	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSData *myEncodedObject = [defaults objectForKey:@"programIPAddres"];
+    NSString* obj = (NSString*)[NSKeyedUnarchiver unarchiveObjectWithData: myEncodedObject];
+	textField_ipAddress.text = obj;
+	
+	myEncodedObject = [defaults objectForKey:@"programPortSettings"];
+    NSString *obj2 = (NSString*)[NSKeyedUnarchiver unarchiveObjectWithData: myEncodedObject];
+	textField_portSettings.text = obj2;
+	
+	[Styles bgGradientColorPurple:self.view];
+	[Styles silverButtonStyle:btnOk];
+	self.title=@"Impresoras";
+	
+	
+}
+
+
+/*
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+*/
+
+-(void) textFieldDidBeginEditing:(UITextField *)textField
+{
+	textField.inputAccessoryView=[Tools inputAccessoryView:textField];
+
+}
+- (void)didReceiveMemoryWarning {
+	// Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+	
+	// Release any cached data, images, etc that aren't in use.
+}
+
+- (void)viewDidUnload {
+	
+	// Release any retained subviews of the main view.
+	// e.g. self.myOutlet = nil;
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[self.view endEditing:YES];
+}
+
+- (void)dealloc {
+	
+	[btnOk release], btnOk = nil;
+    [super dealloc];
+}
+
+
+@end

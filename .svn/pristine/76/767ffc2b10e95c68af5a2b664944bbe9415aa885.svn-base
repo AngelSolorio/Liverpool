@@ -1,0 +1,1630 @@
+//
+//  PaymentViewController.m
+//  CardReader
+//
+//  Created by Raúl Horacio Valencia Tenorio on 7/17/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "PaymentViewController.h"
+#import "ProjectConstants.h"
+#import "Tools.h"
+#import "LiverPoolRequest.h"
+#import "PaymentParser.h"
+#import "SignPrintView.h"
+#import "PrinterResponseParser.h"
+#import "Session.h"
+#import "Styles.h"
+#import "Seller.h"
+#import "TicketGeneratorViewController.h"
+#import "BalanceRequest.h"
+#import "BalanceParser.h"
+#import "Balance.h"
+#import "Rules.h"
+#import "CardReaderAppDelegate.h"
+#import "PromotionGroup.h"
+#import "MonederoCardViewController.h"
+
+@implementation PaymentViewController
+
+@synthesize lblTitle;
+@synthesize lblCard;
+@synthesize lblCardNumber;
+@synthesize lblUser;
+@synthesize lblUserText;
+@synthesize lblDate;
+@synthesize lblDateText;
+@synthesize lblSubtitle;
+@synthesize lblOperation;
+@synthesize btnPay;
+@synthesize barBtnCancel;
+@synthesize barBtnSMS;
+@synthesize barBtnEmail;
+@synthesize barBtnDone;
+@synthesize productList;
+@synthesize productListWithPromos;
+@synthesize scanView;
+@synthesize txtAuthCode;
+@synthesize ctrlPaymentType;
+@synthesize typeOfTransaction;
+@synthesize btnHideAuthCode;
+@synthesize txtAmount;
+@synthesize cardsArray;
+@synthesize filteredPlanGroup;
+@synthesize promotionGroup;
+@synthesize originalPromotionGroup;
+@synthesize numberKeyPad;
+@synthesize lblBalance;
+
+static const CGFloat KEYBOARD_ANIMATION_DURATION=0.3;
+static const CGFloat MINIMUN_SCROLL_FRACTION =0.2;
+static const CGFloat MAXIMUM_SCROLL_FRACTION =0.8;
+static const CGFloat PORTRAIT_KEYBOARD_HEIGHT =216;
+static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
+
+//----------------------------------------
+//            MEMORY MANAGEMENT
+//----------------------------------------
+#pragma mark -
+#pragma mark MEMORY MANAGEMENT
+
+-(void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+}
+
+//----------------------------------------
+//            VIEW LIFECYCLE
+//----------------------------------------
+#pragma mark -
+#pragma mark VIEW LIFECYCLE
+
+-(void)viewDidLoad
+{
+    [super viewDidLoad];
+	
+	lblCard.textColor = [UIColor lightGrayColor];
+	lblUser.textColor = [UIColor lightGrayColor];
+	lblDate.textColor = [UIColor lightGrayColor];
+	[Styles silverButtonStyle:btnPromo];
+	[Styles purpleButtonStyle:btnPay];
+	
+	txtAuthCode.inputAccessoryView=[Tools inputAccessoryView:txtAuthCode];
+	if (txtAmount != nil) {
+		txtAmount.inputAccessoryView=[Tools inputAccessoryView:txtAmount];
+	}
+	
+	
+	
+	[self resetLabels];	
+#ifdef TARGET_IPHONE_SIMULATOR || WITHOUT_CARDREAD
+	
+	[btnPay setTitle:NSLocalizedString(@"Autorizar", @"Slide Credit Card") 
+			forState:UIControlStateNormal];
+	[btnPay setEnabled:YES];
+	
+#else
+	
+	[btnPay setTitle:NSLocalizedString(@"Deslizar Tarjeta", @"Slide Credit Card") 
+			forState:UIControlStateNormal];
+	[btnPay setEnabled:NO];
+	
+#endif
+	
+	scanDevice = [Linea sharedDevice];
+    [scanDevice setDelegate:self];
+	[scanDevice connect];
+	[Styles bgGradientColorPurple:self.view];
+	
+	typeOfTransaction=[[NSString alloc] init];
+	typeOfTransaction=@"ventaClienteConTarjeta";
+	
+	firstPaymentDone=NO;
+	cardsArray=[[NSMutableArray alloc] init];
+	
+	lblTitle.text=[Tools calculateAmountToPayWithPromo:productList];
+
+	if ([Session getIsEmployeeSale]) { // Cambio Ruben - 19/enero/2012
+		[self.ctrlPaymentType setEnabled:NO forSegmentAtIndex:3];
+	}
+	
+}
+-(void) resetLabels
+{
+	[barBtnDone setEnabled:NO];
+	[barBtnEmail setEnabled:NO];
+	[barBtnSMS setEnabled:NO];
+	[lblSubtitle setHidden:YES];
+	[lblOperation setHidden:YES];
+	
+	[lblCardNumber setText:@"XXXX-XXXX-XXXX-XXXX"];
+	[lblUserText setText:@"XXXXX XXXXX"];
+	[lblDateText setText:@"XX/XX"];
+	
+	[lblCard setText:NSLocalizedString(@"Tarjeta: ", @"Card number")];
+	[lblUser setText:NSLocalizedString(@"Usuario: ", @"User name")];
+	[lblDate setText:NSLocalizedString(@"Vencimiento: ", @"Expiration Date")];
+}
+-(void) viewWillAppear:(BOOL)animated
+{
+	DLog(@"viewWillAppear payment");
+	[self.navigationController setNavigationBarHidden:YES animated:animated];
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) hideTabBar];
+	[self connectionState:scanDevice.connstate];
+	scanDevice = [Linea sharedDevice];
+	[scanDevice setDelegate:self];
+	[scanDevice connect];
+	
+	//[self checkPrinterStatus];
+	[super viewWillAppear:animated];
+
+	
+}
+- (void) viewDidAppear:(BOOL)animated 
+{
+	DLog(@"viewdidappear payment");
+	//if (loadedOnce) 
+	//	[self dismissSelfToLogin];
+	//else
+//{
+	//}
+	[super viewDidAppear:animated];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+	DLog(@"viewwilldisappear payment");
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) hideTabBar];
+
+	[scanDevice removeDelegate:self];
+	scanDevice = nil;
+    [super viewWillDisappear:animated];
+}
+
+-(void)viewDidUnload
+{
+	[scanDevice removeDelegate:self];
+	scanDevice = nil;
+    [super viewDidUnload];
+}
+
+//----------------------------------------
+//            INTERACE ORIENTATION
+//----------------------------------------
+#pragma mark -
+#pragma mark INTERACE ORIENTATION
+
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (UIInterfaceOrientationIsPortrait(interfaceOrientation));
+}
+
+//----------------------------------------
+//            MAIL DELEGATE
+//----------------------------------------
+#pragma mark -
+#pragma mark MAIL DELEGATE
+
+-(void)mailComposeController:(MFMailComposeViewController*)controller 
+		 didFinishWithResult:(MFMailComposeResult)result 
+					   error:(NSError*)error 
+{
+	//if ([ctrlPaymentType selectedSegmentIndex]==3) //if monedero print ticketmonedero 
+	//	[self startRequestBalanceMonedero:cardData.cardNumber];
+	//else 
+	if (!firstPaymentDone) 
+		{
+			DLog(@"PRINTTICKET");
+			[self printTicket];
+		}
+	else 
+	{DLog(@"PRINTTICKETTWOPAYS");
+			[self printTicketTwoPays];
+			
+}
+	
+	if (result == MFMailComposeResultCancelled) {
+		
+	} else if (result == MFMailComposeResultSaved) {
+		
+	} else if (result == MFMailComposeResultSent) {
+		DLog(@"☯☯☯☯☯☯☯ MAIL ENVIADO ☯☯☯☯☯☯☯☯☯☯☯☯☯☯☯☯");
+	} else if (result == MFMailComposeResultFailed) {
+		DLog(@"☯☯☯☯☯☯☯ MAIL FAIL! ☯☯☯☯☯☯☯☯☯☯☯☯☯☯☯☯☯☯");
+		
+	} else {
+		
+	}
+	[self becomeFirstResponder];
+	[self dismissModalViewControllerAnimated:YES];
+	
+}
+
+//----------------------------------------
+//            SCAN DEVICE HANDLER
+//----------------------------------------
+#pragma mark -
+#pragma mark SCAN DEVICE HANDLER
+
+-(void)connectionState:(int)state
+{
+	switch (state) {
+			
+		case CONN_DISCONNECTED:
+			
+		case CONN_CONNECTING:
+			
+			break;
+			
+		case CONN_CONNECTED:
+			
+			NS_DURING {
+				
+				[scanDevice msStartScan];
+				[scanDevice setBarcodeTypeMode:BARCODE_TYPE_EXTENDED];
+				
+			} NS_HANDLER {
+				
+				DLog(@"%@", [localException name]);
+				DLog(@"%@", [localException reason]);
+				
+			} NS_ENDHANDLER
+			
+			break;
+	}
+}
+
+
+
+//----------------------------------------
+//            BARCODE ANALYSIS
+//----------------------------------------
+#pragma mark -
+#pragma mark BARCODE ANALYSIS
+
+-(void)barcodeData:(NSString *)barcode 
+			  type:(int)type 
+{	
+	if (cardData) {
+		[cardData release];
+		cardData=nil;
+		DLog(@"libero carddata");
+
+	}
+	
+	cardData=[[Card alloc]init];
+	
+	//	self.lastBarcode=barcode;
+	//	self.lastBarcodeType=[linea barcodeType2Text:type];
+	
+	[status setString:@""];
+	[status appendFormat:@"Type: %d\n",type];
+	[status appendFormat:@"Type text: %@\n",[scanDevice barcodeType2Text:type]];
+	[status appendFormat:@"Barcode: %@",barcode];
+	DLog(@"%@", status);
+	
+
+	//cardData.monederoNumber=[Session getMonederoNumber];
+	
+	[cardData setTrack2:@"track2"];
+	[cardData setCardNumber:[barcode copy]];
+	NSString* noTarjeta=[Tools maskMonederoNumber:barcode];
+	[lblCardNumber setText:noTarjeta];
+	
+	[lblUserText setText:@"Monedero"];
+	
+	[cardData setUserName:[[lblUserText text]copy]];
+	[cardData setTrack1:@"track1"];
+	[cardData setTrack3:@"track3"];
+	
+	[btnPay setTitle:NSLocalizedString(@"Autorizar", @"Authorize Payment") 
+			forState:UIControlStateNormal];
+	[btnPay setEnabled:YES];
+	
+	DLog(@"DAtos de la tarjeta track1:%@ track2:%@ track3:%@ authCode:%@ ,expirationdate:%@",cardData.track1,cardData.track2,cardData.track3,cardData.authCode,cardData.expireDate);
+	
+	[self startRequestBalanceMonedero:cardData.cardNumber];	
+	
+	
+	NS_DURING {
+	} NS_HANDLER {
+		
+		DLog(@"%@", [localException name]);
+		DLog(@"%@", [localException reason]);
+		
+	} NS_ENDHANDLER
+	
+	[self addCardToCardArray];
+	DLog(@"Se agrego card to cardarray %@",cardData.cardNumber);
+	
+}
+-(void) addCardToCardArray
+{
+	Card *ca=[cardData copy];
+
+	if (!firstPaymentDone) {
+		if ([cardsArray count]==1) {
+			[cardsArray replaceObjectAtIndex:0 withObject:ca];
+			[ca release];
+			DLog(@"se reemplazo card1");
+		}
+		else {
+			[cardsArray addObject:ca];
+			[ca release];
+			DLog(@"se agrego card1");
+
+		}
+	}
+	else {
+		if ([cardsArray count]==2) {
+			[cardsArray replaceObjectAtIndex:1 withObject:ca];
+			[ca release];
+			DLog(@"se reemplazo card2");
+
+		}
+		else {
+			[cardsArray addObject:ca];
+			[ca release];
+			DLog(@"se agrego card2");
+
+		}
+	}
+}
+
+
+//----------------------------------------
+//            MAGNETIC CARD DATA
+//----------------------------------------
+#pragma mark -
+#pragma mark MAGNETIC CARD DATA
+
+-(void)magneticCardData:(NSString *)track1 
+				 track2:(NSString *)track2 
+				 track3:(NSString *)track3
+{	
+	if (cardData) {
+		[cardData release];
+		cardData=nil;
+		DLog(@"libero carddata");
+	}
+	
+	cardData=[[Card alloc]init];
+	
+	if(track2 != nil) {
+		int i=[Tools string:track2 indexOf:@"="];
+        int l=1;
+        int len=   i-l;
+        NSString* noTarjeta;
+        if (i!=-1) {
+			noTarjeta=[track2 substringWithRange:(NSMakeRange(l, len))];
+        }else{
+            noTarjeta=track2;
+        }
+		
+		track2 = [track2 substringToIndex:[track2 length] - 1];
+		track2 = [track2 substringFromIndex:1];
+		[cardData setTrack2:[track2 copy]];
+		[cardData setCardNumber:[noTarjeta copy]];
+		noTarjeta=[Tools maskCreditCardNumber:noTarjeta];
+		[lblCardNumber setText:noTarjeta];
+		
+	}
+	
+	if(track1 != nil) {
+        NSString* nombreUsuario;
+        if(track1.length>=19)
+            nombreUsuario=[track1 substringFromIndex:19];
+        else
+            nombreUsuario=track1;
+		
+		[lblUserText setText:[Tools trimUsernameFromCreditCardTrack:track1]];
+		track1 = [track1 substringToIndex:[track1 length] - 1];
+		track1 = [track1 substringFromIndex:1];
+		[cardData setUserName:[[lblUserText text]copy]];
+		[cardData setTrack1:track1];
+	}
+	
+	if(track3 == nil) {
+		
+		[lblDateText setText:[Tools trimExpireDateCreditCardTrack:track1]];
+		[cardData setExpireDate:[Tools trimExpireDateCard:track1]];
+		
+		[cardData setTrack3:track3];
+		
+	}
+	
+	cardData.monederoNumber=[[Session getMonederoNumber]copy];
+	DLog(@"monedero: %@",[Session getMonederoNumber]);
+	int sound[] = {2730,150,0,30,2730,150};
+	[scanDevice playSound:100 
+				 beepData:sound 
+				   length:sizeof(sound)];
+	
+	[btnPay setTitle:NSLocalizedString(@"Autorizar", @"Authorize Payment") 
+			forState:UIControlStateNormal];
+	[btnPay setEnabled:YES];
+	
+	DLog(@"DAtos de la tarjeta track1:%@ track2:%@ track3:%@ authCode:%@ ,expirationdate:%@",cardData.track1,cardData.track2,cardData.track3,cardData.authCode,cardData.expireDate);
+	
+	[self addCardToCardArray];
+	DLog(@"Se agrego card to cardarray %@",cardData.cardNumber);
+
+}
+
+//----------------------------------------
+//            ANIMATION SELECTOR
+//----------------------------------------
+#pragma mark -
+#pragma mark ANIMATION SELECTOR
+
+-(void)animationDidEnd:(NSString*) message forResult:(BOOL) paymentDone
+{
+	DLog(@"Animation did end");
+	//[loading stopAnimating];
+	//	[loading setHidden:YES];
+	[btnPay setHidden:YES];
+	
+	if (paymentDone) {
+		[lblSubtitle setHidden:NO];
+		[lblSubtitle setText:NSLocalizedString(@"Transacción realizada", @"Subtitle text")];
+		//int i = arc4random_uniform(999999);; //produce error
+		int i = arc4random() % 999999;  //reemplazo revisar
+		
+		if (i < 0) {
+			
+			i *= -1;
+			
+		}
+		
+		NSString *aStr = [NSString stringWithFormat:NSLocalizedString(@"Operación Número: %i", @"Operation number"), i];
+		[lblOperation setText:aStr];
+		[lblOperation setHidden:NO];
+		[barBtnEmail setEnabled:YES];
+		[barBtnCancel setEnabled:NO];
+		
+		//remove product list when transaction is completed
+		//productList=nil;
+		
+		[scanView.tableData removeAllObjects];
+		[scanView.aTableView reloadData];
+		[scanView.btnPay setHidden:YES];
+		//------
+	}
+	else
+	{
+		[lblSubtitle setHidden:NO];
+		[lblSubtitle setText:NSLocalizedString(message, @"Subtitle text")];
+	}
+	[barBtnDone setEnabled:YES];
+	[barBtnEmail setEnabled:YES]; //delete 
+	
+}
+
+//----------------------------------------
+//            ACTIONS
+//----------------------------------------
+#pragma mark -
+#pragma mark ACTIONS
+
+-(IBAction)dismissSelf:(id)sender
+{
+	//[self dismissModalViewControllerAnimated:YES];
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) removeScreensToSaleView];
+	[Session setMonederoNumber:@""];
+	
+
+}
+-(IBAction)dismissSelfToLogin
+{
+	[scanDevice removeDelegate:self];
+	scanDevice = nil;
+	//[scanView logout];
+	//[self dismissModalViewControllerAnimated:YES];
+
+}
+-(IBAction) showPromos
+{
+	if ([self validatePaymentData]) {
+		[btnPay setHidden:NO];
+		[btnPromo setHidden:YES];
+		[self promotionValidForTransaction];
+	}
+
+}
+-(void) showPromosForMonedero
+{
+		[btnPay setHidden:NO];
+		[btnPromo setHidden:YES];
+		[self promotionValidForTransaction];
+	
+}
+-(IBAction)authorization:(id)sender
+{
+	if ([self validatePaymentData]) 
+	{
+		//if the payment is monedero filter the promotion and go directly to presupuesto
+		if ([ctrlPaymentType selectedSegmentIndex]==3) 
+			[self showPromosForMonedero];
+		
+		[btnPay setHidden:YES];
+		
+		Card *ca=[cardsArray lastObject];
+		ca.authCode=[txtAuthCode.text copy];
+		DLog(@"ca.authcode %@",ca.authCode);
+		
+		if (!firstPaymentDone) {
+			//DILISA
+			if ([ctrlPaymentType selectedSegmentIndex]==2) {
+				if ([self isValidAmountValue]) 
+					[self startFirstDeferredPaymentRequest];
+				else 
+					[self startRequest];
+			}
+			//MONEDERO
+			if ([ctrlPaymentType selectedSegmentIndex]==3) {
+				[self startFirstDeferredPaymentRequest];
+			}
+			//CREDITO
+			if ([ctrlPaymentType selectedSegmentIndex]==0) {
+				[self startRequest];
+			}
+			//LPC
+			if ([ctrlPaymentType selectedSegmentIndex]==1) {
+				if ([self isValidAmountValue]) 
+					[self startFirstDeferredPaymentRequest];
+				else 
+					[self startRequest];			
+			}
+		}else {
+			//Second payment
+			//DILISA
+			if ([ctrlPaymentType selectedSegmentIndex]==2) {
+					[self startSecondDeferredPaymentRequest];
+			}
+			//MONEDERO
+			if ([ctrlPaymentType selectedSegmentIndex]==3) {
+				[self startSecondDeferredPaymentRequest];
+			}
+			//LPC
+			if ([ctrlPaymentType selectedSegmentIndex]==1) {
+				[self startSecondDeferredPaymentRequest];
+			}
+		}
+
+	}
+}
+-(void) promotionValidForTransaction
+{
+	int cardType=[ctrlPaymentType selectedSegmentIndex];
+	switch (cardType) {
+		case 0:// externas
+			//return [Rules isValidTransactionCredit:productList :cardData.cardNumber];
+			//return YES;
+			filteredPlanGroup=[Rules filterPromotionCreditCar:originalPromotionGroup:cardData.cardNumber];
+			DLog(@"promotionGroup:%@",promotionGroup);
+			DLog(@"filteredPlanGroup:%@",filteredPlanGroup);
+			promotionGroup=[Tools removePaymentPlanBenefitFromList:originalPromotionGroup];
+			DLog(@"promotionGroup:%@",promotionGroup);
+			break;
+		case 1:// LPC
+			//return [Rules isValidTransactionLPCDILISA:productList :cardData.cardNumber];
+			//return YES;
+			filteredPlanGroup=[Rules filterPromotionLPCDilisa:originalPromotionGroup:cardData.cardNumber];
+			DLog(@"promotionGroup:%@",promotionGroup);
+			DLog(@"filteredPlanGroup:%@",filteredPlanGroup);
+			promotionGroup=[Tools removePaymentPlanBenefitFromList:originalPromotionGroup];
+			DLog(@"promotionGroup:%@",promotionGroup);
+			
+			break;
+		case 2:// DILISA
+			//return [Rules isValidTransactionLPCDILISA:productList :cardData.cardNumber];
+			//return YES;
+			filteredPlanGroup=[Rules filterPromotionLPCDilisa:originalPromotionGroup:cardData.cardNumber];
+			DLog(@"promotionGroup:%@",promotionGroup);
+			DLog(@"filteredPlanGroup:%@",filteredPlanGroup);
+			promotionGroup=[Tools removePaymentPlanBenefitFromList:originalPromotionGroup];
+			DLog(@"promotionGroup:%@",promotionGroup);
+			
+			break;
+		case 3:// MONEDERO
+			[Session setMonederoNumber:cardData.cardNumber];
+			filteredPlanGroup=[Rules filterPromotionMonedero:originalPromotionGroup:cardData.cardNumber];
+			DLog(@"promotionGroup:%@",promotionGroup);
+			DLog(@"filteredPlanGroup:%@",filteredPlanGroup);
+			promotionGroup=[Tools removePaymentPlanBenefitFromList:originalPromotionGroup];
+			DLog(@"promotionGroup:%@",promotionGroup);
+			break;
+		default:
+			break;
+	}
+	//if the sale had a monedero and is not paying with the same monedero
+	if([Tools isMonederoPromotion:promotionGroup]&&cardType!=3&&[[Session getMonederoNumber] length]==0)
+	{
+		DLog(@"paymentview Tiene monedero");
+		MonederoCardViewController* monederoView=[[MonederoCardViewController alloc] initWithNibName:@"MonederoCardViewController" bundle:nil];
+		//[Session setMonederoPercent:[[promo promoDiscountPercent]copy]];
+		[self presentModalViewController:monederoView animated:YES];
+		[monederoView release];
+		[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) paymentPlanScreen:promotionGroup :filteredPlanGroup];
+
+	}
+	else if(cardType!=3) //if the cardtype is monedero dont show promotion view
+		[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) paymentPlanScreen:promotionGroup :filteredPlanGroup];
+
+}
+
+-(void)sendMail:(NSString*) urlPDF
+{
+	
+	if ([urlPDF length]==0) 
+		return;	
+	
+	
+	/*Class mailClass = (NSClassFromString(@"MFMailComposeViewController"));
+	 if (mailClass != nil)	{
+	 
+	 if ([mailClass canSendMail]) {
+	 
+	 MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
+	 [mailController setMailComposeDelegate:self];
+	 [mailController setSubject:tpvMovil];
+	 
+	 //create the ticket 
+	 TicketGeneratorViewController *tk=[[TicketGeneratorViewController alloc]init];
+	 tk.view.frame=CGRectMake(0, 0, 320, 460);
+	 [self.view addSubview:tk.view];
+	 
+	 //[tk generateTicket:productList];
+	 //NSData *imgdata=[tk generateTicketPDF];
+	 //DLog(@"image data: %@" ,imgdata);
+	 //UIImage *image= [tk generateTicketImage];
+	 //NSData *imageData = UIImageJPEGRepresentation(image, 1);
+	 
+	 
+	 [tk.view removeFromSuperview];
+	 [tk release];
+	 //[mailController addAttachmentData:imgdata mimeType:@"application/pdf" fileName:@"recibo.pdf"];
+	 //[controller addAttachmentData:myData mimeType:@"application/pdf" fileName:filePath];
+	 
+	 
+	 NSMutableString *aStr = [[NSMutableString alloc] initWithString:[lblTitle text]];
+	 [aStr appendFormat:@"\n%@%@", [lblCard text], [lblCardNumber text]];
+	 [aStr appendFormat:@"\n%@%@", [lblUser text], [lblUserText text]];
+	 [aStr appendFormat:@"\n%@%@", [lblDate text], [lblDateText text]];
+	 [aStr appendFormat:@"\n%@", [lblOperation text]];
+	 [mailController setMessageBody:aStr 
+	 isHTML:YES];
+	 [self presentModalViewController:mailController animated:YES];
+	 [mailController release];
+	 [aStr release];			
+	 }
+	 }	
+	 */
+	
+	MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
+	picker.mailComposeDelegate = self;
+	
+	[picker setSubject:@"Recibo Electronico Liverpool"];
+	
+	// Set up recipients
+	/*NSArray *toRecipients = [NSArray arrayWithObject:@""]; 
+	 NSArray *ccRecipients = [NSArray arrayWithObjects:@"", @"", nil]; 
+	 NSArray *bccRecipients = [NSArray arrayWithObject:@""]; 
+	 
+	 [picker setToRecipients:toRecipients];
+	 [picker setCcRecipients:ccRecipients];	
+	 [picker setBccRecipients:bccRecipients];*/
+	
+	// Attach an image to the email
+	
+	urlPDF=[urlPDF stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+	NSData *pdfData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:urlPDF]];
+	//DLog(@"url : %@", urlPDF);
+	DLog(@"pdfdata : %@", pdfData);
+	[picker addAttachmentData:pdfData mimeType:@"application/pdf" fileName:@"recibo.pdf"];
+	
+	
+	// Fill out the email body text
+	/*NSMutableString *aStr = [[NSMutableString alloc] initWithString:[lblTitle text]];
+	 [aStr appendFormat:@"\n%@%@", [lblCard text], [lblCardNumber text]];
+	 [aStr appendFormat:@"\n%@%@", [lblUser text], [lblUserText text]];
+	 [aStr appendFormat:@"\n%@%@", [lblDate text], [lblDateText text]];
+	 [aStr appendFormat:@"\n%@", [lblOperation text]];*/
+	
+	
+	
+	NSMutableString *aStr = [[NSMutableString alloc] init];
+	[aStr appendString:@"Apreciable cliente: Liverpool agradece su preferencia, y lo invita a seguir disfrutando la mejor experiencia de compra en México, en cualquiera de nuestras tiendas o en www.liverpool.com.mx .\n\n"];
+	[aStr appendString:@"Le recordamos que Liverpool es parte de MI vida...\n\n"];
+	if ([ctrlPaymentType selectedSegmentIndex]==3)
+		[aStr appendFormat:@"Forma de Pago: %@ \n",[lblUserText text]];
+	else 
+		[aStr appendFormat:@"Cliente: %@ \n",[lblUserText text]];
+	
+	[aStr appendFormat:@"Cuenta: %@ \n",[lblCardNumber text]];
+	
+	[aStr appendString:@"\n Atentamente: \n\n"];
+	//	[aStr appendString:@"\n\n\n Saludos y quedo en espera de tus comentarios."];
+	
+	[picker setMessageBody:aStr isHTML:NO];
+	
+	[self presentModalViewController:picker animated:YES];
+    [picker release];
+	[pdfData release];
+	[aStr release];			
+	
+}
+
+-(BOOL) validatePaymentData
+{
+	if ([txtAuthCode.text length]==0&&![txtAuthCode isHidden]) {
+		[Tools displayAlert:@"Error" message:@"Introduzca un codigo de autorizacion valido"];
+		return NO;
+	}
+	else if	([cardData.track1 length]==0 || [cardData.track2 length]==0)
+	{	[Tools displayAlert:@"Error" message:@"Favor de deslizar la tarjeta nuevamente"];
+		return NO;
+	}	
+	else 
+		return YES;
+}
+-(IBAction) selectedPaymentType
+{
+	if (typeOfTransaction) {
+		[typeOfTransaction release];
+	}
+	
+	switch (ctrlPaymentType.selectedSegmentIndex) {
+		case 2: //DILISA
+		{
+			//typeOfTransaction=@"ventaClienteConTarjeta";
+			[txtAuthCode setHidden:NO];
+			[btnHideAuthCode setHidden:NO];
+			[txtAmount setHidden:firstPaymentDone];
+			[btnPay setHidden:YES];
+			[btnPromo setHidden:NO];
+
+		}
+			break;
+		case 3://MONEDERO
+		{	
+			[btnHideAuthCode setHidden:YES];
+			[txtAuthCode setHidden:YES];
+			[txtAmount setHidden:YES];
+			//typeOfTransaction=@"ventaClienteConTarjeta";
+			[btnPromo setHidden:YES];
+			[btnPay setHidden:NO];
+		}
+			break;
+		default: // EXTERNA LPC
+		{
+			[btnHideAuthCode setHidden:YES];
+			[txtAmount setHidden:NO];
+			[txtAuthCode setHidden:NO];
+			//typeOfTransaction=@"ventaClienteConTarjeta";
+			[btnPay setHidden:YES];
+			[btnPromo setHidden:NO];
+		}
+			break;
+	}
+	
+}
+-(IBAction) hideAuthCodeForNewDilisa
+{
+	txtAuthCode.hidden=(txtAuthCode.hidden==TRUE)?FALSE:TRUE;
+	txtAuthCode.text=@"";
+}
+/*-(void) checkPrinterStatus
+{
+	//checks if the printer is online and warns the user if is not on.
+	//[Tools startActivityIndicator:self.view];
+	TicketGeneratorViewController *tk=[[TicketGeneratorViewController alloc] init];
+	if (![tk GetOnlineStatus]) {
+		//[btnPay setEnabled:NO];
+	}
+	[tk release];
+}*/
+-(BOOL) canPrint
+{	TicketGeneratorViewController *tk=[[[TicketGeneratorViewController alloc] init]autorelease];
+
+	return [tk GetOnlineStatus];
+
+}
+//----------------------------------------
+//            MISC METHODS
+//----------------------------------------
+#pragma mark -
+#pragma mark MISC METHODS
+/*-(void)changeTotalValue:(int)amount
+{
+	if (amount !=  0) {
+		
+		total = amount;
+		
+	}
+	NSString *totalS=[Tools calculateAmountToPayWithPromo:productList];
+	NSString *aString = [[NSString alloc] initWithFormat:
+						 NSLocalizedString(@"Total a Pagar: %@", @"Total to pay in Payment View"), totalS];
+	[lblTitle setText:aString];
+	[aString release];
+}
+*/
+//----------------------------------------
+//            REQUEST HANDLERS
+//----------------------------------------
+#pragma mark -
+#pragma mark REQUEST HANDLERS
+
+//////////////// SALE///////////////////
+
+-(void) startRequest
+{
+	[Tools startActivityIndicator:self.view];
+	DLog(@"AUTHCODE: %@",cardData.authCode);
+	DLog(@"TRACK 1: %@",cardData.track1);
+	DLog(@"TRACK 2: %@",cardData.track2);
+	DLog(@"TRACK 3: %@",cardData.track3);
+	DLog(@"MONEDERO: %@",cardData.cardNumber);
+	/*LiverPoolRequest *liverpoolRequest=[[LiverPoolRequest alloc] init];
+	liverpoolRequest.delegate=self;
+	DLog(@"LA TARJETA A LA QUE SE HARA EL CARGO %@",lblCardNumber.text);
+	// ventaclientecontarjeta (productlist,card,seller);
+	
+	Seller *seller=[[Seller alloc] init];
+	seller.password=[Session getPassword];
+	seller.userName=[Session getUserName];
+	
+	Card *ca=[cardsArray lastObject];
+	ca.cardType=[[NSString stringWithFormat:@"%i",ctrlPaymentType.selectedSegmentIndex] copy];
+	
+	//cardData.cardType=[[NSString stringWithFormat:@"%i",ctrlPaymentType.selectedSegmentIndex] copy];
+	
+	NSArray *pars;
+	
+	if ([typeOfTransaction isEqualToString:@"ventaConTarjetaDilisa"]) 
+		pars=[NSArray arrayWithObjects:productList,ca,nil];
+	else
+		pars=[NSArray arrayWithObjects:productList,ca,seller,nil];
+	
+	[seller release];
+	
+	[liverpoolRequest sendRequest:typeOfTransaction forParameters:pars forRequestType:buyRequest];
+	[liverpoolRequest release];*/
+	
+	LiverPoolRequest *liverpoolRequest=[[LiverPoolRequest alloc] init];
+	 liverpoolRequest.delegate=self;
+	 DLog(@"LA TARJETA A LA QUE SE HARA EL CARGO %@",lblCardNumber.text);
+	 // ventaclientecontarjeta (productlist,card,seller);
+	 
+	//seller object
+	 Seller *seller=[[Seller alloc] init];
+	 seller.password=[Session getPassword];
+	 seller.userName=[Session getUserName];
+	 
+	
+	//card object
+	 Card *ca=[cardsArray lastObject];
+	 ca.cardType=[[NSString stringWithFormat:@"%i",ctrlPaymentType.selectedSegmentIndex] copy];
+	ca.planId=[[Session getPlanId] copy];
+	ca.planInstallment=[[Session getPlanInstallment] copy];
+	ca.monederoNumber=[[Session getMonederoNumber] copy];
+	ca.planDescription=[[Session getPlanDescription] copy];
+
+	 //cardData.cardType=[[NSString stringWithFormat:@"%i",ctrlPaymentType.selectedSegmentIndex] copy];
+	 
+	 NSArray *pars;
+	 
+	 //if ([typeOfTransaction isEqualToString:@"ventaConTarjetaDilisa"]) 
+	 //pars=[NSArray arrayWithObjects:productList,ca,nil];
+	 //else
+	
+	//Account employee
+	NSString *accountEmployee=[Session getEmployeeAccount];
+	
+	//Promotion Object
+	PromotionGroup *promoGroup=[[PromotionGroup alloc]init];
+	[promoGroup setSection:[Session getIndexPromoGroup]];
+	[promoGroup setPromotionGroupArray:[promotionGroup copy]];
+	
+	DLog(@"promotion group section: %i, array:%@", promoGroup.section,promoGroup.promotionGroupArray);
+	DLog(@"accountemployee %@",accountEmployee);
+
+	 pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,nil];
+	 
+	 [seller release];
+	 
+	 [liverpoolRequest sendRequest:@"ventaClienteConTarjeta2" forParameters:pars forRequestType:buyRequest2];
+	 [liverpoolRequest release];
+	[promoGroup release];
+	//[ca release];
+}
+-(void) performResults:(NSData *)receivedData :(RequestType) requestType
+{
+	if (requestType==buyRequest||requestType==buyRequest2) 
+		[self paymentRequestParsing:receivedData];
+	if (requestType==printingRequest) 
+		[self printingRequestParsing:receivedData];
+	if (requestType==bRequest) {
+		[self balanceRequestParsing:receivedData];
+	}
+	if (requestType==firstPaymentRequest) {
+		[self firstPaymentDone:receivedData];
+	}
+	if (requestType==secondPaymentRequest) {
+		[self secondPaymentDone:receivedData];
+	}
+	
+}
+-(void) paymentRequestParsing:(NSData*) data
+{
+	PaymentParser *payParser=[[PaymentParser alloc] init];
+	[payParser startParser:data];
+	DLog(@"RESULTADO DE LA COMPRA 1 tarjeta: %@", [payParser getMessageResponse]);
+	[self animationDidEnd:[payParser getMessageResponse] forResult:[payParser getStateOfMessage]];
+	
+	//if the transaction was succesful.
+	if ([payParser getStateOfMessage]) {
+		
+		[barBtnCancel setEnabled:NO];
+			[ctrlPaymentType setUserInteractionEnabled:NO];
+			[txtAuthCode setHidden:YES];
+			[barBtnSMS setEnabled:YES];
+			
+			[Session setDocTo:payParser.payment.docto];
+			[Session setMonthyInterest:payParser.payment.monthlyInterest];
+			[Session setBank:payParser.payment.bank];
+			
+		[productListWithPromos release];
+		DLog (@"sucess sale payparser */*/*/*");
+		//productList=[[payParser returnSaleProductList] copy];
+		productListWithPromos=[NSMutableArray arrayWithArray:[payParser returnSaleProductList]];
+		[productListWithPromos retain];
+		DLog (@"sucess sale payparser productListWithPromos %@",productListWithPromos);
+
+		[btnPromo setHidden:YES];
+		
+		Card *card=[cardsArray lastObject];
+		[card setAuthNumber:[payParser.payment.authorizationCode copy]];
+
+	}
+	else 
+	{
+		[Tools displayAlert:@"Error" message:[payParser getMessageResponse]];
+		[barBtnCancel setEnabled:YES];
+		[barBtnEmail setEnabled:NO];/////*
+		[barBtnDone setEnabled:NO];
+		[barBtnSMS setEnabled:NO];////*
+		[Session setMonederoNumber:@""];
+	}
+	
+	[Session setPlanId:@""];
+	[Session setPlanInstallment:@""];
+	[Session setPlanDescription:@""];
+	
+	[Tools stopActivityIndicator];
+	[payParser release];
+}
+////////////////// PRINT////////////////////////////////////////////
+-(IBAction) printPDFRequest
+{
+	if (![self canPrint]) 
+		return;
+	
+	[Tools startActivityIndicator:self.view];
+	DLog(@"ticketPDF"); 
+	//DLog(@"ticketPDF %i , %@",[cardsArray count],cardsArray);
+
+	
+	//firm to Base64
+	// UIImage *signCapture= [Tools captureSign:self.view];
+	//NSString *encodedSignImage=[Tools convertImageToBase64String:signCapture];
+	
+	//DLog(@"PrintTicket:%@",encodedSignImage);
+	//NSString *printer=[Session getPrinterName];
+	LiverPoolRequest *liverpoolRequest=[[LiverPoolRequest alloc] init];
+	liverpoolRequest.delegate=self;
+	// NSArray *pars=[NSArray arrayWithObjects:productList,encodedSignImage,nil];
+	NSString *term=[Session getTerminal];
+	NSString *docto=[Session getDocTo];
+	NSString *tda=[Session getIdStore];
+	NSString *vend=[Session getUserName];
+	NSString *atendio=[Session getUName];
+	NSString *banco=[Session getBank];
+	if (banco==nil) {
+		banco=@"";
+	}
+	
+	NSArray *pars;
+	if ([cardsArray count]==1) {
+		Card* card1=[cardsArray objectAtIndex:0];
+		pars=[NSArray arrayWithObjects:productListWithPromos,@"ESPF",term,docto,tda,vend,atendio,banco,card1,@"",nil];
+
+	}else if ([cardsArray count]==2) {
+		Card* card1=[cardsArray objectAtIndex:0];
+		Card* card2=[cardsArray objectAtIndex:1];
+		pars=[NSArray arrayWithObjects:productListWithPromos,@"ESPF",term,docto,tda,vend,atendio,banco,card1,card2,nil];
+	}
+	
+	
+	[liverpoolRequest sendRequest:@"imprimeTicket" forParameters:pars forRequestType:printingRequest];
+	[liverpoolRequest release];
+	
+	
+}
+-(void) printingRequestParsing:(NSData*) data
+{
+	PrinterResponseParser *printingParser=[[PrinterResponseParser alloc] init];
+	[printingParser startParser:data];
+	//DLog(@"Resultado de la impresion:%@",[printingParser getStateOfMessage]);
+	
+	if ([printingParser getStateOfMessage]) 
+	{	
+		//[Tools displayAlert:@"Aviso de Impresion" message:@"Impresion Exitosa"];
+		NSString *url=[printingParser returnURLPDF];
+		DLog(@"url devuelto Java:%@",url);
+		[self sendMail:url];
+		
+	}
+	else
+		[Tools displayAlert:@"Aviso de PDF" message:[printingParser returnErrorMessage]];
+	
+	[printingParser release];
+	[Tools stopActivityIndicator];
+	
+}
+-(IBAction) printTicketTwoPays
+{
+	
+	DLog(@"bloqueando boton impresion...");
+	[barBtnSMS setEnabled:NO];
+	
+	BOOL close=[self canPrint];
+	if(!close)
+	{	
+		DLog(@"desbloqueando boton impresion...");
+		
+		[barBtnSMS setEnabled:YES];
+		return;
+	}
+	else 
+		[barBtnSMS setEnabled:NO];
+	
+	
+	TicketGeneratorViewController *tk=[[TicketGeneratorViewController alloc]init];
+	tk.view.frame=CGRectMake(0, 0, 320, 460);
+	[tk setProductList:productListWithPromos];
+	[tk setPaymentType:[ctrlPaymentType selectedSegmentIndex]];
+	for (Card *cardss in cardsArray) {
+		DLog(@"CARDSARRAY: %@, %@",cardss.cardNumber,cardss.track1);
+	}
+	[tk	setCardArray:cardsArray];
+	[tk printTwoPaymentTicket];
+	[tk release];
+}
+
+-(IBAction) printTicket
+{
+	DLog(@"bloqueando boton impresion...");
+	[barBtnSMS setEnabled:NO];
+
+	BOOL close=[self canPrint];
+	if(!close)
+	{	
+		DLog(@"desbloqueando boton impresion...");
+
+		[barBtnSMS setEnabled:YES];
+		return;
+	}
+	else 
+		[barBtnSMS setEnabled:NO];
+	
+
+	DLog(@"printTicket : %@",productListWithPromos);
+	TicketGeneratorViewController *tk=[[TicketGeneratorViewController alloc]init];
+	tk.view.frame=CGRectMake(0, 0, 320, 460);
+	[tk setProductList:productListWithPromos];
+	[tk setPaymentType:[ctrlPaymentType selectedSegmentIndex]];
+	[tk	setCard:[cardsArray lastObject]];
+	
+	if ([ctrlPaymentType selectedSegmentIndex]==3) //if monedero print ticketmonedero 
+		[tk printTicketMonedero];
+	else
+		[tk printTicket];
+	
+	[tk release];
+
+}
+-(void) startRequestBalanceMonedero:(NSString*) barCode
+{
+	BalanceRequest *balanceRequest=[[BalanceRequest alloc] init];
+	balanceRequest.delegate=self;
+	NSString* segmentTextType=@"TSCCTE09";
+	NSArray* pars=[NSArray arrayWithObjects:@"",barCode,nil];
+	[balanceRequest sendRequest:segmentTextType forParameters:pars forRequestType:bRequest]; //cambiar a localized string
+	[balanceRequest release];
+	[Tools startActivityIndicator:self.view];
+}
+
+-(void) balanceRequestParsing:(NSData*) data
+{
+	
+	BalanceParser* balanceParser=[[BalanceParser alloc] init];
+	DLog(@"antes de empezar");
+	[balanceParser startParser:data];
+	DLog(@"termino");
+	DLog(@"balance %@ ",[[[balanceParser balanceModel] error] description]);
+	if([[balanceParser balanceModel] isError]){
+		NSLog(@"IsError");
+	}else  if (([balanceParser balanceModel].sa)!=nil) {
+		
+		[Session setMonederoAmount:([balanceParser balanceModel].sa)];
+
+	}else {
+		[Tools displayAlert:@"Aviso" message:@"No se ha podido establecer comunicación con el servidor"];
+	}
+	[balanceParser release];
+	
+	[Tools stopActivityIndicator];
+}
+
+
+
+
+////////////////////////////// LOGOUT ////////////////////////////////////
+-(void) logoutRequest
+{
+	
+	LiverPoolRequest *liverpoolRequest=[[LiverPoolRequest alloc] init];
+	liverpoolRequest.delegate=self;
+	
+	Seller *seller=[[Seller alloc] init];
+	seller.password=[Session getPassword];
+	seller.userName=[Session getUserName];
+	
+	
+	NSArray *pars;
+	
+	pars=[NSArray arrayWithObjects:seller,nil];
+	
+	[seller release];
+	
+	[liverpoolRequest sendRequest:@"logoutVendedor" forParameters:pars forRequestType:logoutRequest];
+	[liverpoolRequest release];
+}
+
+///////////////////////////////////////////////////////////////////////////
+-(BOOL) isValidAmountValue
+{
+	NSString* amount=txtAmount.text;
+	if ([amount length]==0) 
+		return NO;
+	
+	float amountFloat=[amount floatValue];
+	if (amountFloat>0) 
+	{	
+		//[Tools displayAlert:@"Aviso" message:@"favor de Pasar la siguiente tarjeta"];
+		return YES;
+	}
+	else 
+		return NO;
+}
+
+//request for amount
+-(void) startFirstDeferredPaymentRequest
+{
+	[Tools startActivityIndicator:self.view];
+	DLog(@"AUTHCODE: %@",cardData.authCode);
+	DLog(@"TRACK 1: %@",cardData.track1);
+	DLog(@"TRACK 2: %@",cardData.track2);
+	DLog(@"TRACK 3: %@",cardData.track3);
+	DLog(@"MONEDERO: %@",cardData.cardNumber);
+	LiverPoolRequest *liverpoolRequest=[[LiverPoolRequest alloc] init];
+	liverpoolRequest.delegate=self;
+	DLog(@"LA TARJETA A LA QUE SE HARA EL CARGO %@",lblCardNumber.text);
+	// ventaclientecontarjeta (productlist,card,seller);
+	/*
+	Seller *seller=[[Seller alloc] init];
+	seller.password=[Session getPassword];
+	seller.userName=[Session getUserName];
+	
+	NSString *amount=[txtAmount text];
+	if ([amount length]==0) 
+		amount=@"";
+	
+	
+	//cardData.cardType=[[NSString stringWithFormat:@"%i",ctrlPaymentType.selectedSegmentIndex] copy];
+	Card *ca=[cardsArray lastObject];
+	ca.cardType=[[NSString stringWithFormat:@"%i",ctrlPaymentType.selectedSegmentIndex] copy];
+	DLog(@"cardType %@");
+	ca.amountToPay=[amount copy];
+	//firstAmount=[amount copy];*/
+	
+	//seller object
+	Seller *seller=[[Seller alloc] init];
+	seller.password=[Session getPassword];
+	seller.userName=[Session getUserName];
+	
+	
+	//card object
+	NSString *amount=[txtAmount text];
+	if ([amount length]==0) 
+		amount=@"";
+	
+	Card *ca=[cardsArray lastObject];
+	ca.cardType=[[NSString stringWithFormat:@"%i",ctrlPaymentType.selectedSegmentIndex] copy];
+	ca.planId=[[Session getPlanId] copy];
+	ca.planInstallment=[[Session getPlanInstallment] copy];
+	ca.monederoNumber=[[Session getMonederoNumber] copy];
+	ca.planDescription=[[Session getPlanDescription] copy];
+	DLog(@"cardType %@");
+	ca.amountToPay=[amount copy];
+
+	
+	//Promotion Object
+	PromotionGroup *promoGroup=[[PromotionGroup alloc]init];
+	[promoGroup setSection:[Session getIndexPromoGroup]];
+	[promoGroup setPromotionGroupArray:[promotionGroup copy]];
+		
+	NSArray *pars;
+
+	pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,amount,nil];
+	
+	[seller release];
+	
+	[liverpoolRequest sendRequest:@"ventaClientePrimerPago" forParameters:pars forRequestType:firstPaymentRequest];
+	[liverpoolRequest release];
+	
+}
+-(void) startSecondDeferredPaymentRequest
+{
+	[Tools startActivityIndicator:self.view];
+	DLog(@"AUTHCODE: %@",cardData.authCode);
+	DLog(@"TRACK 1: %@",cardData.track1);
+	DLog(@"TRACK 2: %@",cardData.track2);
+	DLog(@"TRACK 3: %@",cardData.track3);
+	DLog(@"MONEDERO: %@",cardData.cardNumber);
+	LiverPoolRequest *liverpoolRequest=[[LiverPoolRequest alloc] init];
+	liverpoolRequest.delegate=self;
+	DLog(@"LA TARJETA A LA QUE SE HARA EL CARGO %@",lblCardNumber.text);
+	// ventaclientecontarjeta (productlist,card,seller);
+	
+	Seller *seller=[[Seller alloc] init];
+	seller.password=[Session getPassword];
+	seller.userName=[Session getUserName];
+	
+
+	
+	Card *ca=[cardsArray lastObject];
+	ca.cardType=[[NSString stringWithFormat:@"%i",ctrlPaymentType.selectedSegmentIndex] copy];
+	ca.planId=[[Session getPlanId] copy];
+	ca.planInstallment=[[Session getPlanInstallment] copy];
+	ca.monederoNumber=[[Session getMonederoNumber] copy];
+	ca.planDescription=[[Session getPlanDescription] copy];
+	DLog(@"cardType %@");
+	ca.amountToPay=[balanceToPay copy];
+	DLog(@"seconddeferredpaymenrequest balanceToPay:%@",balanceToPay);
+
+	
+	//Promotion Object
+	PromotionGroup *promoGroup=[[PromotionGroup alloc]init];
+	[promoGroup setSection:[Session getIndexPromoGroup]];
+	[promoGroup setPromotionGroupArray:[promotionGroup copy]];
+	
+	NSArray *pars;
+	
+	pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,balanceToPay,nil];
+	
+	[seller release];
+	
+	[liverpoolRequest sendRequest:@"ventaClienteSegundoPago" forParameters:pars forRequestType:secondPaymentRequest];
+	[liverpoolRequest release];
+}
+-(void) firstPaymentDone:(NSData*) data
+{
+	PaymentParser *payParser=[[PaymentParser alloc] init];
+	[payParser startParser:data];
+	DLog(@"RESULTADO DE LA COMPRA 2 tarjetas: %@", [payParser getMessageResponse]);
+
+	[self animationDidEnd:[payParser getMessageResponse] forResult:[payParser getStateOfMessage]];
+	
+	//if the transaction was succesful.
+	if ([payParser getStateOfMessage]) {
+		
+		[barBtnCancel setEnabled:NO];
+		
+		float balance=[payParser.payment.balanceToPay floatValue];
+		if ( balance<=0) { // si el saldo del monedero fue suficiente para pagar el cobro
+			[ctrlPaymentType setUserInteractionEnabled:NO];
+			[txtAuthCode setHidden:YES];
+			[barBtnSMS setEnabled:YES];
+			
+			[Session setDocTo:payParser.payment.docto];
+			[Session setMonthyInterest:payParser.payment.monthlyInterest];
+			[Session setBank:payParser.payment.bank];
+			[btnPromo setHidden:YES];
+			[lblBalance setText:[Tools amountCurrencyFormatFloat:balance]];
+			
+			[productListWithPromos release];
+			productListWithPromos=[NSMutableArray arrayWithArray:[payParser returnSaleProductList]];
+			[productListWithPromos retain];
+			
+			Card *card=[cardsArray lastObject];
+			[card setAuthNumber:[payParser.payment.authorizationCode copy]];
+			DLog(@"primer pago AUTHNUMBER: %@",card.authNumber);
+			
+		}
+		else { //si el saldo fue insuficiente espera el segundo pago
+			[Tools displayAlert:@"Aviso" message:@"favor de deslizar la siguiente tarjeta para terminar el pago"];
+			[txtAmount setUserInteractionEnabled:NO];
+			[txtAmount setHidden:YES];
+			firstPaymentDone=YES;
+			[btnPay setHidden:YES];
+			[btnPromo setHidden:YES];
+			[lblSubtitle setHidden:NO];
+			[btnPay setAlpha:1];
+			[self resetLabels];
+			
+			balanceToPay=[payParser.payment.balanceToPay copy];
+			[self blockPaymentOptionsAfterFirstPayment];
+			[lblBalance setText:[Tools amountCurrencyFormatFloat:balance]];
+			
+			Card *card=[cardsArray lastObject];
+			[card setAuthNumber:[payParser.payment.authorizationCode copy]];
+			DLog(@"primer pago AUTHNUMBER: %@",card.authNumber);
+
+
+		}
+
+	}
+	else 
+	{
+		[Tools displayAlert:@"Error" message:[payParser getMessageResponse]];
+		[barBtnCancel setEnabled:YES];
+		[barBtnEmail setEnabled:NO];/////*
+		[barBtnDone setEnabled:NO];
+		[barBtnSMS setEnabled:NO];////*
+		[cardsArray removeAllObjects];
+		[Session setMonederoNumber:@""];
+
+	}
+	[Tools stopActivityIndicator];
+	[payParser release];
+}
+-(void) blockPaymentOptionsAfterFirstPayment
+{
+
+	//if the first payment was lpc, block dilisa and wait for monedero payment
+	if ([ctrlPaymentType selectedSegmentIndex]==1) 
+	{	[ctrlPaymentType setEnabled:NO forSegmentAtIndex:2];
+		DLog(@"bloqueo dilisa option");
+	}
+	//if the first payment was dilisa, block lpc and wait for monedero payment
+	else if ([ctrlPaymentType selectedSegmentIndex]==2) 
+	{	[ctrlPaymentType setEnabled:NO forSegmentAtIndex:1];
+		DLog(@"bloqueo LPC option");
+
+	}
+	
+	[ctrlPaymentType setEnabled:NO forSegmentAtIndex:0];
+	[ctrlPaymentType setEnabled:NO forSegmentAtIndex:[ctrlPaymentType selectedSegmentIndex]];
+
+	
+}
+
+-(void) secondPaymentDone:(NSData*) data
+{
+	PaymentParser *payParser=[[PaymentParser alloc] init];
+	[payParser startParser:data];
+	DLog(@"RESULTADO DE LA COMPRA: %@", [payParser getMessageResponse]);
+	[self animationDidEnd:[payParser getMessageResponse] forResult:[payParser getStateOfMessage]];
+	
+	//if the transaction was succesful.
+	if ([payParser getStateOfMessage]) {
+		
+		[barBtnCancel setEnabled:NO];
+		[ctrlPaymentType setUserInteractionEnabled:NO];
+		[txtAuthCode setHidden:YES];
+		[barBtnSMS setEnabled:YES];
+		[btnPay setHidden:YES];
+		
+		[Session setDocTo:payParser.payment.docto];
+		[Session setMonthyInterest:payParser.payment.monthlyInterest];
+		[Session setBank:payParser.payment.bank];
+		[barBtnSMS setAction:@selector(printTicketTwoPays)];	
+		[productListWithPromos release];
+		productListWithPromos=[NSMutableArray arrayWithArray:[payParser returnSaleProductList]];
+		[productListWithPromos retain];
+		[lblBalance setText:[Tools amountCurrencyFormat:payParser.payment.balanceToPay]];
+		
+		Card *card=[cardsArray lastObject];
+		[card setAuthNumber:[payParser.payment.authorizationCode copy]];
+
+		[Session setPlanId:@""];
+		[Session setPlanInstallment:@""];
+		[Session setPlanDescription:@""];
+		
+		DLog(@"segundo pago AUTHNUMBER: %@",card.authNumber);
+
+	}
+	else 
+	{  // if the second payment fails reset the UI and ask for the payment again.
+		[self resetLabels];
+		[ctrlPaymentType setSelectedSegmentIndex:UISegmentedControlNoSegment];
+		[Tools displayAlert:@"Error" message:[payParser getMessageResponse]];
+		[barBtnCancel setEnabled:NO];
+		[barBtnEmail setEnabled:NO];/////*
+		[barBtnDone setEnabled:NO];
+		[barBtnSMS setEnabled:NO];////*
+		[Session setMonederoNumber:@""];
+		cardData.track1=@"";
+
+	}
+	[Tools stopActivityIndicator];
+	[payParser release];
+	
+}
+
+//////////////////////////////////////////////////////
+-(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[self.view endEditing:YES];
+}
+
+//------------------------------------------------------
+//   UITextFieldDelegate
+//------------------------------------------------------
+- (BOOL) textFieldShouldBeginEditing:(UITextField *)textField {
+	if (numberKeyPad) {
+		numberKeyPad.currentTextField = textField;
+	}
+	return YES;
+}
+
+- (void) textFieldDidBeginEditing:(UITextField *)textField {	
+    [self keyboardSlideUp:textField];
+	if (![textField isEqual:txtAuthCode]) {
+		/*
+		 Show the numberKeyPad 
+		 */
+		if (!self.numberKeyPad) {
+			self.numberKeyPad = [NumberKeypadDecimalPoint keypadForTextField:textField];
+		}else {
+			//if we go from one field to another - just change the textfield, don't reanimate the decimal point button
+			self.numberKeyPad.currentTextField = textField;
+		}
+	}	
+}
+
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+	//if (![textField isEqual:normal]) {
+    [self keyboardSlideDown:textField];
+	if (textField == numberKeyPad.currentTextField) {
+		/*
+		 Hide the number keypad
+         */
+		[self.numberKeyPad removeButtonFromKeyboard];
+		self.numberKeyPad = nil;
+	}
+	
+	if (numberKeyPad.currentTextField == txtAuthCode) {
+		/*
+		 Hide the number keypad
+		 */
+		[self.numberKeyPad removeButtonFromKeyboard];
+		self.numberKeyPad = nil;
+	}
+	if (textField == txtAmount) {
+		/*
+		 Hide the number keypad
+		 */
+		NSNumberFormatter *currencyFormatter  = [[NSNumberFormatter alloc] init];
+		[currencyFormatter setGeneratesDecimalNumbers:YES];
+		[currencyFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+		
+		NSNumber *maxTotal=[currencyFormatter numberFromString:[lblTitle text]];
+		[Tools isValidAmountToPay:txtAmount :maxTotal];
+		self.numberKeyPad = nil;
+	}
+}	
+-(void) keyboardSlideDown: (UITextField *) textField
+{
+	CGRect viewFrame=self.view.frame;
+	viewFrame.origin.y+=animatedDistance;
+	
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+	[UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+	
+	[self.view setFrame:viewFrame];
+	[UIView commitAnimations]; 
+}
+-(void) keyboardSlideUp: (UITextField *) textField
+{
+	//keyboard slide
+	CGRect textFieldRect=
+	[self.view.window convertRect:textField.bounds fromView:textField];
+	CGRect viewRect= 
+	[self.view.window convertRect:self.view.bounds fromView:self.view];
+	
+	CGFloat midline=textFieldRect.origin.y +0.8 *textFieldRect.size.height;
+	CGFloat numerator=
+	midline-viewRect.origin.y-MINIMUN_SCROLL_FRACTION*viewRect.size.height;
+	
+	CGFloat denominator=
+	(MAXIMUM_SCROLL_FRACTION-MINIMUN_SCROLL_FRACTION) * viewRect.size.height;
+	
+	CGFloat heigthFraction=numerator/denominator;
+	
+	if (heigthFraction<0.0) {
+		heigthFraction=0.0;	
+	}
+	else if (heigthFraction>1.0)
+	{
+		heigthFraction=1.0;
+	}
+	
+	UIInterfaceOrientation orientation=
+	[[UIApplication sharedApplication] statusBarOrientation];
+	if(orientation==UIInterfaceOrientationPortrait||
+	   orientation==UIInterfaceOrientationPortraitUpsideDown)
+	{
+		animatedDistance=floor(PORTRAIT_KEYBOARD_HEIGHT*heigthFraction);
+	}
+	else {
+		animatedDistance=floor(LANDSCAPE_KEYBOARD_HEIGHT*heigthFraction);
+	}
+	
+	CGRect viewFrame=self.view.frame;
+	viewFrame.origin.y-=animatedDistance;
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+	[UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+	[self.view setFrame:viewFrame];
+	[UIView commitAnimations];
+	
+	//end keyboard slide
+	
+}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+	[textField resignFirstResponder];
+	
+	return YES;
+}
+
+-(void) dealloc
+{
+	DLog(@"dealloc paymentView");
+	[filteredPlanGroup release];
+	[promotionGroup release];
+	[originalPromotionGroup release];
+	
+	/*[cardsArray release],*/ cardsArray=nil;
+	[txtAmount release]; txtAmount=nil;
+	[lblTitle release], lblTitle=nil;	
+	[lblCard release],lblCard=nil;	
+	[lblCardNumber release], lblCardNumber=nil;	
+	[lblUser release], lblUser=nil;	
+	[lblUserText release], lblUserText=nil;	
+	[lblDate release], lblDate =nil;	
+	[lblDateText release], lblDateText=nil;	
+	[lblSubtitle release], lblSubtitle=nil;	
+	[lblOperation release], lblOperation=nil;	
+	[lblBalance release];
+	[btnPay release], btnPay =nil;	
+	[barBtnCancel release], barBtnCancel=nil;	
+	[barBtnSMS release],barBtnSMS=nil;	
+	[barBtnEmail release], barBtnEmail=nil;	
+	[barBtnDone release],barBtnDone=nil;	
+	//[productList release], productList=nil;	
+	scanView=nil;
+	
+	[txtAuthCode release];txtAuthCode=nil;
+	[ctrlPaymentType release]; ctrlPaymentType=nil;
+	[cardData release];
+	[typeOfTransaction release];
+	[btnHideAuthCode release], btnHideAuthCode=nil;
+	[super dealloc];
+}
+@end

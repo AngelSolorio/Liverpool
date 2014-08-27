@@ -1,0 +1,10 @@
+Notas del proyecto:
+
+CLASES NO UTILIZADAS (SE PUEDEN BORRAR) 
+-TerminalViewcontroller 
+-configurationviewcontroller
+
+LIBS (DEBEN COPIARSE MANUALMENTE REPOSITORIO NO LAS GUARDA) 
+-libStarIOPort
+-libLineaSDK
+

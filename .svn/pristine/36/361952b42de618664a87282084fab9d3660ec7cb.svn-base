@@ -1,0 +1,27 @@
+//
+//  PaymentResponse.m
+//  CardReader
+//
+//  Created by Martha Patricia Sagahon Azua on 14/10/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "PaymentResponse.h"
+
+
+@implementation PaymentResponse
+@synthesize 	isError,message,docto,monthlyInterest,bank,balanceToPay,authorizationCode;
+
+- (void) dealloc
+{
+	[bank release];bank=nil;
+	[monthlyInterest release];monthlyInterest=nil;
+	[message release],message=nil;
+	[docto release],docto=nil;
+	[balanceToPay release], balanceToPay=nil;
+	[authorizationCode release], authorizationCode=nil;
+	[super dealloc];
+}
+
+
+@end

@@ -1,0 +1,1325 @@
+//
+//  TicketGeneratorViewController.m
+//  CardReader
+//
+//  Created by Rubén Jacobo on 9/28/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "TicketGeneratorViewController.h"
+#import "FindItemModel.h"
+#import "Tools.h"
+#import "starmicronics/Port.h"
+#import "FindItemModel.h"
+#import "Promotions.h"
+#import "Session.h"
+#import "CardReaderAppDelegate.h"
+#define C_AutoCutterFullCut "\x1b\x64\x30"
+#define C_LineFeedx6 "\x0a\x0a\x0a\x0a\x0a\x0a"
+#define C_LineFeedx6_Size 3
+#define C_AutoCutterFullCut_Size 2
+@implementation TicketGeneratorViewController
+@synthesize txtAProducts,productList,card,cardArray;
+@synthesize promotionPlanArray;
+
+// The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+/*
+ - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+ self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+ if (self) {
+ // Custom initialization.
+ }
+ return self;
+ }
+ */
+
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+    [super viewDidLoad];
+}
+-(void) printTicket
+{
+
+	NSMutableString *header=[[[NSMutableString alloc] init] autorelease];
+	
+	//tab settings 
+	[header appendString:@"\x1b\x44\x06\x16\x26\x36\x46\x56\x66\x76\x00"]; 
+	
+	//LOGO
+	//HEX	1B 66 00 0C
+	[header appendString:@"\t\x1b\x66\x00\x0c\n\n"]; //height
+	
+	//Center aligment
+	[header appendString:@"\x1b\x61\x01"];
+	
+	[header appendString:@" Distribuidora Liverpool S.A de C.V. \n"];
+	[header appendString:@" C. Mario Pani No. 200 \n"];
+	[header appendString:@" Col Santa Fe C.P. 05109 \n"];
+	[header appendString:@" Deleg. Cuajimalpa de Morelos D.F \n"];
+	[header appendString:@" Tel. 52.68.30.00 RFC:DLI-931201-MI9 \n"];
+	[header appendString:@"------------------------------------------ \n"];
+	//Left aligment
+	[header appendString:@"\x1b\x61\x00"];
+	
+	NSMutableString *subHeader=[[[NSMutableString alloc] init] autorelease];
+	//Center aligment
+	[subHeader appendString:@"\x1b\x61\x01"];
+	
+	[subHeader appendFormat:@"%@ \n",[Session getStore]];
+	[subHeader appendString:@" Vialidad de la Barranca #6 \n"];
+	[subHeader appendString:@" Col Ex Hacienda Jesus del Monte C.P. 52787 \n"];
+	[subHeader appendString:@" Huixquilucan \n"];
+	[subHeader appendString:@" Estado de Mexico \n"];
+	[subHeader appendString:@" Tel. 53.38.64.00 \n \n"];
+	[subHeader appendString:@"------------------------------------------ \n\n"];
+	
+	//Left aligment
+	[subHeader appendString:@"\x1b\x61\x00"];
+	
+	NSMutableString *saleData=[[[NSMutableString alloc] init] autorelease];
+	[saleData appendString:@"\t\tVENTA \n \n"];
+	[saleData appendString:@"TERM \t   DOCTO \tTDA \tVEND  \n"];
+	[saleData appendFormat:@"%@ \t   %@ \t%@ \t%@  \n \n",[Session getTerminal],[Session getDocTo],[Session getIdStore],[Session getUserName]];
+	[saleData appendFormat:@"\t ATENDIO:%@  \n \n",[Session getUName]];
+	// appending the productarray to an string format
+	
+	float total=0;
+	float totalDiscounts=0;
+	float totalAbonoMonedero=0;
+	NSString *monthlyPaymentMessage=@"";
+	NSString *installmentSelected=@"";
+	NSMutableString *products=[[[NSMutableString alloc] init] autorelease];
+
+	for (FindItemModel *item in productList) {
+		[Tools calculateSuccesiveDiscounts:item];
+		
+		[products appendFormat:@"%@\t         SECC %@\n ",item.description,item.department];
+		[products appendFormat:@"%@\t         %@\n ",item.barCode,[Tools amountCurrencyFormat:item.price]];
+		
+		for (Promotions *promo in item.discounts) {
+			if (promo.promoType==1)  //print promotion monedero
+			{	[products appendFormat:@"\t%@ %@ \n",[Tools calculateDiscountValuePercentage:[item price] :promo.promoDiscountPercent] ,[promo promoDescription]];
+				
+				totalAbonoMonedero+=[[Tools calculateDiscountValuePercentage:[item price] :promo.promoDiscountPercent] floatValue];
+
+			}
+			else if (promo.promoType==3) //print promotion by key with %
+			{	
+				//promo.promoValue=[Tools calculateDiscountValuePercentage:[item price]:[promo promoDiscountPercent]];
+			
+				[products appendFormat:@"\t%@ %@%% \t%@- \n",[promo promoDescription],[promo promoDiscountPercent],[Tools amountCurrencyFormat:[promo promoValue]]];
+				totalDiscounts+=[promo.promoValue floatValue];
+				
+			}
+			else if(promo.promoType==4) //print promotion by key with fixed amount
+				{	
+				[products appendFormat:@"\t%@ $%@ \t%@- \n",[promo promoDescription],[promo promoDiscountPercent],[Tools amountCurrencyFormat:[promo promoDiscountPercent]]];
+				totalDiscounts+=[promo.promoDiscountPercent floatValue];
+				
+				}
+			else //if([promo.promoTypeBenefit isEqualToString:@"PaymentPlanBenefit"])
+				{	
+					monthlyPaymentMessage=[NSString stringWithFormat:@"%@ PAGOS MENSUALES DE:",promo.promoInstallmentSelected];
+					installmentSelected=[promo.promoInstallmentSelected copy];
+					DLog(@"promoinstallment selected ticket:%@",promo.promoInstallmentSelected);
+					//[products appendFormat:@"\t%@ %@ \n",installmentSelected,[promo promoDescription]];
+					[products appendFormat:@"\t %@ \n",[promo promoDescription]];
+
+					
+				}
+
+			
+		}
+	/*	//if the promotion is payment plan print the format . else print the format of percentage discount
+		if ([promotionPlanArray count]>0)  //print promotion installmetn
+		{	Promotions *promo=[promotionPlanArray lastObject];
+			
+			monthlyPaymentMessage=[NSString stringWithFormat:@"%@ PAGOS MENSUALES DE:",promo.promoInstallmentSelected];
+			installmentSelected=[promo.promoInstallmentSelected copy];
+			DLog(@"promoinstallment selected ticket:%@",promo.promoInstallmentSelected);
+			[products appendFormat:@"\t%@ %@ \n",installmentSelected,[promo promoDescriptionPrinter]];
+
+		}*/
+		[products appendString:@"\n"];
+
+		total+=[item.price floatValue];
+	}
+	//calculate the total amount for ticket with discounts
+	total=total-totalDiscounts;
+	
+	NSMutableString *footer=[[[NSMutableString alloc] init] autorelease];
+	
+	
+	[footer appendFormat:@"\t\t TOTAL    %@ \n \n",[Tools amountCurrencyFormatFloat:total]];
+	//Center aligment
+	[footer appendString:@"\x1b\x61\x01"];
+	[footer appendFormat:@"%@\n \n",[self generateTextualAmountDescription:total]];
+	//Left aligment
+	[footer appendString:@"\x1b\x61\x00"];
+	[footer appendString:@"****************************************** \n \n \n"];
+	[footer appendFormat:@"\t %@  %@ \n\n",[self getPaymentType],[Tools amountCurrencyFormatFloat:total]];
+	[footer appendFormat:@"%@ \n",[self getAuthorizationNumber:card]];
+	[footer appendFormat:@"CUENTA:  %@ \n",[self getCardNumberMaskFormat:card.cardNumber]];
+	[footer appendFormat:@"NOMBRE:  %@ \n\n",card.userName];
+	//this part calculate the payment if a payment plan was selected
+	// do nothing otherwise
+	// installmentamount en la respuesta de paymentparse esta devolviendo el total no el interes
+	if ([installmentSelected length]!=0) {
+		//if the payment is without interest
+		DLog(@"entro a installmentselected monthyinsteres %@",[Session getMonthyInterest]);
+		if ([[Session getMonthyInterest] length]==0)
+		{
+			DLog(@"installmentSelected ticket:%@ total:%f",installmentSelected,total);
+			NSString *totalS=[NSString stringWithFormat:@"%.02f",total];
+			NSString *div=[Tools calculateDivisionValueAmount:installmentSelected:totalS];
+			div=[Tools amountCurrencyFormat:div];
+			monthlyPaymentMessage=[monthlyPaymentMessage stringByAppendingString:div];
+			[footer appendString:@"\t"];
+			[footer appendString:monthlyPaymentMessage];
+			[footer appendString:@"\n\n"];
+		}
+		else { // payment with interest
+			DLog(@"installmentSelected payment con interes");
+
+			NSString *interest=[Session getMonthyInterest];
+			interest=[Tools amountCurrencyFormat:interest];
+			monthlyPaymentMessage=[monthlyPaymentMessage stringByAppendingString:interest];
+			[footer appendString:@"\t"];
+			[footer appendString:monthlyPaymentMessage];
+			[footer appendString:@"\n\n"];
+			
+			[Session setMonthyInterest:@""];
+
+		}
+	}
+	[installmentSelected release];
+
+	//----- end of plan payment
+	
+	//Monedero this section only applies if the lista has a monedero promotion
+	if ([Tools monederoPromotionInList:productList]) {
+		DLog (@"////////////////// SI CONTIENE UN ABONO A MONEDERO");
+		
+		//MONEDERO DATA
+		//NSString *totalS=[NSString stringWithFormat:@"%f",total];
+		NSString *montoObtenido=[NSString stringWithFormat:@"%.02f",totalAbonoMonedero];
+		NSString *monedero=[Session getMonederoAmount];
+		NSString *saldoAnterior=[Tools calculateAddUpValueAmount:monedero :montoObtenido];
+
+		
+		DLog(@"TICKET PART MONEDEROOBTENIDO:%@ , SaldoMonederoFinal %:%@ ,montoObtenido:%@",monedero,saldoAnterior,montoObtenido);
+		[footer appendFormat:@"%@           %@ \n\n",[self getCardNumberMaskFormat:card.cardNumber],[Tools amountCurrencyFormatFloat:total]];
+		[footer appendFormat:@"MONEDERO %@ \n",[Session getMonederoNumber]];
+
+		[footer appendFormat:@"Saldo Anterior\t  %@ \n",[Tools amountCurrencyFormat:monedero]];
+		[footer appendFormat:@"Monto Utilizado\t  %@ \n",[Tools amountCurrencyFormatFloat:0]];
+		[footer appendFormat:@"Monto Obtenido\t  %@ \n",[Tools amountCurrencyFormat:montoObtenido]];
+		[footer appendFormat:@"Saldo Actual\t  %@ \n\n",[Tools amountCurrencyFormat:saldoAnterior]];
+		
+		[Session setMonederoAmount:@""];
+		[Session setMonederoPercent:@""];
+		[Session setMonederoNumber:@""];
+	}
+	
+	//End of Monedero Balance
+	
+	//Center aligment
+	[footer appendString:@"\x1b\x61\x01"];
+	[footer appendString:@"Gracias Por Su Visita!  \n \n"];
+	[footer appendFormat:@"%@ \n \n",[self generateDate]];
+	[footer appendString:@"liverpool.com.mx  \n"];	
+	[footer appendString:@"Centro de atencion telefonica\n"];
+	[footer appendString:@"01-800-713-5555 \n\n\n\n"];
+	//Left aligment
+	[footer appendString:@"\x1b\x61\x00"];
+	
+	//HEX 1D 6B m n d1....dn
+	[footer appendString:@"        "];
+	[footer appendString:@"\x1d\x68\x3c"]; //height
+	[footer appendString:@"\x1d\x77\x01"]; //width
+	[footer appendString:@"\x1d\x6b\x04"]; //command
+	[footer appendFormat:@"%@\x00 \n\n",[self generateTicketCodeBar]]; //data
+	[footer appendString:@"\n\n\n"];
+	
+	 
+	
+	/**************************TICKET COPY *******************************************/
+	
+	//subheader+ products custom + text	
+	NSMutableString *totalCopyComprobant=[[[NSMutableString alloc] init] autorelease];
+	[totalCopyComprobant appendString:@"\t\tVENTA \n\n"];
+	[totalCopyComprobant appendFormat:@"\t %@  \t%@ \n",[self getPaymentType],[Tools amountCurrencyFormatFloat:total]];
+	[totalCopyComprobant appendFormat:@"%@ \n",[self getAuthorizationNumber:card]];
+	[totalCopyComprobant appendString:@"**********************************\n"];
+	[totalCopyComprobant appendFormat:@"CUENTA:  %@ \n",[self getCardNumberMaskFormat:card.cardNumber]];
+	[totalCopyComprobant appendFormat:@"NOMBRE:  %@ \n",card.userName];
+	
+	[totalCopyComprobant appendString:@"\t"];
+	[totalCopyComprobant appendString:monthlyPaymentMessage];
+	[totalCopyComprobant appendString:@"\n\n"];
+	
+	NSMutableString *comprobant=[[[NSMutableString alloc] init] autorelease];
+	[comprobant appendString:@"\n \n Distribuidora Liverpool S.A. de C.V. \n \n"];
+	[comprobant appendString:@"Mario Pani Num. 200 Col. Sta Fe. Deleg"];
+	[comprobant appendString:@"Cuajimalpa de Morelos C.P. 05109 Mexico, D.F."];
+	[comprobant appendString:@"TEL. 5268-3000 R.F.C DLI-931201-MI9 \n\n"];
+	[comprobant appendString:@"Por el presente PAGARE, me obligo a pagar "];
+	[comprobant appendString:@"incondicionalmente a la orden de distribuidora "];
+	[comprobant appendString:@"Liverpool SA de C.V. y/o del emisor de la "];
+	[comprobant appendString:@"tarjeta, en la ciudad de Mexico DF, o en "];
+	[comprobant appendString:@"cualquier otra que se me requiera, el dia ___ "];
+	[comprobant appendString:@"de ___ de ___ la cantidad de $_________. "];
+	[comprobant appendString:@"El presente causara interes mensual del ____% "];
+	[comprobant appendString:@"sobre el importe de este pagare y en caso de "];
+	[comprobant appendString:@"incumplimiento, pagare ademas de un interes "];
+	[comprobant appendString:@"moratorio del ___% mensual en terminos del "];
+	[comprobant appendString:@"contrato suscrito.\n"];
+	[comprobant appendString:@"Algunos de los adeudos a su cargo han sido o podran "];
+	[comprobant appendString:@"ser cedidos a un fideicomiso\n \n\n\n"];
+	//Center aligment
+	[comprobant appendString:@"\x1b\x61\x01"];
+	
+	[comprobant appendString:@"___________________\n"];
+	[comprobant appendString:@"Acepto       \n\n"];
+	
+	//Left aligment
+	[subHeader appendString:@"\x1b\x61\x00"]; 
+	
+	[comprobant appendFormat:@"TIENDA: %@ %@ \n \n",[Session getIdStore],[self generateDate]];
+	
+	
+
+	
+	NSString *ticketString=[[NSString alloc] init];
+	ticketString=[ticketString stringByAppendingString:header];
+	ticketString=[ticketString stringByAppendingString:subHeader];
+	ticketString=[ticketString stringByAppendingString:saleData];
+	ticketString=[ticketString stringByAppendingString:products];
+	ticketString=[ticketString stringByAppendingString:footer];
+	[self WriteToPrinter:ticketString];
+
+
+	// ticket copy part
+		NSString *ticketStringComprobant=[[NSString alloc] init];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:subHeader];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:saleData];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:totalCopyComprobant];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:comprobant];
+	
+							[NSTimer scheduledTimerWithTimeInterval:8.0 
+													  target:self 
+													selector:@selector(printComprobant:) 
+													userInfo:ticketStringComprobant repeats:NO];
+	
+	//txtAProducts.text=ticketString;
+	
+}
+-(void) printTwoPaymentTicket
+{
+	
+	NSMutableString *header=[[[NSMutableString alloc] init] autorelease];
+	
+	//tab settings 
+	[header appendString:@"\x1b\x44\x06\x16\x26\x36\x46\x56\x66\x76\x00"]; 
+	
+	//LOGO
+	//HEX	1B 66 00 0C
+	[header appendString:@"\t\x1b\x66\x00\x0c\n\n"]; //height
+	
+	//Center aligment
+	[header appendString:@"\x1b\x61\x01"];
+	
+	[header appendString:@" Distribuidora Liverpool S.A de C.V. \n"];
+	[header appendString:@" C. Mario Pani No. 200 \n"];
+	[header appendString:@" Col Santa Fe C.P. 05109 \n"];
+	[header appendString:@" Deleg. Cuajimalpa de Morelos D.F \n"];
+	[header appendString:@" Tel. 52.68.30.00 RFC:DLI-931201-MI9 \n"];
+	[header appendString:@"------------------------------------------ \n"];
+	//Left aligment
+	[header appendString:@"\x1b\x61\x00"];
+	
+	NSMutableString *subHeader=[[[NSMutableString alloc] init] autorelease];
+	//Center aligment
+	[subHeader appendString:@"\x1b\x61\x01"];
+	
+	[subHeader appendFormat:@"%@ \n",[Session getStore]];
+	[subHeader appendString:@" Vialidad de la Barranca #6 \n"];
+	[subHeader appendString:@" Col Ex Hacienda Jesus del Monte C.P. 52787 \n"];
+	[subHeader appendString:@" Huixquilucan \n"];
+	[subHeader appendString:@" Estado de Mexico \n"];
+	[subHeader appendString:@" Tel. 53.38.64.00 \n \n"];
+	[subHeader appendString:@"------------------------------------------ \n\n"];
+	
+	//Left aligment
+	[subHeader appendString:@"\x1b\x61\x00"];
+	
+	NSMutableString *saleData=[[[NSMutableString alloc] init] autorelease];
+	[saleData appendString:@"\t\tVENTA \n \n"];
+	[saleData appendString:@"TERM \t   DOCTO \tTDA \tVEND  \n"];
+	[saleData appendFormat:@"%@ \t   %@ \t%@ \t%@  \n \n",[Session getTerminal],[Session getDocTo],[Session getIdStore],[Session getUserName]];
+	[saleData appendFormat:@"\t ATENDIO:%@  \n \n",[Session getUName]];
+	// appending the productarray to an string format
+	
+	float total=0;
+	float totalDiscounts=0;
+	float totalAbonoMonedero=0;
+	NSString *monthlyPaymentMessage=@"";
+	NSString *installmentSelected=@"";
+	NSMutableString *products=[[[NSMutableString alloc] init] autorelease];
+	
+	for (FindItemModel *item in productList) {
+		
+		[Tools calculateSuccesiveDiscounts:item];
+
+		[products appendFormat:@"%@\t         SECC %@\n ",item.description,item.department];
+		[products appendFormat:@"%@\t         %@\n ",item.barCode,[Tools amountCurrencyFormat:item.price]];
+		
+		for (Promotions *promo in item.discounts) {
+			//if the promotion is payment plan print the format . else print the format of percentage discount
+			if ([promo.promoInstallment length]>0||promo.promoType==1)  //print promotion installmetn
+			{	
+				[products appendFormat:@"\t%@ %@ \n",[Tools calculateDiscountValuePercentage:[item price] :promo.promoDiscountPercent] ,[promo promoDescription]];
+				
+				totalAbonoMonedero+=[[Tools calculateDiscountValuePercentage:[item price] :promo.promoDiscountPercent] floatValue];
+				
+				/*if ([promo.promoInstallmentSelected length]!=0) 
+				{
+					monthlyPaymentMessage=[NSString stringWithFormat:@"%@ PAGOS MENSUALES DE:",promo.promoInstallmentSelected];
+					installmentSelected=promo.promoInstallmentSelected; 
+					DLog(@"promoinstallment selected ticket:%@",promo.promoInstallmentSelected);}
+				totalAbonoMonedero+=[[Tools calculateDiscountValuePercentage:promo.promoBaseAmount :promo.promoDiscountPercent] floatValue];
+				*/
+			}
+			else	
+			{	if (promo.promoType==3) //print promotion by key with %
+			{	
+				promo.promoValue=[Tools calculateDiscountValuePercentage:[item price]:[promo promoDiscountPercent]];
+				
+				[products appendFormat:@"\t%@ %@%% \t%@- \n",[promo promoDescription],[promo promoDiscountPercent],[Tools amountCurrencyFormat:[promo promoValue]]];
+				totalDiscounts+=[promo.promoValue floatValue];
+				
+			}
+			else if(promo.promoType==4) //print promotion by key with fixed amount
+			{	
+				[products appendFormat:@"\t%@ $%@ \t%@- \n",[promo promoDescription],[promo promoDiscountPercent],[Tools amountCurrencyFormat:[promo promoDiscountPercent]]];
+				totalDiscounts+=[promo.promoDiscountPercent floatValue];
+				
+			}else //if([promo.promoTypeBenefit isEqualToString:@"PaymentPlanBenefit"])
+			{	
+				monthlyPaymentMessage=[NSString stringWithFormat:@"%@ PAGOS MENSUALES DE:",promo.promoInstallmentSelected];
+				installmentSelected=[promo.promoInstallmentSelected copy];
+				DLog(@"promoinstallment selected ticket:%@",promo.promoInstallmentSelected);
+				//[products appendFormat:@"\t%@ %@ \n",installmentSelected,[promo promoDescription]];
+				[products appendFormat:@"\t %@ \n",[promo promoDescription]];
+				
+				
+			}
+			}
+		}
+		[products appendString:@"\n"];
+		
+		total+=[item.price floatValue];
+	}
+	//calculate the total amount for ticket with discounts
+	total=total-totalDiscounts;
+	
+	NSMutableString *footer=[[[NSMutableString alloc] init] autorelease];
+	
+	
+	[footer appendFormat:@"\t\t TOTAL    %@ \n \n",[Tools amountCurrencyFormatFloat:total]];
+	//Center aligment
+	[footer appendString:@"\x1b\x61\x01"];
+	[footer appendFormat:@"%@\n \n",[self generateTextualAmountDescription:total]];
+	//Left aligment
+	[footer appendString:@"\x1b\x61\x00"];
+	[footer appendString:@"****************************************** \n \n \n"];
+	
+	for (Card* cards in cardArray) {
+		
+		if ([cards.track1 isEqual:@"track1"]) {
+			//its monedero
+			pType=monederoType;
+			DLog(@"ASBSAAS ACA");
+			//MONEDERO DATA
+			//if the first payment was monedero the amount to pay is equal to the monedero balance coz it use all of the balance to do the first pay
+			NSString *totalS=([cards.amountToPay length]>0 ? cards.amountToPay : [Session getMonederoAmount]);
+			cards.amountToPay=[totalS copy];
+			NSString *totalAbonoMonederoS=[NSString stringWithFormat:@"%.02f",totalAbonoMonedero];
+			NSString *saldoAnterior= [Session getMonederoAmount];
+			NSString *monedero=[Tools calculateRestValueAmount:saldoAnterior :totalS];
+			NSString *montoObtenido=totalAbonoMonederoS;
+
+			monedero=[Tools calculateAddUpValueAmount:monedero :montoObtenido];
+			DLog(@"cards.amountToPay %@",cards.amountToPay);
+			DLog(@"[Session getMonederoAmount] %@",[Session getMonederoAmount]);
+
+			DLog(@"ASBSAAS  aca 2");
+
+			//NSString *montoObtenido=totalAbonoMonederoS;
+			//saldoAnterior=[Tools calculateAddUpValueAmount:saldoAnterior :montoObtenido];
+			
+			[footer appendFormat:@"MONEDERO %@           %@ \n\n",[self getCardNumberMaskFormat:cards.cardNumber],[Tools amountCurrencyFormat:totalS]];
+
+			DLog(@"TICKET PART MONEDEROOBTENIDO:%@ , MON %:%@",montoObtenido,[Session getMonederoPercent]);
+			
+			[footer appendFormat:@"Saldo Anterior\t  %@ \n",[Tools amountCurrencyFormat:saldoAnterior]];
+			[footer appendFormat:@"Monto Utilizado\t  %@ \n",[Tools amountCurrencyFormat:totalS]];
+			[footer appendFormat:@"Monto Obtenido\t  %@ \n",[Tools amountCurrencyFormat:montoObtenido]];
+			[footer appendFormat:@"Saldo Actual\t  %@ \n\n",[Tools amountCurrencyFormat:monedero] ];
+			
+			
+		}else { //its dilisa-lpc
+			pType=[cards.cardType intValue];
+			[footer appendFormat:@"%@  \t%@ \n",[self getPaymentType],[Tools amountCurrencyFormat:cards.amountToPay]];
+			[footer appendFormat:@"%@ \n",[self getAuthorizationNumber:cards]];
+			[footer appendFormat:@"CUENTA:  %@ \n",[self getCardNumberMaskFormat:cards.cardNumber]];
+			[footer appendFormat:@"NOMBRE:  %@ \n\n",cards.userName];
+		}
+	}
+	
+	[footer appendString:@"****************************************** \n \n \n"];
+
+	
+	
+	//this part calculate the payment if a payment plan was selected
+	// do nothing otherwise
+	if ([installmentSelected length]!=0) {
+		//if the payment is without interest
+		if ([[Session getMonthyInterest] length]==0)
+		{
+			NSString *totalS=[NSString stringWithFormat:@"%.02f",total];
+			NSString *div=[Tools calculateDivisionValueAmount:installmentSelected:totalS];
+			div=[Tools amountCurrencyFormat:div];
+			monthlyPaymentMessage=[monthlyPaymentMessage stringByAppendingString:div];
+			[footer appendString:@"\t"];
+			[footer appendString:monthlyPaymentMessage];
+			[footer appendString:@"\n\n"];
+		}
+		else { // payment with interest
+			NSString *interest=[Session getMonthyInterest];
+			interest=[Tools amountCurrencyFormat:interest];
+			monthlyPaymentMessage=[monthlyPaymentMessage stringByAppendingString:interest];
+			[footer appendString:@"\t"];
+			[footer appendString:monthlyPaymentMessage];
+			[footer appendString:@"\n\n"];
+			
+			[Session setMonthyInterest:@""];
+			
+		}
+		
+	}
+	
+	//----- end of plan payment
+	/*
+	//Monedero this section only applies if the lista has a monedero promotion
+	if ([Tools monederoPromotionInList:productList]) {
+		DLog (@"////////////////// SI CONTIENE UN ABONO A MONEDERO");
+		
+		//MONEDERO DATA
+		//NSString *totalS=[NSString stringWithFormat:@"%f",total];
+		NSString *montoObtenido=[NSString stringWithFormat:@"%.02f",totalAbonoMonedero];
+		NSString *monedero=[Session getMonederoAmount];
+		NSString *saldoAnterior=[Tools calculateAddUpValueAmount:monedero :montoObtenido];
+		
+		
+		DLog(@"TICKET PART MONEDEROOBTENIDO:%@ , SaldoMonederoFinal %:%@ ,montoObtenido:%@",monedero,saldoAnterior,montoObtenido);
+		[footer appendFormat:@"MONEDERO %@ \n",[Session getMonederoNumber]];
+		[footer appendFormat:@"%@           %@ \n\n\n",[self getCardNumberMaskFormat:card.cardNumber],[Tools amountCurrencyFormatFloat:total]];
+		[footer appendFormat:@"Saldo Anterior\t  %@ \n",[Tools amountCurrencyFormat:monedero]];
+		[footer appendFormat:@"Monto Utilizado\t  %@ \n",[Tools amountCurrencyFormatFloat:0]];
+		[footer appendFormat:@"Monto Obtenido\t  %@ \n",[Tools amountCurrencyFormat:montoObtenido]];
+		[footer appendFormat:@"Saldo Actual\t  %@ \n\n",[Tools amountCurrencyFormat:saldoAnterior]];
+		
+		[Session setMonederoAmount:@""];
+		[Session setMonederoPercent:@""];
+		[Session setMonederoNumber:@""];
+	}
+	*/
+	//End of Monedero Balance
+	
+	//Center aligment
+	[footer appendString:@"\x1b\x61\x01"];
+	[footer appendString:@"Gracias Por Su Visita!  \n \n"];
+	[footer appendFormat:@"%@ \n \n",[self generateDate]];
+	[footer appendString:@"liverpool.com.mx  \n"];	
+	[footer appendString:@"Centro de atencion telefonica\n"];
+	[footer appendString:@"01-800-713-5555 \n\n\n\n"];
+	//Left aligment
+	[footer appendString:@"\x1b\x61\x00"];
+	
+	//HEX 1D 6B m n d1....dn
+	[footer appendString:@"        "];
+	[footer appendString:@"\x1d\x68\x3c"]; //height
+	[footer appendString:@"\x1d\x77\x01"]; //width
+	[footer appendString:@"\x1d\x6b\x04"]; //command
+	[footer appendFormat:@"%@\x00 \n\n",[self generateTicketCodeBar]]; //data
+	[footer appendString:@"\n\n\n"];
+	
+	
+	
+	/**************************TICKET COPY *******************************************/
+	
+	//subheader+ products custom + text	
+	NSMutableString *totalCopyComprobant=[[[NSMutableString alloc] init] autorelease];
+	[totalCopyComprobant appendString:@"\t\tVENTA \n\n"];
+	
+	
+	//iterates the card array to print the payment and the amount spended 
+	// if dilisa print dilisa format else print monedero format
+	for (Card* cards in cardArray) {
+		
+		if ([cards.track1 isEqual:@"track1"]) {
+			//its monedero
+			pType=monederoType;
+			NSString *totalS=([cards.amountToPay length]>0 ? cards.amountToPay : [Session getMonederoAmount]);
+			[totalCopyComprobant appendFormat:@"MONEDERO %@           %@ \n\n",[self getCardNumberMaskFormat:cards.cardNumber],[Tools amountCurrencyFormat:totalS]];
+
+			[Session setMonederoAmount:@""];
+			[Session setMonederoPercent:@""];
+			[Session setMonederoNumber:@""];
+			
+		}else { //its dilisa
+			pType=[cards.cardType intValue];
+			[totalCopyComprobant appendFormat:@"\t %@  \t%@ \n",[self getPaymentType],[Tools amountCurrencyFormat:cards.amountToPay]];
+			[totalCopyComprobant appendFormat:@"%@ \n",[self getAuthorizationNumber:cards]];
+			[totalCopyComprobant appendFormat:@"CUENTA:  %@ \n",[self getCardNumberMaskFormat:cards.cardNumber]];
+			[totalCopyComprobant appendFormat:@"NOMBRE:  %@ \n",cards.userName];
+		}
+	}
+	
+	[totalCopyComprobant appendString:@"\n\t"];
+	[totalCopyComprobant appendString:monthlyPaymentMessage];
+	[totalCopyComprobant appendString:@"\n\n"];
+	
+	NSMutableString *comprobant=[[[NSMutableString alloc] init] autorelease];
+	[comprobant appendString:@"\n \n Distribuidora Liverpool S.A. de C.V. \n \n"];
+	[comprobant appendString:@"Mario Pani Num. 200 Col. Sta Fe. Deleg"];
+	[comprobant appendString:@"Cuajimalpa de Morelos C.P. 05109 Mexico, D.F."];
+	[comprobant appendString:@"TEL. 5268-3000 R.F.C DLI-931201-MI9 \n\n"];
+	[comprobant appendString:@"Por el presente PAGARE, me obligo a pagar "];
+	[comprobant appendString:@"incondicionalmente a la orden de distribuidora "];
+	[comprobant appendString:@"Liverpool SA de C.V. y/o del emisor de la "];
+	[comprobant appendString:@"tarjeta, en la ciudad de Mexico DF, o en "];
+	[comprobant appendString:@"cualquier otra que se me requiera, el dia ___ "];
+	[comprobant appendString:@"de ___ de ___ la cantidad de $_________. "];
+	[comprobant appendString:@"El presente causara interes mensual del ____% "];
+	[comprobant appendString:@"sobre el importe de este pagare y en caso de "];
+	[comprobant appendString:@"incumplimiento, pagare ademas de un interes "];
+	[comprobant appendString:@"moratorio del ___% mensual en terminos del "];
+	[comprobant appendString:@"contrato suscrito.\n"];
+	[comprobant appendString:@"Algunos de los adeudos a su cargo han sido o podran "];
+	[comprobant appendString:@"ser cedidos a un fideicomiso\n \n\n\n"];
+	//Center aligment
+	[comprobant appendString:@"\x1b\x61\x01"];
+	
+	[comprobant appendString:@"___________________\n"];
+	[comprobant appendString:@"Acepto       \n\n"];
+	
+	//Left aligment
+	[subHeader appendString:@"\x1b\x61\x00"]; 
+	
+	[comprobant appendFormat:@"TIENDA: %@ %@ \n \n",[Session getIdStore],[self generateDate]];
+	
+	
+	
+	
+	NSString *ticketString=[[NSString alloc] init];
+	ticketString=[ticketString stringByAppendingString:header];
+	ticketString=[ticketString stringByAppendingString:subHeader];
+	ticketString=[ticketString stringByAppendingString:saleData];
+	ticketString=[ticketString stringByAppendingString:products];
+	ticketString=[ticketString stringByAppendingString:footer];
+	[self WriteToPrinter:ticketString];
+	
+	
+	// ticket copy part
+	NSString *ticketStringComprobant=[[NSString alloc] init];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:subHeader];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:saleData];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:totalCopyComprobant];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:comprobant];
+	
+	[NSTimer scheduledTimerWithTimeInterval:8.0 
+									 target:self 
+								   selector:@selector(printComprobant:) 
+								   userInfo:ticketStringComprobant repeats:NO];
+	
+	//txtAProducts.text=ticketString;
+	
+}
+
+
+- (void)printComprobant:(NSTimer*)theTimer {
+	[Session setStatus:CLOSE_SESSION];
+	[self WriteToPrinter:(NSString*)[theTimer userInfo]];
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) loginScreen];
+
+
+}
+-(void) printTicketAirtime:(NSString*) phoneNumber
+{
+	
+	NSMutableString *header=[[[NSMutableString alloc] init] autorelease];
+	
+	//tab settings printer port
+	[header appendString:@"\x1b\x44\x06\x16\x26\x36\x46\x56\x66\x76\x00"]; 
+	
+	//LOGO
+	//HEX	1B 66 00 0C
+	[header appendString:@"\t \x1b\x66\x00\x0c \n\n "]; 
+	
+	
+	//Center aligment
+	[header appendString:@"\x1b\x61\x01"]; 
+
+	
+	[header appendString:@" Distribuidora Liverpool S.A de C.V. \n"];
+	[header appendString:@" C. Mario Pani No. 200 \n"];
+	[header appendString:@" Col Santa Fe C.P. 05109 \n"];
+	[header appendString:@" Deleg. Cuajimalpa de Morelos D.F \n"];
+	[header appendString:@" Tel. 52.68.30.00 RFC:DLI-931201-MI9 \n"];
+	[header appendString:@"------------------------------------------ \n"];
+	
+	NSMutableString *subHeader=[[[NSMutableString alloc] init] autorelease];
+	[subHeader appendFormat:@"%@ \n",[Session getStore]];
+	[subHeader appendString:@" Vialidad de la Barranca #6 \n"];
+	[subHeader appendString:@" Col Ex Hacienda Jesus del Monte C.P. 52787 \n"];
+	[subHeader appendString:@" Huixquilucan \n"];
+	[subHeader appendString:@" Estado de Mexico \n"];
+	[subHeader appendString:@" Tel. 53.38.64.00 \n \n"];
+	[subHeader appendString:@"------------------------------------------ \n\n"];
+	
+	//Left aligment
+	[subHeader appendString:@"\x1b\x61\x00"]; 
+	
+	
+	
+	NSMutableString *products=[[[NSMutableString alloc] init] autorelease];
+	[products appendString:@"TERM \t   DOCTO \t TDA \t VEND  \n"];
+	[products appendFormat:@"%@ \t   %@ \t%@ \t%@  \n \n",[Session getTerminal],[Session getDocTo],[Session getIdStore],[Session getUserName]];
+	[products appendString:@"\t ATENDIO:  \n \n"];
+	// appending the productarray to an string format
+	
+	float total=0;
+	float totalDiscounts=0;
+	for (FindItemModel *item in productList) {
+		[products appendFormat:@"%@\t SECC %@\n ",item.description,item.department];
+		[products appendFormat:@"%@\t %@\n ",item.barCode,item.price];
+		
+		for (Promotions *promo in item.discounts) {
+			//if the promotion is payment plan print the format . else print the format of percentage discount
+			if ([promo.promoInstallment length]>0)  //print promotion installmetn
+				[products appendFormat:@"\t%@ \n\n",[promo promoDescription]];
+			else	
+			{	if (promo.promoType==3) //print promotion by key with %
+			{	
+				promo.promoValue=[Tools calculateDiscountValuePercentage:[item price]:[promo promoDiscountPercent]];
+				
+				[products appendFormat:@"\t%@ %@%% \t%@- \n",[promo promoDescription],[promo promoDiscountPercent],[Tools amountCurrencyFormat:[promo promoValue]]];
+				totalDiscounts+=[promo.promoValue floatValue];
+				
+			}
+			else if(promo.promoType==4) //print promotion by key with fixed amount
+			{	
+				[products appendFormat:@"\t%@ $%@ \t%@- \n",[promo promoDescription],[promo promoDiscountPercent],[promo promoDiscountPercent]];
+				totalDiscounts+=[promo.promoDiscountPercent floatValue];
+				
+			}
+			}
+		}
+		[products appendString:@"\n"];
+
+		total+=[item.price floatValue];
+	}
+	//calculate the total amount for ticket with discounts
+	total=total-totalDiscounts;
+	
+	NSMutableString *footer=[[[NSMutableString alloc] init] autorelease];
+	[footer appendFormat:@"\t\t TOTAL  $%.02f \n \n",total];
+	[footer appendFormat:@" %@\n \n",[self generateTextualAmountDescription:total]];
+	[footer appendString:@"****************************************** \n \n"];
+	[footer appendFormat:@"\t %@ $ \t%.02f \n",[self getPaymentType],total];
+	[footer appendString:@"\tAUTORIZACION \n"];
+	[footer appendString:@"*************PRESUPUESTO******************  \n"];
+	[footer appendFormat:@"CUENTA:  %@ \n",[self getCardNumberMaskFormat:card.cardNumber]];
+	[footer appendFormat:@"NOMBRE:  %@ \n",card.userName];
+	[footer appendFormat:@"VENCE:  %@ \n\n",card.expireDate];
+	[footer appendString:@"****************************************** \n \n"];
+	[footer appendString:@"CONFIRMACION : \n"];
+	[footer appendFormat:@"TELEFONO: %@\n\n",phoneNumber];
+	[footer appendString:@"****************************************** \n \n"];
+	
+	//NOTA falta agregar la firma con info de las compañias de telefono.
+	
+	
+	/**************************TICKET COPY *******************************************/
+	
+	//subheader+ products custom + text	
+	NSMutableString *headerCopyComprobant=[[[NSMutableString alloc] init] autorelease];
+	[headerCopyComprobant appendFormat:@"\t %@ \n",[Session getStore]];
+	[headerCopyComprobant appendString:@"Av. Mario Pani No-200 Santa Fe, Mex DF.\t"];
+	
+	
+	NSMutableString *productsComprobant=[[[NSMutableString alloc] init] autorelease];
+	[productsComprobant appendString:@"TERM \t DOCTO \t TDA \t VEND  \n"];
+	[productsComprobant appendFormat:@"  %@ \t%@ \t%@ \t%@  \n \n",[Session getTerminal],[Session getDocTo],[Session getIdStore],[Session getUserName]];
+	[productsComprobant appendString:@"\t ATENDIO:  \n \n"];
+	// appending the productarray to an string format
+	
+	total=0;
+	totalDiscounts=0;
+	for (FindItemModel *item in productList) {
+		[productsComprobant appendFormat:@"%@\t SECC %@\n ",item.description,item.department];
+		[productsComprobant appendFormat:@"%@\t %@\n ",item.barCode,item.price];
+		
+		for (Promotions *promo in item.discounts) {
+			//if the promotion is payment plan print the format . else print the format of percentage discount
+			if ([promo.promoInstallment length]>0)  //print promotion installmetn
+				[productsComprobant appendFormat:@"\t%@ \n",[promo promoDescription]];
+			else	
+			{	if (promo.promoType==3) //print promotion by key with %
+			{	
+				[productsComprobant appendFormat:@"\t%@ %@%% \t%@- \n",[promo promoDescription],[promo promoDiscountPercent],[promo promoValue]];
+				totalDiscounts+=[promo.promoValue floatValue];
+				
+			}
+			else if(promo.promoType==4) //print promotion by key with fixed amount
+			{	
+				[productsComprobant appendFormat:@"\t%@ $%@ \t%@- \n",[promo promoDescription],[promo promoDiscountPercent],[promo promoDiscountPercent]];
+				totalDiscounts+=[promo.promoDiscountPercent floatValue];
+				
+			}
+			}
+		}
+		[productsComprobant appendString:@"\n"];
+
+		total+=[item.price floatValue];
+	}
+	//calculate the total amount for ticket with discounts
+	total=total-totalDiscounts;
+	[productsComprobant appendString:@"\n\n\t\t\t VENTA \n \n"];
+	[productsComprobant appendFormat:@"\t %@ $ \t%.02f \n\n",[self getPaymentType],total];
+	[productsComprobant appendFormat:@"%@ \n",[self getAuthorizationNumber:card]];
+	[productsComprobant appendFormat:@"CUENTA:  %@ \n",[self getCardNumberMaskFormat:card.cardNumber]];
+	[productsComprobant appendFormat:@"NOMBRE:  %@ \n",card.userName];
+	[productsComprobant appendFormat:@"VENCE:  %@ \n\n",card.expireDate];
+	
+	
+	
+	NSMutableString *comprobant=[[[NSMutableString alloc] init] autorelease];
+	[comprobant appendString:@"\n \n Distribuidora Liverpool S.A. de C.V. \n \n"];
+	[comprobant appendString:@"Mario Pani Num. 200 Col. Sta Fe. Deleg"];
+	[comprobant appendString:@"Cuajimalpa de Morelos C.P. 05109 Mexico, D.F."];
+	[comprobant appendString:@"TEL. 5268-3000 R.F.C DLI-931201-MI9 \n\n"];
+	[comprobant appendString:@"Por el presente PAGARE, me obligo a pagar "];
+	[comprobant appendString:@"incondicionalmente a la orden de distribuidora "];
+	[comprobant appendString:@"Liverpool SA de C.V. y/o del emisor de la "];
+	[comprobant appendString:@"tarjeta, en la ciudad de Mexico DF, o en "];
+	[comprobant appendString:@"cualquier otra que se me requiera, el dia ___ "];
+	[comprobant appendString:@"de ___ de ___ la cantidad de $_________."];
+	[comprobant appendString:@"El presente causara interes mensual del ____% "];
+	[comprobant appendString:@"sobre el importe de este pagare y en caso de "];
+	[comprobant appendString:@"incumplimiento, pagare ademas de un interes "];
+	[comprobant appendString:@"moratorio del ___% mensual en terminos del "];
+	[comprobant appendString:@"contrato suscrito.\n"];
+	[comprobant appendString:@"Algunos de los adeudos a su cargo han sido o podran "];
+	[comprobant appendString:@"ser cedidos a un fideicomiso\n \n\n\n"];
+	[comprobant appendString:@"\t ___________________\n"];
+	[comprobant appendString:@"\t       Acepto       \n\n"];
+	[comprobant appendFormat:@"TIENDA: %@ %@ \n \n",[Session getIdStore],[self generateDate]];
+	
+	
+	NSString *ticketString=[[NSString alloc] init];
+	ticketString=[ticketString stringByAppendingString:header];
+	ticketString=[ticketString stringByAppendingString:subHeader];
+	ticketString=[ticketString stringByAppendingString:products];
+	ticketString=[ticketString stringByAppendingString:footer];
+	[self WriteToPrinter:ticketString];
+
+	// ticket copy part
+	NSString *ticketStringComprobant=[[NSString alloc] init];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:headerCopyComprobant];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:productsComprobant];
+	ticketStringComprobant=[ticketStringComprobant stringByAppendingString:comprobant];
+	
+					[NSTimer scheduledTimerWithTimeInterval:8.0 
+													  target:self 
+													selector:@selector(printComprobant:) 
+													userInfo:ticketStringComprobant repeats:NO];
+	
+	//txtAProducts.text=ticketString;
+	
+	
+}
+-(void) printTicketMonedero
+{
+	NSMutableString *header=[[[NSMutableString alloc] init] autorelease];
+	
+	//tab settings 
+	[header appendString:@"\x1b\x44\x06\x16\x26\x36\x46\x56\x66\x76\x00"]; 
+	
+	//LOGO
+	//HEX	1B 66 00 0C
+	[header appendString:@"\t\x1b\x66\x00\x0c\n\n"]; //height
+	
+	//Center aligment
+	[header appendString:@"\x1b\x61\x01"];
+	
+	[header appendString:@" Distribuidora Liverpool S.A de C.V. \n"];
+	[header appendString:@" C. Mario Pani No. 200 \n"];
+	[header appendString:@" Col Santa Fe C.P. 05109 \n"];
+	[header appendString:@" Deleg. Cuajimalpa de Morelos D.F \n"];
+	[header appendString:@" Tel. 52.68.30.00 RFC:DLI-931201-MI9 \n"];
+	[header appendString:@"------------------------------------------ \n"];
+	//Left aligment
+	[header appendString:@"\x1b\x61\x00"];
+	
+	NSMutableString *subHeader=[[[NSMutableString alloc] init] autorelease];
+	//Center aligment
+	[subHeader appendString:@"\x1b\x61\x01"];
+	
+	[subHeader appendFormat:@"%@ \n",[Session getStore]];
+	[subHeader appendString:@" Vialidad de la Barranca #6 \n"];
+	[subHeader appendString:@" Col Ex Hacienda Jesus del Monte C.P. 52787 \n"];
+	[subHeader appendString:@" Huixquilucan \n"];
+	[subHeader appendString:@" Estado de Mexico \n"];
+	[subHeader appendString:@" Tel. 53.38.64.00 \n \n"];
+	[subHeader appendString:@"------------------------------------------ \n\n"];
+	
+	//Left aligment
+	[subHeader appendString:@"\x1b\x61\x00"];
+	
+	NSMutableString *products=[[[NSMutableString alloc] init] autorelease];
+	[products appendString:@"\t\tVENTA \n \n"];
+	[products appendString:@"TERM \t   DOCTO \tTDA \tVEND  \n"];
+	[products appendFormat:@"%@ \t   %@ \t%@ \t%@  \n \n",[Session getTerminal],[Session getDocTo],[Session getIdStore],[Session getUserName]];
+	[products appendFormat:@"\t ATENDIO:%@  \n \n",[Session getUName]];
+	// appending the productarray to an string format
+	
+	float total=0;
+	float totalDiscounts=0;
+	float totalAbonoMonedero=0;
+	for (FindItemModel *item in productList) {
+
+		[Tools calculateSuccesiveDiscounts:item];
+
+		[products appendFormat:@"%@\t     SECC %@\n ",item.description,item.department];
+		[products appendFormat:@"%@\t     %@\n ",item.barCode,item.price];
+		
+		for (Promotions *promo in item.discounts) {
+			//if the promotion is payment plan print the format . else print the format of percentage discount
+			if ([promo.promoInstallment length]>0||promo.promoType==1)  //print promotion installmetn
+			{	[products appendFormat:@"\t%@ %@ \n",[Tools calculateDiscountValuePercentage:item.price :promo.promoDiscountPercent] ,[promo promoDescription]];
+				totalAbonoMonedero+=[[Tools calculateDiscountValuePercentage:item.price :promo.promoDiscountPercent] floatValue];
+			}
+			else	
+			{	if (promo.promoType==3) //print promotion by key with %
+			{	
+				[products appendFormat:@"\t%@ %@%% \t%@- \n",[promo promoDescription],[promo promoDiscountPercent],[promo promoValue]];
+				totalDiscounts+=[promo.promoValue floatValue];
+				
+			}
+			else if(promo.promoType==4) //print promotion by key with fixed amount
+			{	
+				[products appendFormat:@"\t%@ $%@ \t%@- \n",[promo promoDescription],[promo promoDiscountPercent],[promo promoDiscountPercent]];
+				totalDiscounts+=[promo.promoDiscountPercent floatValue];
+				
+			}
+			}
+		}
+		[products appendString:@"\n"];
+		
+		total+=[item.price floatValue];
+	}
+	//calculate the total amount for ticket with discounts
+	total=total-totalDiscounts;
+	
+	NSMutableString *footer=[[[NSMutableString alloc] init] autorelease];
+	
+	
+	[footer appendFormat:@"\t\t TOTAL    %@ \n \n",[Tools amountCurrencyFormatFloat:total]];
+	//Center aligment
+	[footer appendString:@"\x1b\x61\x01"];
+	[footer appendFormat:@"%@\n \n",[self generateTextualAmountDescription:total]];
+	//Left aligment
+	[footer appendString:@"\x1b\x61\x00"];
+	[footer appendString:@"****************************************** \n \n \n"];
+	//[footer appendFormat:@"%@                 %@ \n",[self getPaymentType],[Tools amountCurrencyFormatFloat:total]];
+	
+	//MONEDERO DATA
+	NSString *totalS=[NSString stringWithFormat:@"%f",total];
+	NSString *totalAbonoMonederoS=[NSString stringWithFormat:@"%.02f",totalAbonoMonedero];
+	//NSString *monedero=[Session getMonederoAmount];
+	//NSString *saldoAnterior= [Tools calculateRestValueAmount:monedero :totalS];
+	NSString *saldoAnterior= [Session getMonederoAmount];
+	NSString *monedero= [Tools calculateRestValueAmount:saldoAnterior :totalS];
+
+	NSString *montoObtenido=totalAbonoMonederoS;
+	monedero=[Tools calculateAddUpValueAmount:monedero :montoObtenido];
+
+	
+	DLog(@"TICKET PART MONEDEROOBTENIDO:%@ , MON %:%@",montoObtenido,[Session getMonederoPercent]);
+	[footer appendFormat:@"%@           %@ \n\n\n",[self getCardNumberMaskFormat:card.cardNumber],[Tools amountCurrencyFormatFloat:total]];
+	
+	[footer appendFormat:@"Saldo Anterior\t  %@ \n",[Tools amountCurrencyFormat:saldoAnterior]];
+	[footer appendFormat:@"Monto Utilizado\t  %@ \n",[Tools amountCurrencyFormatFloat:total]];
+	[footer appendFormat:@"Monto Obtenido\t  %@ \n",[Tools amountCurrencyFormat:montoObtenido]];
+	[footer appendFormat:@"Saldo Actual\t  %@ \n\n",[Tools amountCurrencyFormat:monedero] ];
+
+	[Session setMonederoAmount:@""];
+	[Session setMonederoPercent:@""];
+	[Session setMonederoNumber:@""];
+	//----------------
+	
+	//Center aligment
+	[footer appendString:@"\x1b\x61\x01"];
+	[footer appendString:@"Gracias Por Su Visita!  \n \n"];
+	[footer appendFormat:@"%@ \n \n",[self generateDate]];
+	[footer appendString:@"liverpool.com.mx  \n"];	
+	[footer appendString:@"Centro de atencion telefonica\n"];
+	[footer appendString:@"01-800-713-5555 \n\n\n\n"];
+	//Left aligment
+	[footer appendString:@"\x1b\x61\x00"];
+	
+	//HEX 1D 6B m n d1....dn
+	[footer appendString:@"        "]; 
+	[footer appendString:@"\x1d\x68\x3c"]; //height
+	[footer appendString:@"\x1d\x77\x01"]; //width
+	[footer appendString:@"\x1d\x6b\x04"]; //command
+	[footer appendFormat:@"%@\x00 \n\n",[self generateTicketCodeBar]]; //data
+	[footer appendString:@"\n\n\n"];
+	
+	
+	NSString *ticketString=[[NSString alloc] init];
+	ticketString=[ticketString stringByAppendingString:header];
+	ticketString=[ticketString stringByAppendingString:subHeader];
+	ticketString=[ticketString stringByAppendingString:products];
+	ticketString=[ticketString stringByAppendingString:footer];
+	
+	[self WriteToPrinter:ticketString];
+	txtAProducts.text=ticketString;
+	[Session setStatus:CLOSE_SESSION];
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) loginScreen];
+
+	
+}
+-(void) printTicketBalance:(NSString*) balance
+{
+	NSMutableString *ticketString=[[[NSMutableString alloc] init] autorelease];
+	
+	
+	//tab settings 
+	[ticketString appendString:@"\x1b\x44\x06\x16\x26\x36\x46\x56\x66\x76\x00"]; 
+	
+	//LOGO
+	//HEX	1B 66 00 0C
+	[ticketString appendString:@"\t\x1b\x66\x00\x0c\n\n"]; //height
+	/**************** END OF SM-T300 COMMAND CONFIG ****************************************/
+	
+	//	[ticketString appendString:@"****************************************** \n"];
+	//[ticketString appendString:@"------------------------------------------ \n\n\n"];	
+	//[ticketString appendString:@"\t\tLiverpool \n"];
+	//[ticketString appendString:@"------------------------------------------ \n\n\n"];
+	//	[ticketString appendString:@"****************************************** \n\n\n"];
+	[ticketString appendString:@"\tConsulta de Saldo                   \n\n\n"];
+	//	[ticketString appendString:@"****************************************** \n\n\n"];
+	[ticketString appendString:@"------------------------------------------ \n\n\n"];
+	
+	[ticketString appendFormat:@"Cuenta :   %@\n\n",[card cardNumber]];
+	[ticketString appendFormat:@"\t%@ Saldo :  %@\n\n",[card cardType],balance];
+	[ticketString appendFormat:@"\t%@ \n \n",[self generateDate]];
+	//	[ticketString appendString:@"****************************************** \n\n\n"];
+	[ticketString appendString:@"------------------------------------------ \n\n\n"];
+	[ticketString appendFormat:@"Centro de Atencion Telefonica\n"];
+	[ticketString appendFormat:@"5262-9999 en el D.F. o al 01800-713-5555\n"];
+	[ticketString appendFormat:@"desde cualquier parte de la Republica sin costo\n"];
+	[ticketString appendFormat:@"Liverpool en Linea www.liverpool.com.mx\n\n\n"];
+	
+	/*
+	 //HEX 1D 6B m n d1....dn
+	 [ticketString appendString:@"\x1d\x68\x3c"]; //height
+	 [ticketString appendString:@"\x1d\x77\x02"]; //width
+	 [ticketString appendString:@"\x1d\x6b\x04"]; //command
+	 [ticketString appendFormat:@"%@\x00 \n\n",[self generateTicketCodeBar]]; //data
+	 [ticketString appendString:@"\n\n\n"];
+	 
+	 */
+	[self WriteToPrinter:ticketString];
+	txtAProducts.text=ticketString;
+	
+}
+-(NSString*) generateDate
+{
+	// Convert string to date object
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"EEE d/MMM/yyyy HH:mm"];
+	date = [[NSDate alloc] init];
+	NSString *dateString = [dateFormat stringFromDate:date];
+	dateString=[dateString uppercaseString];
+	[dateFormat release];
+	//[dateFormat setDateFormat:@"d/MM"];
+	//expireDate = [dateFormat stringFromDate:date]; 	
+	
+	NSData *stringData = [dateString dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES];
+	
+	NSString *dateStr = [[[NSString alloc] initWithData: stringData encoding: NSASCIIStringEncoding] autorelease];
+	return dateStr;
+}
+-(NSString*) generateTextualAmountDescription:(int) amount
+{
+	NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+	[formatter setNumberStyle: NSNumberFormatterSpellOutStyle];
+	NSLocale *locale = [[[NSLocale alloc] initWithLocaleIdentifier:@"es_ES"]autorelease];
+	[formatter setLocale:locale]; // Set locale if you want to use something other then the current one
+	NSString* numberString = [formatter stringFromNumber:[NSNumber numberWithInt: amount]];
+	numberString=[numberString uppercaseString];
+	numberString=[numberString stringByAppendingString:@" PESOS M.N."];
+	[formatter release];
+	return numberString;
+}
+
+-(NSString*) generateTicketCodeBar
+{
+	// Convert string to date object
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"ddMMyy"];
+	NSMutableString *ticketCodeBar = [NSMutableString stringWithString:[dateFormat stringFromDate:date]];
+	[dateFormat release];
+	DLog(@"1: %@",ticketCodeBar);
+	
+	
+	NSString* idStore=[Session getIdStore];
+	float floatIdStore=[idStore floatValue];
+	
+	NSString* terminal=[Session getTerminal];
+	float floatTerminal=[terminal floatValue];
+	
+	NSString* docto=[Session getDocTo];
+	float floatDocto=[docto floatValue];
+	
+	NSString* userName=[Session getUserName];
+	float floatUserName=[userName floatValue];
+	
+	[ticketCodeBar appendFormat:@"%03.0f",floatIdStore];
+	[ticketCodeBar appendFormat:@"%03.0f",floatTerminal];
+	[ticketCodeBar appendFormat:@"%04.0f",floatDocto];
+	//[ticketCodeBar appendString:@"0666"];
+	//[ticketCodeBar appendString:@"10793777"];
+	[ticketCodeBar appendFormat:@"%08.0f",floatUserName];
+	DLog(@"CODEBAR FINAL: %@",ticketCodeBar);
+
+	[date release];
+	return ticketCodeBar;
+	
+}
+-(NSString*) getAuthorizationNumber:(Card*) cardData
+{
+	DLog(@"getAuthorizationNumber : %@",[cardData authNumber]);
+	NSString *authLine=@"D@1\t AUTORIZACION  ";
+	if ([[cardData authNumber]length]>0) 
+	{
+		authLine=[authLine stringByAppendingString:[cardData authNumber]];
+		return authLine;
+	}
+	else
+		return @"";
+}
+-(void)WriteToPrinter:(NSString*) stringToPrint
+{
+	// NOTE: comment this method to avoid compiling errors in SIMULATION MODE
+	
+	if (![Tools validatePrinterConfig]) 
+		return;
+	
+	
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+	
+	NSData* myEncodedObject = [defaults objectForKey:@"programIPAddres"];
+	NSString* ipAddress = (NSString*)[NSKeyedUnarchiver unarchiveObjectWithData: myEncodedObject];
+	NSLog(@"ipAddress: %@", ipAddress);
+	
+	myEncodedObject = [defaults objectForKey:@"programPortSettings"];
+	NSString* portSettings = (NSString*)[NSKeyedUnarchiver unarchiveObjectWithData:myEncodedObject];
+	NSLog(@"portSettings: %@", portSettings);
+	
+	//stringToPrint = [NSString stringWithUTF8String:[stringToPrint cStringUsingEncoding:NSASCIIStringEncoding]];
+	//stringToPrint = [NSString stringWithUTF8String:stringToPrint];
+	NSLog(@"string: %@", stringToPrint);
+	
+	int dataSize = [stringToPrint length] + 1 + C_LineFeedx6_Size + C_AutoCutterFullCut_Size;
+	NSMutableData *dataToPrint = [NSMutableData dataWithCapacity:dataSize];
+	
+	[dataToPrint appendBytes:[stringToPrint UTF8String] length:[stringToPrint length]];
+	
+	if([portSettings isEqualToString:@"mini"])
+	{
+		[dataToPrint appendBytes:"\n" length:1];
+		[dataToPrint appendBytes:C_LineFeedx6 length:C_LineFeedx6_Size];
+		[dataToPrint appendBytes:C_AutoCutterFullCut length:C_AutoCutterFullCut_Size];
+	}
+	
+	NSString * portName = @"TCP:";
+	portName = [portName stringByAppendingString:ipAddress];
+	
+	Port * iOPort = [Port getPort:portName :portSettings :4000];
+	if(iOPort == NULL)
+	{
+		[Tools displayAlert:@"Error de Impresora" message:@"Open port error"];
+	}
+	else
+	{
+		@try {
+			int totalAmountWritten = 0;
+			while(totalAmountWritten < [dataToPrint length])
+			{
+				totalAmountWritten += [iOPort writePort:[dataToPrint mutableBytes] :totalAmountWritten :[dataToPrint length] - totalAmountWritten];
+			}
+		}
+		@catch (PortException * e) {
+			[Tools displayAlert:@"Error de Impresora" message:@"Write error"];
+		}
+		@finally {
+			[Port releasePort:iOPort];
+		}
+	}
+	[pool release];
+	
+}
+-(BOOL)GetOnlineStatus
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc]init];
+	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+	NSData* myEncodedObject = [defaults objectForKey:@"programIPAddres"];
+	NSString* ipAddress = (NSString*)[NSKeyedUnarchiver unarchiveObjectWithData: myEncodedObject];
+	
+	myEncodedObject = [defaults objectForKey:@"programPortSettings"];
+	NSString* portSettings = (NSString*)[NSKeyedUnarchiver unarchiveObjectWithData: myEncodedObject];
+	
+	if ([ipAddress length]==0) 
+		ipAddress=@"";
+	
+	if ([portSettings length]==0) 
+		portSettings=@"";
+	
+	NSString * portName = @"TCP:";
+	portName = [portName stringByAppendingString:ipAddress];
+	
+	Port * iOPort = [Port getPort:portName :portSettings :4000];
+	
+	if(iOPort == NULL)
+	{
+		[Tools displayAlert:@"Error de Impresora" message:@"Error en la configuracion del Puerto o impresora Apagada"];
+		return NO;
+	}
+	else 
+	{
+		@try {
+			if([iOPort getOnlineStatus] == SM_TRUE)
+			{
+				
+				return YES;
+			}
+			else
+			{
+				[Tools displayAlert:@"La impresora no tiene papel" message:@""];
+				return FALSE;
+			}
+		}
+		@catch (PortException * e) {			
+			[Tools displayAlert:@"Ocurrio un Error de Comunicacion Con la impresora" message:@""];
+			return FALSE;
+		}
+		@finally {
+			[Port releasePort:iOPort];
+		}
+	}
+	[pool release];
+	//[Tools stopActivityIndicator];
+
+}
+
+-(void) setPaymentType:(int) type
+{
+	switch (type) {
+		case 0:
+			pType=creditType;
+			break;
+		case 1:
+			pType=LPCType;
+			break;
+		case 2:
+			pType=dilisaType;
+			break;
+		case 3:
+			pType=monederoType;
+			break;
+		default:
+			break;
+	}
+}
+-(NSString*) getCardNumberMaskFormat:(NSString*) aCardNumber
+{
+	if (pType==monederoType) 
+		return [Tools maskMonederoNumber:aCardNumber];
+	else
+		return [Tools maskCreditCardNumber:aCardNumber];
+}
+-(NSString*) getPaymentType
+{
+	switch (pType) {
+		case creditType:
+			return [@"TARJETA "stringByAppendingString:[Session getBank]];
+			//return [@"CREDITO "];
+			break;
+		case LPCType:
+			return @"PREMIUM CARD";
+			break;
+		case dilisaType:
+			return @"DILISA";
+			break;
+		case monederoType:
+			return @"MONEDERO";
+			break;
+		default:
+			return @"";
+			break;
+	}
+}
+/*
+ // Override to allow orientations other than the default portrait orientation.
+ - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+ // Return YES for supported orientations.
+ return (interfaceOrientation == UIInterfaceOrientationPortrait);
+ }
+ */
+
+-(IBAction) removeTicketTestView
+{
+	//[self.view  removeFromSuperview];
+	//[self release];
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc. that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+- (void)dealloc {
+	//productList =nil;
+	[txtAProducts release];
+    [super dealloc];
+}
+
+
+@end

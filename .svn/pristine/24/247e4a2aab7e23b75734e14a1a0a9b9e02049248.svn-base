@@ -1,0 +1,218 @@
+//
+//  PaymentPlanViewController.m
+//  CardReader
+//
+//  Created by Gonet on 15/12/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "PaymentPlanViewController.h"
+#import "Promotions.h"
+#import "Styles.h"
+#import "CardReaderAppDelegate.h"
+
+@implementation PaymentPlanViewController
+@synthesize filteredPlanGroup;
+@synthesize promotionGroup;
+@synthesize aTableView;
+
+
+
+// The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+/*
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization.
+    }
+    return self;
+}
+*/
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+	DLog(@"PAYMENTPLANVIEWCONTROLLER :%@",filteredPlanGroup);
+    [super viewDidLoad];
+	
+	[filteredPlanGroup addObject:@"Presupuesto"]; // Cambio Ruben - 18/enero/2012
+	
+	[aTableView reloadData]; // Cambio Ruben - 18/enero/2012
+	[Styles bgGradientColorPurple:self.view];
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+	[self.navigationController setNavigationBarHidden:YES animated:NO]; // Cambio Ruben - 18/enero/2012
+
+}
+
+/*
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations.
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+*/
+
+
+//----------------------------------------
+//            TABLE VIEW MANAGEMENT
+//----------------------------------------
+#pragma mark -
+#pragma mark TABLE VIEW MANAGEMENT
+
+-(UITableViewCell *)tableView:(UITableView *)tableView 
+		cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+	
+	if (cell == nil) 
+	{
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+									   reuseIdentifier:@"Cell"]autorelease];
+	}else{//MPSA
+        for (UIView* subview in [cell.contentView subviews]) {
+			// if (subview.tag!=0) {
+			[subview removeFromSuperview];
+            //}
+        }
+    }
+	cell.textLabel.textColor=[UIColor whiteColor];
+	cell.textLabel.backgroundColor=[UIColor clearColor];
+	cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:14.0];
+	
+	
+	if ([[filteredPlanGroup objectAtIndex:indexPath.row] isKindOfClass:[Promotions class]]) { // Cambio Ruben - 18/enero/2012
+		Promotions *promo=[filteredPlanGroup objectAtIndex:indexPath.row];
+		
+		if ([[promo promoDescription]length]==0) 
+		{	NSString* description=[promo.promoDescriptionPrinter copy];
+			
+			description=[description stringByAppendingFormat:@" %@",([promo.promoBank length]>0 ? promo.promoBank : @"")];
+			[cell.textLabel setText:description];
+		}
+		else  
+		{	NSString* description=[promo.promoDescription copy];
+			description=[description stringByAppendingFormat:@" %@",([promo.promoBank length]>0 ? promo.promoBank : @"")];
+			[cell.textLabel setText:description];
+		}		[cell setUserInteractionEnabled:YES];
+		
+	}
+	else { // Cambio Ruben - 18/enero/2012
+		NSString* description=[filteredPlanGroup objectAtIndex:indexPath.row];
+		[cell.textLabel setText:description];
+	}
+
+	NSString *cellImage;
+	NSString *cellImageSelected;
+	if ([filteredPlanGroup count] == 1) {
+		cellImage = @"AloneCell";
+		cellImageSelected = @"AloneCellSelected";
+	}
+	else if (indexPath.row == 0) {
+		cellImage = @"TopCell";
+		cellImageSelected = @"TopCellSelected";
+	}
+	else if (indexPath.row == ([filteredPlanGroup count] -1)) {
+		cellImage = @"BottomCell";
+		cellImageSelected = @"BottomCellSelected";
+	}
+	else if (indexPath.row == ([filteredPlanGroup count] -2)) {
+		cellImage = @"CenterCell";
+		cellImageSelected = @"CenterCellSelected";
+	}
+	else {
+		cellImage = @"CenterCellSingle";
+		cellImageSelected = @"CenterCellSingleSelected";
+	}
+	
+	UIImage *imageNormal = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:cellImage ofType:@"png"]] ;
+	cell.backgroundView = [[[UIImageView alloc] init] autorelease];
+	((UIImageView *)cell.backgroundView).image = imageNormal;
+	((UIImageView *)cell.backgroundView).clipsToBounds=YES;
+	[Styles cornerView:((UIImageView *)cell.backgroundView)];
+	
+	UIImage *imageSelected = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:cellImageSelected ofType:@"png"]] ;	
+	cell.selectedBackgroundView = [[[UIImageView alloc] init] autorelease];
+	((UIImageView *)cell.selectedBackgroundView).image = imageSelected;
+	((UIImageView *)cell.selectedBackgroundView).clipsToBounds = YES;
+	[Styles cornerView:((UIImageView *)cell.selectedBackgroundView)];
+	
+	
+	return cell;
+}
+
+
+- (NSInteger)tableView:(UITableView *)table
+ numberOfRowsInSection:(NSInteger)section {
+	return [filteredPlanGroup count];
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return 35;
+}
+
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	
+	 //select a promotion from the list and save it.
+	 promotionIndex=[indexPath copy];  // Ruben
+	
+	// Cambio Ruben - 18/enero/2012
+	
+	if (indexPath.row == [filteredPlanGroup indexOfObject:[filteredPlanGroup lastObject]]) {
+		NSLog(@"Se eligio la ultima opcion");
+		[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) removePaymentPlanScreen];
+	}
+	else {
+		[self isPromoWithInstallment];
+	}
+	
+	// Cambio Ruben - 18/enero/2012
+
+	 
+	
+	
+}
+
+//if the promo has installments, show the next view 
+-(void) isPromoWithInstallment
+{
+	Promotions *promo=[filteredPlanGroup objectAtIndex:promotionIndex.row];
+	DLog(@"Promoinstallment: %@",promo.promoInstallment);
+	DLog(@"promotionGroup add %@",promotionGroup);
+	[promotionGroup addObject:promo];
+	if ([promo.promoInstallment length]>0) 
+		[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) installmentsScreen:promo];
+	else 
+		[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) promoScreen:promo];
+	
+}
+
+
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc. that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+
+- (void)dealloc {
+	DLog(@"dealloc paymentplanview");
+	//[filteredPlanGroup release];
+	[aTableView release];aTableView=nil;
+    [super dealloc];
+}
+
+
+@end

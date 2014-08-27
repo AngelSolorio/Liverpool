@@ -1,0 +1,52 @@
+//
+//  TicketGeneratorViewController.h
+//  CardReader
+//
+//  Created by Rubén Jacobo on 9/28/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "Card.h"
+
+typedef enum {
+	creditType,
+	LPCType,
+	dilisaType,
+	monederoType
+
+} paymentType;
+@interface TicketGeneratorViewController : UIViewController {
+
+	UITextView *txtAProducts;
+	NSArray *productList;
+	Card    *card;
+	paymentType pType;
+	NSDate *date;
+	NSMutableArray *cardArray;
+	NSMutableArray *promotionPlanArray;
+}
+
+@property (nonatomic,retain) IBOutlet	UITextView *txtAProducts;
+@property (nonatomic,assign)			NSArray *productList;
+@property (nonatomic,assign)			Card    *card;
+@property (nonatomic,assign)			NSMutableArray *cardArray;
+@property (nonatomic,assign)			NSMutableArray *promotionPlanArray;
+
+-(void) printTicket;
+-(void)WriteToPrinter:(NSString*) stringToPrint;
+-(NSString*) generateDate;
+-(IBAction) removeTicketTestView;
+-(NSString*) generateTextualAmountDescription:(int) amount;
+-(void) setPaymentType:(int) type;
+-(NSString*) getPaymentType;
+-(void) printTicketAirtime:(NSString*) phoneNumber;
+-(void) printTicketBalance:(NSString*) balance;
+-(NSString*) generateTicketCodeBar;
+-(void) printTicketMonedero;
+-(BOOL)GetOnlineStatus;
+-(NSString*) getCardNumberMaskFormat:(NSString*) aCardNumber;
+-(void) printTwoPaymentTicket;
+-(NSString*) getAuthorizationNumber:(Card*) cardData;
+
+@end

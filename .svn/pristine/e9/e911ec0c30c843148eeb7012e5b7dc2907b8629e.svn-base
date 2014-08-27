@@ -1,0 +1,50 @@
+//
+//  Card.h
+//  CardReader
+//
+//  Created by Gonet on 19/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+
+@interface Card : NSObject <NSCopying> {
+
+	NSString *track1;
+	NSString *track2;
+	NSString *track3;
+	NSString *authCode;
+	NSString *cardNumber;
+	NSString *cardType;
+	NSString *expireDate;
+	NSString *userName;
+	NSString *monederoNumber;
+	NSString *amountToPay;
+	NSString *planId;
+	NSString *planInstallment;
+	NSString *planDescription;
+	NSString *authNumber;
+
+	
+}
+@property (nonatomic,retain) 	NSString *track1;
+@property (nonatomic,retain) 	NSString *track2;
+@property (nonatomic,retain) 	NSString *track3;
+@property (nonatomic,retain) 	NSString *authCode;
+@property (nonatomic,retain) 	NSString *cardNumber;
+@property (nonatomic,retain) 	NSString *cardType;
+@property (nonatomic,retain) 	NSString *expireDate;
+@property (nonatomic,retain) 	NSString *userName;
+@property (nonatomic,retain) 	NSString *monederoNumber;
+@property (nonatomic,retain) 	NSString *amountToPay;
+@property (nonatomic,retain) 	NSString *planId;
+@property (nonatomic,retain) 	NSString *planInstallment;
+@property (nonatomic,retain) 	NSString *planDescription;
+@property (nonatomic,retain)	NSString *authNumber;
+
+
+
+
+
+@end

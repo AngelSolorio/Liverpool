@@ -1,0 +1,26 @@
+//
+//  Seller.h
+//  CardReader
+//
+//  Created by Gonet on 20/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+
+@interface Seller : NSObject {
+
+	
+	NSString *userName;
+	NSString *password;
+	NSString *name;
+
+}
+
+@property (nonatomic,retain) 	NSString *userName;
+@property (nonatomic,retain) 	NSString *password;
+@property (nonatomic,retain) 	NSString *name;
+
+
+@end

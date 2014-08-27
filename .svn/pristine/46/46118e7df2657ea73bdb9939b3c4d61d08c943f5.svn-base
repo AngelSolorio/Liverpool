@@ -1,0 +1,43 @@
+//
+//  FindItemModel.h
+//  CardReader
+//
+//  Created by Gonet on 10/08/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+
+@interface FindItemModel : NSObject {
+
+	NSString *barCode;
+	NSString *brand;
+	NSString *department;
+	NSString *generic;
+	NSString *itemCount;
+	NSString *itemType;
+	NSString *lineType;
+	NSString *price;
+	NSString *description;
+	BOOL	  promo;
+	NSMutableArray	 *discounts;
+
+}
+@property (nonatomic, retain) 	NSString *barCode;
+@property (nonatomic, retain) 	NSString *brand;
+@property (nonatomic, retain) 	NSString *department;
+@property (nonatomic, retain) 	NSString *generic;
+@property (nonatomic, retain) 	NSString *itemCount;
+@property (nonatomic, retain)	NSString *itemType;
+@property (nonatomic, retain)	NSString *lineType;
+@property (nonatomic, retain)	NSString *price;
+@property (nonatomic, retain)	NSString *description;
+@property (nonatomic, retain)	NSMutableArray	 *discounts;
+@property (nonatomic)			BOOL	  promo;
+
+
+
+
+
+@end

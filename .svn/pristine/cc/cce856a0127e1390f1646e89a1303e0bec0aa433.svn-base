@@ -1,0 +1,25 @@
+//
+//  EmployeeSaleViewController.h
+//  CardReader
+//
+//  Created by Gonet on 06/12/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "LineaSDK.h"
+
+
+@interface EmployeeSaleViewController : UIViewController<LineaDelegate> {
+	Linea                       *scanDevice;
+	UITextField					*txtCardNumber;
+	UIButton					*btnOk;
+}
+@property (nonatomic,retain) IBOutlet UITextField	*txtCardNumber;
+@property (nonatomic,retain) IBOutlet UIButton		*btnOk;
+
+-(IBAction) exitEmployeeSale;
+-(void) showScanItemView;
+-(IBAction) validateManualCardNumber;
+
+@end

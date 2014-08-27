@@ -1,0 +1,48 @@
+//
+//  ItemDetailViewController.h
+//  CardReader
+//
+//  Created by Gonet on 31/08/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "FindItemModel.h"
+
+@interface ItemDetailViewController : UIViewController <UITableViewDelegate>{
+
+	UILabel		*lblProductName;
+	UILabel		*lblBarcode;
+	UILabel		*lblPrice;
+	UILabel		*lblDepartment;
+	UILabel		*lblBgDepartment;
+	UILabel		*lblBgDiscount;
+	UILabel		*lblDiscount;
+	UIButton	*btnDiscount;
+	UIButton	*btnPromotions;
+	UITableView	*aTableView;
+	FindItemModel *itemModel;
+	UILabel     *lblBackground;
+	
+}
+
+@property(nonatomic, retain)	IBOutlet	UILabel		*lblProductName;
+@property(nonatomic, retain)	IBOutlet	UILabel		*lblBarcode;
+@property(nonatomic, retain)	IBOutlet	UILabel		*lblPrice;
+@property(nonatomic, retain)	IBOutlet	UILabel		*lblDepartment;
+@property(nonatomic, retain)	IBOutlet	UILabel		*lblBgDiscount;
+@property(nonatomic, retain)	IBOutlet	UILabel		*lblDiscount;
+@property(nonatomic, retain)	IBOutlet	UILabel		*lblBgDepartment;
+@property(nonatomic, retain)	IBOutlet	UIButton	*btnDiscount;
+@property(nonatomic, retain)	IBOutlet	UIButton	*btnPromotions;
+
+@property(nonatomic, retain)	IBOutlet	UITableView	*aTableView;
+@property(nonatomic, assign)				FindItemModel *itemModel;
+@property(nonatomic, retain)	IBOutlet	UILabel     *lblBackground;
+
+-(void) displayItemInfo:(FindItemModel*) itemModel;
+-(IBAction) promotionScreen;
+-(IBAction) manualDiscountScreen;
+
+
+@end

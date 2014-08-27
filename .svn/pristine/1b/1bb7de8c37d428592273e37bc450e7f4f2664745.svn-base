@@ -1,0 +1,259 @@
+//
+//  ItemDetailViewController.m
+//  CardReader
+//
+//  Created by Gonet on 31/08/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "ItemDetailViewController.h"
+#import "Styles.h"
+#import "CardReaderAppDelegate.h"
+#import "Promotions.h"
+#import "Tools.h"
+#import "ProjectConstants.h"
+
+@implementation ItemDetailViewController
+@synthesize lblProductName,lblBarcode,lblPrice,lblDepartment,lblBgDepartment,lblBgDiscount;
+@synthesize btnDiscount,btnPromotions,itemModel,aTableView,lblDiscount,lblBackground;
+// The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+/*
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization.
+    }
+    return self;
+}
+*/
+
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+	//testArray=[NSMutableArray arrayWithObjects:@"Promocion verano 20%",@"Venta Nocturna 10%",@"Promocion por tecla 5%",nil];
+	//[testArray retain];
+	aTableView.backgroundColor=[UIColor clearColor];
+	aTableView.allowsSelection=NO;
+	self.title=@"Producto";
+	[Styles bgGradientColorPurple:self.view];
+	[Styles cornerView:lblBgDiscount];
+	[Styles cornerView:lblBgDepartment];
+	/*[Styles cornerView:lblProductName];
+	[Styles cornerView:lblBarcode];
+	[Styles cornerView:lblPrice];
+	[Styles cornerView:lblDepartment];*/
+	
+	[Styles purpleLabelBackground:lblProductName];
+	[Styles purpleLabelBackground:lblBarcode];
+	[Styles purpleLabelBackground:lblPrice];
+	[Styles purpleLabelBackground:lblDepartment];
+	[Styles purpleLabelBackground:lblBgDiscount];
+	[Styles purpleLabelBackground:lblDiscount];
+	[Styles cornerView:lblBackground];
+	
+	[aTableView reloadData];
+    [super viewDidLoad];
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+	[aTableView reloadData];
+	[self displayItemInfo:itemModel];
+	[super viewWillAppear:animated];
+}
+/*
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations.
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+*/
+
+
+//----------------------------------------
+//            TABLE VIEW MANAGEMENT
+//----------------------------------------
+#pragma mark -
+#pragma mark TABLE VIEW MANAGEMENT
+-(NSString *)tableView:(UITableView *)tableView
+titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return NSLocalizedString(@"¿Borrar?", @"Erase confirmation");	
+}
+-(UITableViewCell *)tableView:(UITableView *)tableView 
+		cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+	
+	if (cell == nil) 
+	{
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+									   reuseIdentifier:@"Cell"]autorelease];
+	}else{//MPSA
+        for (UIView* subview in [cell.contentView subviews]) {
+			// if (subview.tag!=0) {
+			[subview removeFromSuperview];
+            //}
+        }
+    }
+	cell.textLabel.textColor=[UIColor whiteColor];
+	cell.textLabel.backgroundColor=[UIColor clearColor];
+	cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:14.0];
+	
+	NSString *cellImage;
+	NSString *cellImageSelected;
+	if ([itemModel.discounts count] == 1) {
+		cellImage = @"AloneCell";
+		cellImageSelected = @"AloneCellSelected";
+	}
+	else if (indexPath.row == 0) {
+		cellImage = @"TopCell";
+		cellImageSelected = @"TopCellSelected";
+	}
+	else if (indexPath.row == ([itemModel.discounts count] -1)) {
+		cellImage = @"BottomCell";
+		cellImageSelected = @"BottomCellSelected";
+	}
+	else if (indexPath.row == ([itemModel.discounts count] -2)) {
+		cellImage = @"CenterCell";
+		cellImageSelected = @"CenterCellSelected";
+	}
+	else {
+		cellImage = @"CenterCellSingle";
+		cellImageSelected = @"CenterCellSingleSelected";
+	}
+
+	UIImage *imageNormal = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:cellImage ofType:@"png"]] ;
+	cell.backgroundView = [[[UIImageView alloc] init] autorelease];
+	((UIImageView *)cell.backgroundView).image = imageNormal;
+	((UIImageView *)cell.backgroundView).clipsToBounds=YES;
+	[Styles cornerView:((UIImageView *)cell.backgroundView)];
+	
+	UIImage *imageSelected = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:cellImageSelected ofType:@"png"]] ;	
+	cell.selectedBackgroundView = [[[UIImageView alloc] init] autorelease];
+	((UIImageView *)cell.selectedBackgroundView).image = imageSelected;
+	((UIImageView *)cell.selectedBackgroundView).clipsToBounds = YES;
+	[Styles cornerView:((UIImageView *)cell.selectedBackgroundView)];
+	
+	
+	Promotions *promo=[itemModel.discounts objectAtIndex:indexPath.row];
+	NSString *discountDescription;
+	if ([promo.promoDiscountPercent length]!=0) 
+		if (promo.promoType==3) //promo % discount
+			discountDescription=[NSString stringWithFormat:@"%@%% %@",promo.promoDiscountPercent,promo.promoDescription];
+		if (promo.promoType==4)  //promo $ fixed amount
+			discountDescription=[NSString stringWithFormat:@"$%@ %@",promo.promoDiscountPercent,promo.promoDescription];
+	
+	else
+		//promos already have the number of mounts ALERT
+		//discountDescription=[NSString stringWithFormat:@"%@ MESES %@",promo.promoInstallmentSelected,promo.promoDescription];
+		if ([promo.promoDescription length]>0) 
+			discountDescription=[NSString stringWithFormat:@"%@",promo.promoDescription];
+		else
+			discountDescription=[NSString stringWithFormat:@"%@",promo.promoDescriptionPrinter];
+
+
+	[cell.textLabel setText:discountDescription];
+	return cell;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView 
+numberOfRowsInSection:(NSInteger)section
+{
+	return [itemModel.discounts count];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return 35;
+}
+-(void)tableView:(UITableView *)tableView 
+commitEditingStyle:(UITableViewCellEditingStyle)editingStyle 
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (editingStyle == UITableViewCellEditingStyleDelete) {
+		
+		[itemModel.discounts removeObjectAtIndex:indexPath.row];
+		
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+						 withRowAnimation:UITableViewRowAnimationFade];
+		[tableView reloadData];
+		
+		if ([itemModel.discounts count]>0) 
+			[self displayItemInfo:itemModel];
+		else 
+			lblDiscount.text=@"";
+	}
+	
+	if ([tableView numberOfRowsInSection:indexPath.section] == 0) {
+			
+		itemModel.promo=FALSE;	
+	}
+	
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+}
+
+-(void) displayItemInfo:(FindItemModel*) item
+{
+	itemModel=item;
+	lblPrice.text=[Tools amountCurrencyFormat:itemModel.price];
+	lblBarcode.text=itemModel.barCode ;
+	lblProductName.text=itemModel.description ;
+	lblDepartment.text=itemModel.department;
+	
+	if ([itemModel.discounts count]>0) {
+		
+		if ([[itemModel.discounts objectAtIndex:0] promoType]==3) {
+			lblDiscount.text=[[itemModel.discounts objectAtIndex:0] promoDiscountPercent];
+
+		}
+		if ([[itemModel.discounts objectAtIndex:0] promoType]==4) {
+			lblDiscount.text=[[itemModel.discounts objectAtIndex:0] promoDiscountPercent];
+			
+		}
+	}
+	[aTableView reloadData];
+}
+-(IBAction) promotionScreen
+{
+	//[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) itemPromotionScreen:itemModel];
+
+}
+-(IBAction) manualDiscountScreen
+{
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) itemDiscountScreen:itemModel];
+
+}
+
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc. that aren't in use.
+}
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+- (void)dealloc {
+	[lblProductName release];lblProductName=nil;
+	[lblBarcode release];lblBarcode=nil;
+	[lblPrice release];lblPrice=nil;
+	[lblDepartment release];lblDepartment=nil;
+	[lblBgDepartment release];lblBgDepartment=nil;
+    [lblBgDiscount release];lblBgDiscount=nil;
+	[btnDiscount release]; btnDiscount=nil;
+	[btnPromotions release];btnPromotions=nil;
+	[aTableView release]; aTableView=nil;
+	[lblDiscount release]; lblDiscount=nil;
+	itemModel =nil;
+	[lblBackground release], lblBackground = nil;
+	[super dealloc];
+}
+
+
+@end

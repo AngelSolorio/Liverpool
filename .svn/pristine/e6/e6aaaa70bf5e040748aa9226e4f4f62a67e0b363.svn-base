@@ -1,0 +1,68 @@
+//
+//  ScanViewController.h
+//  CardReader
+//
+//  Created by Raúl Horacio Valencia Tenorio on 7/13/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "LineaSDK.h"
+#import "MATCGlossyButton.h"
+#import "LiverPoolRequest.h"
+
+@class FindItemModel;
+@interface ScanViewController : UIViewController 
+								<UITableViewDataSource, UITableViewDelegate,
+								 LineaDelegate,WsCompleteDelegate,UITextFieldDelegate>
+{
+	IBOutlet UITableView        *aTableView;
+	IBOutlet UITextView         *textDescription;
+	IBOutlet UITextField		*txtSKUManual;
+	IBOutlet UIButton			*btnScan;
+	IBOutlet UIButton			*btnPay;
+	//IBOutlet UIBarButtonItem    *barButtonLeft;
+	IBOutlet UIBarButtonItem    *barButtonRight;
+	Linea                       *scanDevice;
+
+	NSMutableArray              *tableData;
+	NSMutableArray				*productList;
+	NSMutableString             *status;
+	NSMutableString             *debug;
+	float                         total;
+	int							selectedItemIndex;
+}
+
+@property (retain, nonatomic) IBOutlet UITextView        *textDescription;
+@property (retain, nonatomic) IBOutlet UITextField	 *txtSKUManual;
+@property (retain, nonatomic) IBOutlet UIButton				*btnScan;
+@property (retain, nonatomic) IBOutlet UIButton			 *btnPay;
+//@property (retain, nonatomic) IBOutlet UIBarButtonItem   *barButtonLeft;
+@property (retain, nonatomic) IBOutlet UIBarButtonItem   *barButtonRight;
+@property (retain, nonatomic) IBOutlet UITableView       *aTableView;
+@property (retain, nonatomic)		   NSMutableArray    *tableData;
+
+//-(void)designTweaks;
+-(IBAction)startScanBarCode:(id)sender;
+-(IBAction)stopScanBarCode:(id)sender;
+-(IBAction)payItems:(id)sender;
+-(IBAction) logout;
+-(void)connectionState:(int)state;
+-(void)enableCharging;
+-(void)updateBattery;
+//-(void)displayAlert:(NSString *)title 
+//			message:(NSString *)message;
+-(void)setBarbuttonImage:(int)imageToLoad;
+//-(void)turnOnEditing;
+//-(void)turnOffEditing;
+-(void)totalAddition:(id)object;
+//-(void)setDataIntoArray:(NSString *)barCode;
+-(void)setDataIntoArray:(FindItemModel *)itemObject;
+-(void) findItemRequestParsing:(NSData*) data;
+-(void) startRequest:(NSString*) barCode;
+-(NSString*) displayPromotionDiscount:(int) index;
+-(void) applyPromotionsToProducts:(FindItemModel*) aItemWithPromo;
+-(void) isSKUSameSection:(FindItemModel*) aItemWithPromo;
+-(void) removeProductsFromList;
+
+@end

@@ -1,0 +1,233 @@
+//
+//  Session.m
+//  CardReader
+//
+//  Created by Gonet on 30/08/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "Session.h"
+
+
+@implementation Session
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Initialization code here.
+	}
+    
+    return self;
+}
++(void)setPrinterName:(NSString*) aPrinterName
+{
+	[printerName release];
+	printerName=[aPrinterName copy];
+}
++(NSString*)getPrinterName
+{
+	return printerName;
+}
+
++(void) setUserName:(NSString*) aUserName
+{
+	[user release];
+	user=[aUserName copy];
+}
++(NSString*)getUserName
+{
+	return user;
+}
++(void) setPassword:(NSString*) aPassword
+{
+	[password release];
+	password=[aPassword copy];
+}
++(NSString*)getPassword
+{
+	return password;
+}
+
++(void) setTerminal:(NSString*) aTerminal{
+	[terminal release];
+	terminal= [aTerminal copy];
+}
++(NSString*)getTerminal{
+	return terminal;
+}
++(void) setStore:(NSString*) aStore{
+	[store release];
+	store=[aStore copy];
+}
++(NSString*)getStore{
+	return store;
+}
++(void) setIdStore:(NSString*) aIdStore{
+	[idStore release];
+	idStore=[aIdStore copy];
+}
++(NSString*)getIdStore{
+	return idStore;
+}
++(void) setDocTo:(NSString*) adocTo
+{
+	[docTo release];
+	docTo=[adocTo copy];
+
+}
++(NSString*)getDocTo
+{
+	return docTo;
+
+}
++(void) setMonederoNumber:(NSString*) amonederoNumber
+{
+	[monederoNumber release];
+	monederoNumber=[amonederoNumber copy];
+	
+}
++(NSString*)getMonederoNumber
+{
+	return monederoNumber;
+	
+}
++(void) setMonederoAmount:(NSString*) amonederoAmount
+{
+	[monederoAmount release];
+	monederoAmount=[amonederoAmount copy];
+	
+}
++(NSString*)getMonederoAmount
+{
+	return monederoAmount;
+	
+}
++(void) setMonederoPercent:(NSString*) amonederoPercent;
+{
+	[monederoPercentage release];
+	monederoPercentage=[amonederoPercent copy];
+	
+}
++(NSString*)getMonederoPercent;
+{
+	return monederoPercentage;
+	
+}
++(void) setUName:(NSString*) aName;
+{
+	[name release];
+	name=[aName copy];
+	
+}
++(NSString*)getUName
+{
+	return name;
+	
+}
++(void) setMonthyInterest:(NSString*) aInterest
+{
+	[monthyInterest release];
+	monthyInterest=[aInterest copy];
+	
+}
++(NSString*)getMonthyInterest
+{
+	return monthyInterest;
+	
+}
++(void) setStatus:(Status) aStatus
+{
+
+	status=aStatus;
+	NSLog(@"Status actual %d ",status);
+}
++(Status) getStatus
+{
+	NSLog(@"Status actual %d ",status);
+	return status;
+}
++(void) setBank:(NSString*)aBank{
+	[bank release];
+	bank=[aBank copy];
+
+}
++(NSString*)getBank{
+	return bank;
+}
++(void) setIsEmployeeSale:(BOOL) flag
+{
+	isEmployeeSale=flag; 
+}
++(BOOL) getIsEmployeeSale
+{
+	return isEmployeeSale;
+}
++(void) setIndexPromoGroup:(int)aIndexPromoGroup
+{
+	indexPromoGroup=aIndexPromoGroup;
+
+}
++(int) getIndexPromoGroup
+{
+	return indexPromoGroup;
+}
+
++(void) setPlanId:(NSString*) aPlanId
+{
+	[planId release];
+	planId=[aPlanId copy];
+}
++(NSString*)getPlanId
+{
+	return planId;
+}
++(void) setPlanInstallment:(NSString*) aPlanInstallment;
+{
+	[planInstallment release];
+	planInstallment=[aPlanInstallment  copy];
+}
+
++(NSString*)getPlanInstallment
+{
+	return planInstallment;
+}
++(void) setPlanDescription:(NSString*) aPlanDescription;
+{
+	[planDescription release];
+	planDescription=[aPlanDescription  copy];
+}
++(NSString*)getPlanDescription;
+{
+	return planDescription;
+}
++(void) setEmployeeAccount:(NSString*) aEmployeeAccount
+{
+	[employeeAccount release];
+	employeeAccount=[aEmployeeAccount copy];
+	
+}
++(NSString*)getEmployeeAccount
+{
+	return employeeAccount;
+	
+}
+-(void) dealloc
+{
+	[planDescription release];
+	[employeeAccount release];
+	[monthyInterest release];
+	[name release];
+	[printerName release];
+	[user release];	
+	[password release];	
+	[terminal release];
+	[idStore release];
+	[store release];
+	[docTo release];
+	[monederoNumber release];
+	[monederoAmount release];
+	[monederoPercentage release];
+
+	[super	dealloc];
+}
+@end

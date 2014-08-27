@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>62B75AE9-2772-416E-99F1-B358FC18544E</string>
+	<key>IDESourceControlProjectName</key>
+	<string>CardReader</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
+		<string>https://glpos.plan.io/svn/glpos/CardReaderLiverpool</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>CardReader.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
+		<string>https://glpos.plan.io/svn/glpos</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://glpos.plan.io/svn/glpos/CardReaderLiverpool/CardReader.xcodeproj</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>66989A6C-2247-4E75-A4FB-D9484830B6FA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>66989A6C-2247-4E75-A4FB-D9484830B6FA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Liverpool VillaHermosa</string>
+		</dict>
+	</array>
+</dict>
+</plist>

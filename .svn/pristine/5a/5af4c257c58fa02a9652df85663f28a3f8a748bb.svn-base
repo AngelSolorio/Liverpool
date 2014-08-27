@@ -1,0 +1,54 @@
+//
+//  Promotions.m
+//  CardReader
+//
+//  Created by Gonet on 02/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "Promotions.h"
+
+
+@implementation Promotions
+@synthesize promoDescription,promoDiscountPercent;
+@synthesize promoType,promoDescriptionPrinter,promoAplicationMethod;
+@synthesize promoBaseAmount;
+@synthesize promoMagnitude;
+@synthesize promoQty;
+@synthesize promoValue;
+@synthesize promoProrationMethod;
+@synthesize promoTypeBenefit;
+@synthesize promoInstallment;
+@synthesize promoInstallmentSelected; 
+@synthesize header;
+@synthesize planId;
+@synthesize promoTypeMonedero;
+@synthesize promoPrefixs;
+@synthesize	promoExcludePrefixs;
+@synthesize promoTender;
+@synthesize promoBank;
+
+-(void) dealloc
+{
+	[promoBank release];
+	[promoTender release];	
+	[promoPrefixs release];
+	[promoExcludePrefixs release];
+	[promoTypeMonedero release];
+	[promoAplicationMethod release];
+	[promoBaseAmount release];
+	[promoMagnitude release];
+	[promoQty release];
+	[promoValue release];
+	[promoProrationMethod release];
+	[promoDescription release];
+	[promoDiscountPercent release];
+	[promoDescriptionPrinter release];
+	[promoTypeBenefit release];
+	[promoInstallment release];
+	[promoInstallmentSelected release];
+	[header release];
+	[planId release];
+	[super dealloc];
+}
+@end

@@ -1,0 +1,983 @@
+//
+//  Tools.m
+//  CardReader
+//
+//  Created by Eduardo Urias on 7/18/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "Tools.h"
+#import <QuartzCore/QuartzCore.h>
+#import "Base64.h"
+#import "SignPrintView.h"
+#import "Session.h"
+#import "Promotions.h"
+@implementation Tools
+
+#define NUMBERS @"0123456789."
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Initialization code here.
+    }
+    
+    return self;
+}
+
++(NSInteger)string:(NSString*)actual indexOf:(NSString*)buscado{
+    NSInteger p=-1;
+    NSRange textRange;
+    textRange =[actual rangeOfString:buscado];
+    
+    if(textRange.location != NSNotFound)
+    {
+        //Does contain the substring
+        p=textRange.location;
+    }
+    DLog(@"Index %d",p);
+    return p;
+}
+
++(UIImage*)captureScreen:(UIView*) aView
+{
+	//CGSize viewSize=aView.frame.size;
+	//viewSize.height=416;
+	UIGraphicsBeginImageContext(aView.frame.size);
+	[aView.layer renderInContext:UIGraphicsGetCurrentContext()];
+	UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	return viewImage;
+}
+
+/*+(NSMutableData*)outputPDF:(UIView*) aView
+{
+    NSMutableData* outputData = [[NSMutableData alloc] init];
+    CGDataConsumerRef dataConsumer = CGDataConsumerCreateWithCFData((CFMutableDataRef)outputData);
+    CFMutableDictionaryRef attrDictionary = NULL;    
+    attrDictionary = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CFDictionarySetValue(attrDictionary, kCGPDFContextTitle, @"My Awesome Document");
+    CGContextRef pdfContext = CGPDFContextCreate(dataConsumer, NULL, attrDictionary); 
+    CFRelease(dataConsumer);
+    CFRelease(attrDictionary);
+    UIImage* myUIImage = [Tools captureScreen:aView];
+    CGImageRef pageImage = [myUIImage CGImage];
+    CGPDFContextBeginPage(pdfContext, NULL);
+    CGContextDrawImage(pdfContext, CGRectMake(200, 200, [myUIImage size].width, [myUIImage size].height), pageImage);
+    CGPDFContextEndPage(pdfContext);
+    CGPDFContextClose(pdfContext);
+    CGContextRelease(pdfContext);   
+    //NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    //NSString* documentsDirectory = [paths objectAtIndex:0];
+   // NSString* appFile = [documentsDirectory stringByAppendingPathComponent:@"tmp.pdf"];
+   // [outputData writeToFile:appFile atomically:YES];
+	return outputData;
+}
+*/
++(UIImage*)captureSign:(UIView*) aView
+{
+	SignPrintView *signView;
+	for (UIView *view in [aView subviews]) {
+		if ([view isKindOfClass:[SignPrintView class]])
+			signView=(SignPrintView*) view;
+	}
+	
+	[signView.clearButton setHidden:YES];
+	[signView.okButton setHidden:YES];
+
+	CGSize viewSize=signView.frame.size;
+	UIGraphicsBeginImageContext(viewSize);
+	[signView.layer renderInContext:UIGraphicsGetCurrentContext()];
+	UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	
+	[signView.clearButton setHidden:NO];
+	[signView.okButton setHidden:NO];
+
+	return viewImage;
+}
++(void)displayAlert:(NSString *)title 
+			message:(NSString *)message
+{
+	[self enableApp];
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title 
+													message:message 
+												   delegate:nil 
+										  cancelButtonTitle:@"Aceptar" 
+										  otherButtonTitles:nil];
+	[alert show];
+	[alert release];
+	
+}
++(void) startActivityIndicator:(UIView*) aView
+{
+	bgActivity=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 120, 80)];
+	[self disableApp];
+	bgActivity.center=aView.center;
+	bgActivity.backgroundColor=[UIColor blackColor];
+	bgActivity.alpha=.8;
+	[[bgActivity layer] setCornerRadius:8.0f];
+	[[bgActivity layer] setMasksToBounds:YES];
+	[[bgActivity layer] setBorderWidth:0.2f];
+	
+	UILabel *lblLoading=[[UILabel alloc] initWithFrame:CGRectMake(20, 55, 85, 20)];
+	lblLoading.text=@"Procesando...";
+	lblLoading.adjustsFontSizeToFitWidth=YES; 
+	lblLoading.backgroundColor=[UIColor clearColor];
+	lblLoading.textColor=[UIColor whiteColor];
+	
+	[bgActivity addSubview:lblLoading];
+	[aView addSubview:bgActivity];
+	[lblLoading release];
+	[bgActivity release];
+	
+	activityIndicator=[[UIActivityIndicatorView alloc]
+					   initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+	activityIndicator.center=aView.center;
+	[aView addSubview:activityIndicator];
+	[activityIndicator startAnimating];
+	[activityIndicator release];
+}
++(void) stopActivityIndicator
+{
+	NSLog(@"EJECUTANDO stopActivityIndicator");
+	if (activityIndicator) {
+		NSLog(@"EJECUTANDO setUserInteractionEnabled para bgActivity");
+		[bgActivity setUserInteractionEnabled:YES];
+		[activityIndicator stopAnimating];
+		[activityIndicator removeFromSuperview];
+		[bgActivity removeFromSuperview];
+		activityIndicator = nil;
+		
+		bgActivity = nil;
+	}
+	
+	[self enableApp];
+}
++(NSString*)convertImageToBase64String:(UIImage*) aImage
+{
+	NSData *imageData=UIImageJPEGRepresentation(aImage,0.5); 
+	NSString *encodedImageData=[Base64 encode:imageData];
+	return encodedImageData;
+}
++(BOOL) isValidNumber:(NSString *) string
+{
+	NSCharacterSet *cs;
+	NSString *filtered;
+	cs = [[NSCharacterSet characterSetWithCharactersInString:NUMBERS] invertedSet];
+	filtered = [[string componentsSeparatedByCharactersInSet:cs] componentsJoinedByString:@""];
+	
+	if ([string isEqualToString:filtered]) {
+		return YES;
+	}else {
+		return NO;
+	}
+	[filtered release];
+}
++(BOOL) confirmPhoneValidation:(UITextField*) txtFirstNumber :(UITextField*) txtSecondNumber
+{
+	NSString* fstNumber=txtFirstNumber.text;
+	NSString* sndNumber=txtSecondNumber.text;
+		
+	if ([fstNumber isEqualToString:sndNumber])
+	{
+		CALayer* layer=[txtFirstNumber layer];
+		layer.borderColor=[[UIColor clearColor]CGColor];
+		
+		layer=[txtSecondNumber layer];
+		layer.borderColor=[[UIColor clearColor]CGColor];
+		return YES;
+	}
+	else {
+		CALayer* layer=[txtFirstNumber layer];
+		layer.borderColor=[[UIColor redColor]CGColor];
+		layer.borderWidth=2;
+		layer.cornerRadius=5;
+		
+		layer=[txtSecondNumber layer];
+		layer.borderColor=[[UIColor redColor]CGColor];
+		layer.borderWidth=2;
+		layer.cornerRadius=5;
+		return NO;
+	}
+
+}
+
++(BOOL) isTextFieldEmpty:(UITextField*) theTextfield
+{
+	if ([theTextfield.text length]==0) {
+		
+		CALayer* layer=[theTextfield layer];
+		layer.borderColor=[[UIColor redColor]CGColor];
+		layer.borderWidth=2;
+		layer.cornerRadius=5;
+		
+		return YES;
+	}
+	else {
+		CALayer* layer=[theTextfield layer];
+		layer.borderColor=[[UIColor clearColor]CGColor];
+		return NO;
+	}
+
+}
+/*+(void) loadPrinter
+{
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); 
+    NSString *documentsDirectory = [paths objectAtIndex:0]; 
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"Printers.plist"]; NSFileManager *fileManager = [NSFileManager defaultManager];
+	
+    if (![fileManager fileExistsAtPath: path]) 
+    {
+        path = [documentsDirectory stringByAppendingPathComponent: [NSString stringWithFormat: @"Printers.plist"] ];
+    }
+	
+	
+	NSMutableDictionary *savedStock = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
+    NSString* printer = [savedStock objectForKey:@"printer"];
+
+	DLog(@"printer Selected:%@",printer);
+	[Session setPrinterName:printer];
+	[savedStock release];
+
+}
+*/
+
+/*+(void) savePrinter
+{
+	
+	NSString *printer=[Session getPrinterName];
+	if (!printer) 
+		return;
+	
+	
+	NSString *error;
+	
+    NSString *rootPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	
+    NSString *plistPath = [rootPath stringByAppendingPathComponent:@"Printers.plist"];
+	
+    NSDictionary *plistDict = [NSDictionary dictionaryWithObjects:
+							   
+							   [NSArray arrayWithObjects: [Session getPrinterName], nil]
+							   
+														  forKeys:[NSArray arrayWithObjects: @"printer", nil]];
+	
+    NSData *plistData = [NSPropertyListSerialization dataFromPropertyList:plistDict
+						 
+																   format:NSPropertyListXMLFormat_v1_0
+						 
+														 errorDescription:&error];
+	
+    if(plistData) {
+		
+        [plistData writeToFile:plistPath atomically:YES];
+		
+    }
+	
+	else {
+		
+        NSLog(@"%@",error);
+		
+        [error release];
+		
+    }
+	
+}
+*/
++(void) loadStore
+{
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); 
+    NSString *documentsDirectory = [paths objectAtIndex:0]; 
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"StoreConfigure.plist"]; NSFileManager *fileManager = [NSFileManager defaultManager];
+	
+    if (![fileManager fileExistsAtPath: path]) 
+    {
+        path = [documentsDirectory stringByAppendingPathComponent: [NSString stringWithFormat: @"StoreConfigure.plist"] ];
+    }
+	
+	
+	NSMutableDictionary *savedStock = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
+    NSString* terminal = [savedStock objectForKey:@"terminal"];
+	NSString* idStore = [savedStock objectForKey:@"idStore"];
+	NSString* store = [savedStock objectForKey:@"store"];
+	
+	DLog(@"terminal Selected:%@",terminal);
+	[Session setIdStore:idStore];
+	[Session setStore:store];
+	[Session setTerminal:terminal];
+	[savedStock release];
+	
+}
++(void) saveStore
+{
+	
+	NSString *idStore=[Session getIdStore];
+	if (!idStore) 
+		return;
+	
+	
+	NSString *error;
+	
+    NSString *rootPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	
+    NSString *plistPath = [rootPath stringByAppendingPathComponent:@"StoreConfigure.plist"];
+	NSLog(@"plistPath %@ ", plistPath);
+	
+    NSDictionary *plistDict = [NSDictionary dictionaryWithObjects:
+							   
+							   [NSArray arrayWithObjects: [Session getIdStore],[Session getStore], [Session getTerminal], nil]
+							   
+														  forKeys:[NSArray arrayWithObjects: @"idStore",@"store",@"terminal", nil]];
+	
+    NSData *plistData = [NSPropertyListSerialization dataFromPropertyList:plistDict
+						 
+																   format:NSPropertyListXMLFormat_v1_0
+						 
+														 errorDescription:&error];
+	
+    if(plistData) {
+		
+        [plistData writeToFile:plistPath atomically:YES];
+		
+    }
+	
+	else {
+		
+        NSLog(@"%@",error);
+		
+        [error release];
+		
+    }
+	
+}
+
++(NSString*) calculateDiscountValuePercentage:(NSString*) aPrice :(NSString*)percentageDiscount
+{
+	float price=[aPrice floatValue];
+	float discount= [percentageDiscount floatValue];
+	
+	float finalPrice= ((discount/100) *price);
+	NSString *result=[NSString stringWithFormat:@"%.02f", finalPrice];
+	DLog(@"TOOLS DISCOUNT:%f",discount);
+	DLog(@"TOOLS FINAL PRICE:%f",finalPrice);
+	
+	if (finalPrice<=0) 
+		return @"";
+	else
+		return result;
+}
+
++(NSString*) calculateDiscountValueAmount:(NSString*) aPrice :(NSString*)amountDiscount
+{
+	float price=[aPrice floatValue];
+	float discount= [amountDiscount floatValue];
+	DLog(@"********* TOOLS Price:%.02f discount:%.02f",price,discount);
+	float finalPrice= price-discount;
+	NSString *result=[NSString stringWithFormat:@"%.02f", finalPrice];
+	return result;
+}
++(NSString*) calculateAddUpValueAmount:(NSString*) amount1 :(NSString*)amount2
+{
+	float amount1Float=[amount1 floatValue];
+	float amount2Float= [amount2 floatValue];
+	DLog(@"********* TOOLS ADDUP Price:%.02f discount:%.02f",amount1,amount2);
+	float finalPrice= amount1Float+amount2Float;
+	NSString *result=[NSString stringWithFormat:@"%.02f", finalPrice];
+	return result;
+}
++(NSString*) calculateRestValueAmount:(NSString*) amount1 :(NSString*)amount2
+{
+	float amount1Float=[amount1 floatValue];
+	float amount2Float= [amount2 floatValue];
+	DLog(@"********* TOOLS REST Price:%.02f discount:%.02f",amount1,amount2);
+	float finalPrice= amount1Float-amount2Float;
+	NSString *result=[NSString stringWithFormat:@"%.02f", finalPrice];
+	return result;
+}
++(NSString*) calculateDivisionValueAmount:(NSString*) dividend :(NSString*)divisor
+{
+	float divisorFloat=[divisor floatValue];
+	float dividendFloat= [dividend floatValue];
+	DLog(@"********* TOOLS DIVID Price:%.02f discount:%.02f",divisor,dividend);
+	float finalPrice=  divisorFloat/dividendFloat;
+	NSString *result=[NSString stringWithFormat:@"%.02f", finalPrice];
+	return result;
+}
+
++(void) showViewAnimation:(UIView*) aView
+{
+	aView.center=CGPointMake(320+(aView.frame.size.width/2), aView.center.y);
+	
+	/*[UIView beginAnimations:nil context:NULL]; {
+		[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+		[UIView setAnimationDuration:0.5];
+        [UIView setAnimationDelegate:self];
+        
+		
+		aView.center=CGPointMake(320-(aView.frame.size.width/2), aView.center.y);
+		[aView setHidden:NO];
+
+	} [UIView commitAnimations];
+	*/
+	[aView setHidden:NO];
+	[UIView animateWithDuration:0.5
+						  delay:0.0
+						options: UIViewAnimationCurveEaseOut
+					 animations:^{
+						 aView.center=CGPointMake(320-(aView.frame.size.width/2), aView.center.y);
+					 } 
+					 completion:^(BOOL finished){
+					 }];
+	
+}
+
+
++(void) hideViewAnimation:(UIView*) aView
+{
+	
+	/*[UIView beginAnimations:nil context:NULL]; {
+		[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+		[UIView setAnimationDuration:0.5];
+        [UIView setAnimationDelegate:self];
+        
+		
+		aView.center=CGPointMake(320+(aView.frame.size.width/2), aView.center.y);
+		[UIView setAnimationDidStopSelector:@selector(setViewToHidden:)];
+	} [UIView commitAnimations];*/
+	
+	[UIView animateWithDuration:0.5
+						  delay:0.0
+						options: UIViewAnimationCurveEaseOut
+					 animations:^{
+						 aView.center=CGPointMake(320+(aView.frame.size.width/2), aView.center.y);
+					 } 
+					 completion:^(BOOL finished){
+						 aView.hidden=YES;
+					 }];
+	
+}
+
++(NSString*) trimUsernameFromCreditCardTrack:(NSString*) track1
+{
+	NSArray *array = [track1 componentsSeparatedByCharactersInSet:
+					[NSCharacterSet characterSetWithCharactersInString:@"^"]];
+	
+	NSString *username=[array objectAtIndex:1];
+	
+	username = [username stringByTrimmingCharactersInSet:
+							   [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	DLog(@"userblank count:%i",[username length]);
+
+	if ([username length]==0) 
+		return @"Tarjeta Debito";
+	else 
+		return username;
+	
+}
++(NSString*) trimExpireDateCreditCardTrack:(NSString*) track1
+{
+	NSArray *array = [track1 componentsSeparatedByCharactersInSet:
+					  [NSCharacterSet characterSetWithCharactersInString:@"^"]];
+	
+	
+	NSString *expireDate=[array objectAtIndex:2];
+	expireDate=[expireDate substringToIndex:4];
+	DLog(@"expiredate: %@", expireDate);
+
+	// Convert string to date object
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"ddMM"];
+	NSDate *date = [dateFormat dateFromString:expireDate]; 
+	
+	[dateFormat setDateFormat:@"MM/d"];
+	expireDate = [dateFormat stringFromDate:date]; 
+	
+	DLog(@"expiredateview: %@", expireDate);
+	return expireDate;
+}
++(NSString*) trimExpireDateCard:(NSString*) track1
+{
+	NSArray *array = [track1 componentsSeparatedByCharactersInSet:
+					  [NSCharacterSet characterSetWithCharactersInString:@"^"]];
+	
+	
+	NSString *expireDate=[array objectAtIndex:2];
+	expireDate=[expireDate substringToIndex:4];
+
+	DLog(@"expiredateparameter: %@", expireDate);
+	return expireDate;
+}
++ (NSString*) getUniqueID{
+		return [[UIDevice currentDevice] uniqueIdentifier]; 
+}
+
++(BOOL) validatePrinterConfig
+{
+	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+	NSData* myEncodedObject = [defaults objectForKey:@"programIPAddres"];
+	NSString* ipAddress = (NSString*)[NSKeyedUnarchiver unarchiveObjectWithData: myEncodedObject];
+	NSString* portSettings = (NSString*)[NSKeyedUnarchiver unarchiveObjectWithData:myEncodedObject];
+	NSLog(@"ipAddress: %@", ipAddress);
+	if ([ipAddress length]==0|| [portSettings length]==0) 
+	{
+		[Tools displayAlert:@"Advertencia: Impresion" message:@"Favor de configurar la ip de la impresora en el menu de configuracion antes de realizar una transaccion"];
+		return NO;
+	}
+	else
+		return YES;
+}	
+
++(NSString*) maskCreditCardNumber:(NSString*) cardNumber
+{
+	cardNumber=[cardNumber stringByReplacingCharactersInRange:NSMakeRange(0, 12) withString:@"************"]; 
+	return	cardNumber;
+}
+
++(NSString*) maskMonederoNumber:(NSString*) cardNumber
+{
+	cardNumber=[cardNumber stringByReplacingCharactersInRange:NSMakeRange(0, 9) withString:@"************"]; 
+	return	cardNumber;
+}
++(NSString*) amountCurrencyFormat:(NSString*) amount
+{
+	// alloc formatter
+	NSNumberFormatter *currencyStyle = [[NSNumberFormatter alloc] init];
+	
+	// set options.
+	[currencyStyle setFormatterBehavior:NSNumberFormatterBehavior10_4];
+	[currencyStyle setNumberStyle:NSNumberFormatterCurrencyStyle];
+	
+	NSNumber *amt = [NSNumber numberWithFloat:[amount floatValue]];
+	
+	// get formatted string
+	NSString* formatted = [currencyStyle stringFromNumber:amt];
+	
+
+	//NSData* asciiData =[formatted dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+	//formatted=[NSString stringWithCString:[asciiData bytes] encoding:NSASCIIStringEncoding];
+
+	NSCharacterSet *CurrencyChars = [[NSCharacterSet characterSetWithCharactersInString:@"1234567890.,$"] invertedSet];
+	formatted=[[formatted componentsSeparatedByCharactersInSet:CurrencyChars] componentsJoinedByString:@""];
+	
+	[currencyStyle release];
+	return formatted;
+	
+}
++(NSString*) amountCurrencyFormatFloat:(float) amount
+{
+	// alloc formatter
+	NSNumberFormatter *currencyStyle = [[NSNumberFormatter alloc] init];
+	
+	// set options.
+	[currencyStyle setFormatterBehavior:NSNumberFormatterBehavior10_4];
+	[currencyStyle setNumberStyle:NSNumberFormatterCurrencyStyle];
+	
+	NSNumber *amt = [NSNumber numberWithFloat:amount];
+	
+	// get formatted string
+	NSString* formatted = [currencyStyle stringFromNumber:amt];
+	
+	
+	//NSData* asciiData =[formatted dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+	//formatted=[NSString stringWithCString:[asciiData bytes] encoding:NSUTF8StringEncoding];
+	
+	NSCharacterSet *CurrencyChars = [[NSCharacterSet characterSetWithCharactersInString:@"1234567890.,$"] invertedSet];
+	formatted=[[formatted componentsSeparatedByCharactersInSet:CurrencyChars] componentsJoinedByString:@""];
+	
+	[currencyStyle release];
+	return formatted;
+	
+}
+
++ (UIView *)inputAccessoryView:(UITextField*) aTxtField{
+	
+		txtField=aTxtField;
+        CGRect accessFrame = CGRectMake(0.0, 0.0, 80, 30.0);
+		
+        UIView* inputAccessoryView = [[UIView alloc] initWithFrame:accessFrame];
+		
+        inputAccessoryView.backgroundColor = [UIColor clearColor];
+		
+        UIButton *compButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		
+        compButton.frame = CGRectMake(240, 0, 80, 30);
+		
+        [compButton setTitle: @"ok" forState:UIControlStateNormal];
+		[compButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		UIImage *buttonImageNormal = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"tab" ofType:@"png"]];	
+	
+		[compButton setBackgroundImage:buttonImageNormal forState:UIControlStateNormal];
+
+		
+        [compButton addTarget:self action:@selector(hideKeyboard)
+		 
+			 forControlEvents:UIControlEventTouchUpInside];
+		
+        [inputAccessoryView addSubview:compButton];
+		
+    return inputAccessoryView;
+	
+}
+
++(void) hideKeyboard
+{
+	[txtField.superview.superview endEditing:YES];
+	
+}
++(BOOL) monederoPromotionInList:(NSArray*) aProductList
+{
+	for (FindItemModel *item in aProductList) 
+	{	
+		for (Promotions *promo in item.discounts) {
+			NSRange textRange;
+			NSString* promoName=[[promo promoTypeBenefit]copy];
+			DLog(@"%@",promoName);
+			textRange =[promoName rangeOfString:@"factorLoyaltyBenefit" options:NSCaseInsensitiveSearch];
+			
+			if(textRange.location != NSNotFound&&[promoName length]!=0)
+			{		
+				//Does contain the substring
+				return YES;
+			}
+			[promoName release];
+		}
+	}
+	return NO;
+}
+
++(NSString*) calculateAmountToPayWithPromo:(NSArray*) productList
+{
+	float total=0;
+	float totalDiscounts=0;
+	
+	for (FindItemModel *item in productList) {
+		
+		for (Promotions *promo in item.discounts) {
+				
+			if (promo.promoType==3) //print promotion by key with %
+			{	
+				totalDiscounts+=[promo.promoValue floatValue];
+			}
+			else if(promo.promoType==4) //print promotion by key with fixed amount
+			{	
+				totalDiscounts+=[promo.promoDiscountPercent floatValue];
+			}
+			
+		}
+		
+		total+=[item.price floatValue];
+	}
+	//calculate the total amount for ticket with discounts
+	total=total-totalDiscounts;
+	DLog(@"<<<<total>>>>>:%f, products:%@",total,productList);
+	NSString *totalS=[NSString stringWithFormat:@"%.02f",total];
+	totalS=[self amountCurrencyFormat:totalS];
+	return totalS;
+}
++(NSString*) calculateAmountToPay:(NSArray*) productList
+{
+	float total=0;
+	float totalDiscounts=0;
+	
+	for (FindItemModel *item in productList) {
+		
+		for (Promotions *promo in item.discounts) {
+			
+			if (promo.promoType==3) //print promotion by key with %
+			{	
+				totalDiscounts+=[promo.promoValue floatValue];
+			}
+			else if(promo.promoType==4) //print promotion by key with fixed amount
+			{	
+				totalDiscounts+=[promo.promoDiscountPercent floatValue];
+			}
+			
+		}
+		
+		total+=[item.price floatValue];
+	}
+	//calculate the total amount for ticket with discounts
+	total=total-totalDiscounts;
+	DLog(@"<<<<total>>>>>:%f, products:%@",total,productList);
+	NSString *totalS=[NSString stringWithFormat:@"%.02f",total];
+	return totalS;
+}
+
++(NSMutableArray*) removePromotionFromList:(NSMutableArray*)testArray forPlanId:(NSString*) planId
+{
+	NSMutableArray *testMutableArray=[NSMutableArray arrayWithArray:testArray];
+	//NSMutableArray *testMutableArray = [[NSMutableArray alloc] initWithArray:testArray copyItems:YES];
+	
+	NSRange textRange;
+	int optionIndex=0;
+	int promoIndex=0;
+	
+	for (NSMutableArray *optionGroup in testArray) { //for each promo group
+		
+		NSMutableArray *og=[NSMutableArray arrayWithArray:optionGroup];
+		for (Promotions *promo in og) {
+			
+			NSString* promoName=[[promo planId]copy];
+			textRange =[promoName rangeOfString:planId options:NSCaseInsensitiveSearch];
+			
+			if (textRange.location != NSNotFound&&[promoName length]!=0) {
+				
+				optionIndex=[testMutableArray indexOfObjectIdenticalTo:optionGroup];
+				promoIndex=[[testMutableArray objectAtIndex:optionIndex] indexOfObjectIdenticalTo:promo];
+				DLog(@"REMOVIO INDEXIDENTICAL optiongroup:%i promoindex:%i",optionIndex,promoIndex);
+				[[testMutableArray objectAtIndex:optionIndex] removeObjectAtIndex:promoIndex];
+				
+			}
+			[promoName release];
+		}
+	}
+	
+	testArray=[NSMutableArray arrayWithArray:testMutableArray];
+	[testArray retain];
+	return testArray;
+}
++(NSMutableArray*) removeCouponBenefitFromList:(NSMutableArray*)testArray;
+{
+	NSMutableArray *testMutableArray=[NSMutableArray arrayWithArray:testArray];
+
+	NSRange textRange;
+	int optionIndex=0;
+	int promoIndex=0;
+	
+	for (NSMutableArray *optionGroup in testArray) { //for each promo group
+		
+		NSMutableArray *og=[NSMutableArray arrayWithArray:optionGroup];
+		for (Promotions *promo in og) {
+			
+			NSString* promoName=[[promo promoTypeBenefit]copy];
+			textRange =[promoName rangeOfString:@"couponBenefit" options:NSCaseInsensitiveSearch];
+			
+			if (textRange.location != NSNotFound&&[promoName length]!=0) {
+			
+				optionIndex=[testMutableArray indexOfObjectIdenticalTo:optionGroup];
+				promoIndex=[[testMutableArray objectAtIndex:optionIndex] indexOfObjectIdenticalTo:promo];
+				DLog(@"REMOVIO INDEXIDENTICAL optiongroup:%i promoindex:%i",optionIndex,promoIndex);
+				[[testMutableArray objectAtIndex:optionIndex] removeObjectAtIndex:promoIndex];
+
+			}
+			[promoName release];
+		}
+	}
+	
+	testArray=[NSMutableArray arrayWithArray:testMutableArray];
+	[testArray retain];
+	return testArray;
+	
+}
++(NSMutableArray*) removeDESCxPROMFromList:(NSMutableArray*)testArray
+{
+	NSMutableArray *testMutableArray=[NSMutableArray arrayWithArray:testArray];
+	
+	NSRange textRange;
+	NSRange textRange2;
+
+	int optionIndex=0;
+	int promoIndex=0;
+	
+	for (NSMutableArray *optionGroup in testArray) { //for each promo group
+		
+		NSMutableArray *og=[NSMutableArray arrayWithArray:optionGroup];
+		for (Promotions *promo in og) {
+			
+			NSString* promoName=[[promo promoTypeBenefit]copy];
+			textRange =[promoName rangeOfString:@"percentageDiscount" options:NSCaseInsensitiveSearch];
+			
+			NSString* promoType=[[promo promoDescription]copy];
+			textRange2 =[promoType rangeOfString:@"DESC X PROM" options:NSCaseInsensitiveSearch];
+			
+			if (textRange.location != NSNotFound&&[promoName length]!=0 &&textRange2.location != NSNotFound&&[promoType length]!=0) {
+				
+				optionIndex=[testMutableArray indexOfObjectIdenticalTo:optionGroup];
+				promoIndex=[[testMutableArray objectAtIndex:optionIndex] indexOfObjectIdenticalTo:promo];
+				DLog(@"REMOVIO INDEXIDENTICAL optiongroup:%i promoindex:%i",optionIndex,promoIndex);
+				[[testMutableArray objectAtIndex:optionIndex] removeObjectAtIndex:promoIndex];
+				
+			}
+			[promoName release];
+		}
+	}
+	
+	testArray=[NSMutableArray arrayWithArray:testMutableArray];
+	[testArray retain];
+	return testArray;
+	
+}
++(NSMutableArray*) removePaymentPlanBenefitFromList:(NSMutableArray*)testArray
+{
+	
+		NSMutableArray *testMutableArray=[NSMutableArray arrayWithArray:testArray];
+		NSRange textRange;
+		
+		for (Promotions *promo in testArray) {
+			NSString* promoName=[[promo promoTypeBenefit]copy];
+			textRange =[promoName rangeOfString:@"paymentPlanBenefit" options:NSCaseInsensitiveSearch];
+			
+			if (textRange.location != NSNotFound&&[promoName length]!=0) {
+				DLog(@"REMOVIO removePaymentPlanBenefitFromList INDEXIDENTICAL %i ,%@",[testMutableArray indexOfObjectIdenticalTo:promo],promoName);
+				[testMutableArray removeObjectAtIndex:[testMutableArray indexOfObjectIdenticalTo:promo]];
+			}
+			[promoName release];
+		}
+	
+	testArray=[NSMutableArray arrayWithArray:testMutableArray];
+	[testArray retain];
+	return testArray;
+		
+}
+
+
+
++(void) applyPromotionsToTicket:(NSMutableArray*) aPromotionList :(NSMutableArray*) aProductList
+{
+	//if(item.department==aPromotionList.department)
+	for(FindItemModel *item in aProductList)
+	{
+		for (Promotions *promo in aPromotionList) {
+			[item.discounts addObject:promo];
+		}
+	}
+}
+
+
++(BOOL) isMonederoPromotion:(NSMutableArray*) promotionList
+ {
+	BOOL isMonedero=NO;
+	for (Promotions *promo in promotionList) {
+	NSRange textRange;
+	 NSString* promoName=[[promo promoTypeMonedero]copy];
+	 DLog(@"%@",promoName);
+	 textRange =[promoName rangeOfString:@"monedero" options:NSCaseInsensitiveSearch];
+ 
+		if(textRange.location != NSNotFound&&[promoName length]!=0)
+		{		
+			//Does contain the substring
+			//MonederoCardViewController* monederoView=[[MonederoCardViewController alloc] initWithNibName:@"MonederoCardViewController" bundle:nil];
+			[Session setMonederoPercent:[promo promoDiscountPercent]];
+			//[self presentModalViewController:monederoView animated:YES];
+			//[monederoView release];
+			isMonedero=YES;
+		}
+	 [promoName release];
+	 }	
+	 return isMonedero;
+ }
+
++(void) calculateSuccesiveDiscounts:(FindItemModel *) item
+{
+	NSMutableArray *discountCopy=[[[NSMutableArray alloc] initWithArray:item.discounts] autorelease];
+	//Promotions *lastPromo=[discountCopy lastObject];
+	DLog(@"calculateSuccesiveDiscounts" );
+	
+	for (Promotions *promo in discountCopy) {
+		
+		NSInteger index=[discountCopy indexOfObjectIdenticalTo:promo];
+		DLog(@"index succesive %i",index);
+		
+		if (index==0) {
+			//percentDiscount
+			if ([promo promoType]==3) {
+			    NSString *finalPriceWithPreviousDiscount=[self calculateDiscountValuePercentage:item.price :promo.promoDiscountPercent];
+				promo.promoValue=[finalPriceWithPreviousDiscount copy];
+				DLog(@"Aplicando descuento sucesivo lastpromo.promovalue:%@",promo.promoValue);
+				
+			}
+			if ([promo promoType]==4) {
+			    //NSString *finalPriceWithPreviousDiscount=[self calculateRestValueAmount:item.price :promo.promoDiscountPercent];
+				//promo.promoValue=[finalPriceWithPreviousDiscount copy];
+				promo.promoValue=[promo.promoDiscountPercent copy];
+
+				DLog(@"Aplicando descuento sucesivo lastpromo.promovalue:%@",promo.promoValue);
+				
+			}
+		}
+		else {
+			Promotions *previousPromo=[item.discounts objectAtIndex:(index-1)];
+			DLog(@"antes de aplicar descuento sucesivo lastpromo.promovalue:%@",previousPromo.promoValue);
+			NSString *amountPreviousDiscount=[Tools calculateRestValueAmount:item.price :previousPromo.promoValue];
+			DLog(@"finalPriceWithPreviousDiscount amountPreviousDiscount %@",amountPreviousDiscount);
+			
+			//percentDiscount
+			if ([promo promoType]==3) {
+			    NSString *finalPriceWithPreviousDiscount=[self calculateDiscountValuePercentage:amountPreviousDiscount :promo.promoDiscountPercent];
+				promo.promoValue=[finalPriceWithPreviousDiscount copy];
+				DLog(@"Aplicando descuento sucesivo lastpromo.promovalue:%@",promo.promoValue);
+			
+			}
+			if ([promo promoType]==4) {
+			    NSString *finalPriceWithPreviousDiscount=[self calculateRestValueAmount:item.price :promo.promoDiscountPercent];
+				promo.promoValue=[finalPriceWithPreviousDiscount copy];
+				DLog(@"Aplicando descuento sucesivo lastpromo.promovalue:%@",promo.promoValue);
+				
+			}
+		}
+
+		
+		
+	}
+	/*
+	if ([discountCopy count]>1) 
+	{		
+		int index=[discountCopy count]-2;
+		DLog(@"index: %i",index);
+		Promotions *previousPromo=[discountCopy objectAtIndex:index];
+		
+		if ([previousPromo.promoDescription isEqualToString:@"DESC x TECLA"]) {
+			DLog(@"antes de aplicar descuento sucesivo lastpromo.promovalue:%@",previousPromo.promoValue);
+			
+			NSString *amountPreviousDiscount=[Tools calculateRestValueAmount:itemModel.price :previousPromo.promoValue];
+			DLog(@"finalPriceWithPreviousDiscount amountPreviousDiscount %@",amountPreviousDiscount);
+			NSString *finalPriceWithPreviousDiscount=[self calculateDiscounts:amountPreviousDiscount];
+			lastPromo.promoValue=[finalPriceWithPreviousDiscount copy];
+			DLog(@"Aplicando descuento sucesivo lastpromo.promovalue:%@",lastPromo.promoValue);
+		}
+	}
+	else {
+		NSString *price= itemModel.price;
+		NSString *finalPrice=[self calculateDiscounts:price];
+		lastPromo.promoValue=[finalPrice copy];
+		DLog(@"Aplicando descuento lastpromo.promovalue:%@",lastPromo.promoValue);
+		
+	}
+	*/
+}
++(BOOL) isValidAmountToPay:(UITextField*) discount :(NSNumber*) maxAmount
+{
+	float discountValue=[discount.text floatValue];
+	DLog(@"isValidAmountToPay %f ,%f",discountValue,[maxAmount floatValue]);
+
+		if (discountValue>[maxAmount floatValue]) 
+		{
+			//discount.backgroundColor=[UIColor redColor];
+			[self displayAlert:@"Aviso" message:@"El monto ingresado supera la cantidad a pagar"];
+			return NO;
+		}
+		else
+		{
+			//discount.backgroundColor=[UIColor whiteColor];
+			return YES;
+		}
+
+}
+
++(void)disableApp
+{
+	UIWindow* window = [[UIApplication sharedApplication] keyWindow]; // Cambio Ruben - 19/enero/2012
+	NSLog(@"EJECUTANDO setUserInteractionEnabled para window");
+	[window setUserInteractionEnabled:NO]; // Cambio Ruben - 19/enero/2012
+}
+
++(void)enableApp
+{
+	UIWindow* window = [[UIApplication sharedApplication] keyWindow]; // Cambio Ruben - 19/enero/2012
+	NSLog(@"EJECUTANDO setUserInteractionEnabled para window");
+	[window setUserInteractionEnabled:YES]; // Cambio Ruben - 19/enero/2012
+}
+
+@end

@@ -1,0 +1,59 @@
+//
+//  AirtimeViewController.h
+//  CardReader
+//
+//  Created by Gonet on 13/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "LiverPoolRequest.h"
+#import "AmountsViewController.h"
+#import "CardDataViewController.h"
+#import "LineaSDK.h"
+#import "FindItemModel.h"
+@interface AirtimeViewController : UIViewController <LineaDelegate,WsCompleteDelegate,UITextFieldDelegate,CardDataDelegate> {
+	
+	UITextField* txtPhoneNumber;
+	UITextField* txtConfirmsPhoneNumber;
+	UITextField* txtBarCode;
+	UIView*  viewPhoneData;
+	AmountsViewController *amountViewController;
+	UIView* viewBarCodeScan;
+	UIButton* btnShowWiewBarCodeScan;
+	UIButton* btnBuyCredits;
+
+	CardDataViewController *cardDataView;
+	Linea                       *scanDevice;
+	
+	FindItemModel* itemModel;
+	UILabel* lblProduct;
+	Card *cardData;
+}
+
+@property(nonatomic,retain) IBOutlet	UITextField* txtPhoneNumber;
+@property(nonatomic,retain) IBOutlet	UITextField* txtConfirmsPhoneNumber;
+@property(nonatomic,retain) IBOutlet	UIButton* btnBuyCredits;
+@property(nonatomic,retain) IBOutlet	UIView*  viewPhoneData;
+@property(nonatomic,retain) IBOutlet	UIViewController *amountViewController;
+@property(nonatomic,retain) IBOutlet	UIView* viewBarCodeScan;
+@property(nonatomic,retain) IBOutlet	UIButton* btnShowWiewBarCodeScan;
+@property(nonatomic,retain) IBOutlet	UITextField* txtBarCode;
+@property(nonatomic,retain) IBOutlet	UILabel* lblProduct;
+
+
+-(IBAction) buyCreditsAction:(id)sender;
+-(IBAction) exitCreditsAction:(id)sender;
+-(IBAction) closeViewBarCodeScan:(id)sender;
+-(IBAction) barcodeAccepted:(id)sender;
+-(void) buyCreditsActionRequestParsing:(NSData*) data;
+-(void) startRequest:(NSString*) barCode;
+-(void) showCardDataReaderView;
+-(void) hideCardDataReaderView;
+-(void) findItemRequestParsing:(NSData*) data;
+-(void) startRequestAirtime;
+-(void) logoutRequest;
+-(void) printTicketAirTime:(NSString*) phoneNumber;
+-(void) checkPrinterStatus;
+
+@end

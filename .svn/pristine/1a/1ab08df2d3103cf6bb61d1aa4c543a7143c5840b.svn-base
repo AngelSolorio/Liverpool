@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Products</key>
+	<array>
+		<string>01-refresh.png</string>
+		<string>02-redo.png</string>
+		<string>03-loopback.png</string>
+		<string>04-squiggle.png</string>
+		<string>05-shuffle.png</string>
+		<string>06-magnify.png</string>
+		<string>07-map-marker.png</string>
+		<string>08-chat.png</string>
+		<string>09-chat-2.png</string>
+		<string>10-medical.png</string>
+		<string>11-clock.png</string>
+	</array>
+</dict>
+</plist>

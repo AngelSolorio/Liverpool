@@ -1,0 +1,21 @@
+//
+//  PromotionGroup.m
+//  CardReader
+//
+//  Created by Gonet on 19/12/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "PromotionGroup.h"
+
+
+@implementation PromotionGroup
+@synthesize promotionGroupArray;
+@synthesize section;
+
+-(void)dealloc
+{
+	[promotionGroupArray release];
+	[super	dealloc];
+}
+@end

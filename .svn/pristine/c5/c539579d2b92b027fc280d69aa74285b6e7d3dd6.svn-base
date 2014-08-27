@@ -1,0 +1,101 @@
+//
+//  ConfigurationAuthorization.m
+//  CardReader
+//
+//  Created by Gonet on 19/11/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "ConfigurationAuthorization.h"
+#import "Tools.h"
+#import "Settings.h"
+#import "Styles.h"
+
+@implementation ConfigurationAuthorization
+
+@synthesize txtStoreID,txtPassword,btnOk;
+// The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+/*
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization.
+    }
+    return self;
+}
+*/
+
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+	
+	txtStoreID.inputAccessoryView=[Tools inputAccessoryView:txtStoreID];
+	txtPassword.inputAccessoryView=[Tools inputAccessoryView:txtPassword];
+	self.title=@"Configuracion de impresoras";
+	
+	[Styles bgGradientColorPurple:self.view];
+	[Styles silverButtonStyle:btnOk];
+	
+    [super viewDidLoad];
+}
+
+
+/*
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations.
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+*/
+-(void) viewWillAppear:(BOOL)animated
+{
+	[txtStoreID setText:@""];
+	[txtPassword setText:@""];
+	[super viewWillAppear:YES];
+}
+-(void) viewWillDisappear:(BOOL)animated
+{
+	[txtStoreID setText:@""];
+	[txtPassword setText:@""];
+	[super viewWillDisappear:YES];
+}
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc. that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+-(IBAction) validatePassword
+{
+	if ([txtStoreID.text isEqual:@"103"]&&[txtPassword.text isEqualToString:@"liverpool"]) {
+		Settings *sets=[[Settings alloc] init];
+		[self presentModalViewController:sets animated:YES];
+		[sets release];
+	}
+	else 
+		[Tools displayAlert:@"Error" message:@"Tienda/Contraseña incorrectos favor de verificar"];
+
+}
+
+-(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[self.view endEditing:YES];
+	[super touchesBegan:touches withEvent:event];
+}
+
+- (void)dealloc {
+	[txtPassword release]; txtPassword=nil;
+	[txtStoreID release];txtStoreID=nil;
+	[btnOk release], btnOk = nil;
+	
+    [super dealloc];
+}
+
+
+@end

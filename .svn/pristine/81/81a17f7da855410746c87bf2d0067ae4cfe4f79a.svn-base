@@ -1,0 +1,20 @@
+//
+//  PromotionGroup.h
+//  CardReader
+//
+//  Created by Gonet on 19/12/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+
+@interface PromotionGroup : NSObject {
+
+	NSMutableArray* promotionGroupArray;
+	int section;
+}
+
+@property (nonatomic,retain) 	NSMutableArray* promotionGroupArray;
+@property (nonatomic)			int section;
+@end

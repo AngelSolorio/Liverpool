@@ -1,0 +1,75 @@
+//
+//  Tools.h
+//  CardReader
+//
+//  Created by Eduardo Urias on 7/18/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "FindItemModel.h"
+
+@interface Tools : NSObject
+	UIActivityIndicatorView *activityIndicator;
+	UIView *bgActivity;
+	UITextField *txtField;
+
+//+(void) loadPrinter;
+//+(void) savePrinter;
+
+//Accesory Methods
++(void) startActivityIndicator:(UIView*) aView;
++(void) stopActivityIndicator;
++(void) displayAlert:(NSString *)title message:(NSString *)message;
++(void) showViewAnimation:(UIView*) aView;
++(void) hideViewAnimation:(UIView*) aView;
++(void) loadStore;
++(void) saveStore;
++(void) disableApp;
++(void) enableApp;
++(void) hideKeyboard;
++(BOOL) validatePrinterConfig;
++(BOOL) isTextFieldEmpty:(UITextField*) theTextfield;
++(BOOL) confirmPhoneValidation:(UITextField*) txtFirstNumber :(UITextField*) txtSecondNumber;
++(BOOL) isValidNumber:(NSString *) string;
++(NSString*) getUniqueID;
++(NSString*) convertImageToBase64String:(UIImage*) aImage;
++(UIImage*) captureSign:(UIView*) aView;
++(UIImage*) captureScreen:(UIView*) aView;
++(NSInteger) string:(NSString*)actual indexOf:(NSString*)buscado;
++(UIView *) inputAccessoryView:(UITextField*) aTxtField;
++(BOOL) isValidAmountToPay:(UITextField*) discount :(NSNumber*) maxAmount;
+
+//Formats
++(NSString*) amountCurrencyFormatFloat:(float) amount;
++(NSString*) amountCurrencyFormat:(NSString*) amount;
++(NSString*) maskMonederoNumber:(NSString*) cardNumber;
++(NSString*) maskCreditCardNumber:(NSString*) cardNumber;
++(NSString*) trimExpireDateCard:(NSString*) track1;
++(NSString*) trimExpireDateCreditCardTrack:(NSString*) track1;
++(NSString*) trimUsernameFromCreditCardTrack:(NSString*) track1;
+
+//Calculations
++(NSString*) calculateAddUpValueAmount:(NSString*) amount1 :(NSString*)amount2;
++(NSString*) calculateDivisionValueAmount:(NSString*) dividend :(NSString*)divisor;
++(NSString*) calculateRestValueAmount:(NSString*) amount1 :(NSString*)amount2;
++(NSString*) calculateAmountToPayWithPromo:(NSArray*) productList;
++(NSString*) calculateAmountToPay:(NSArray*) productList;
++(NSString*) calculateDiscountValuePercentage:(NSString*) aPrice :(NSString*)percentageDiscount;
++(NSString*) calculateDiscountValueAmount:(NSString*) aPrice :(NSString*)amountDiscount;
++(void)		 calculateSuccesiveDiscounts:(FindItemModel *) item;
+
+//Arrays searchs
++(BOOL) monederoPromotionInList:(NSArray*) aProductList;
++(BOOL) isMonederoPromotion:(NSMutableArray*) promotionList;
+
+//Arrays Filters
++(NSMutableArray*) removePromotionFromList:(NSMutableArray*)testArray forPlanId:(NSString*) planId;
++(NSMutableArray*) removeCouponBenefitFromList:(NSMutableArray*)testArray;
++(NSMutableArray*) removeDESCxPROMFromList:(NSMutableArray*)testArray;
++(NSMutableArray*) removePaymentPlanBenefitFromList:(NSMutableArray*)testArray;
+
+//Arrays inserts
++(void) applyPromotionsToTicket:(NSMutableArray*) aPromotionList :(NSMutableArray*) aProductList;
+
+@end

@@ -1,0 +1,18 @@
+//
+//  Error.h
+//  CardReader
+//
+//  Created by Martha Patricia Sagahon Azua on 10/10/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+
+
+
+@interface Error : NSObject {
+	NSString* number;
+	NSString* description;
+}
+@property (nonatomic,retain)	NSString* number;	
+@property (nonatomic,retain)	NSString* description;
+@end

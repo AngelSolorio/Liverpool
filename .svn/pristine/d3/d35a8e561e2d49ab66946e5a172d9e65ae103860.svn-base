@@ -1,0 +1,161 @@
+//
+//  MonederoCardViewController.m
+//  CardReader
+//
+//  Created by Gonet on 25/10/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "MonederoCardViewController.h"
+#import "Session.h"
+#import "Tools.h"
+#import "BalanceParser.h"
+#import "Balance.h"
+#import "Styles.h"
+@implementation MonederoCardViewController
+@synthesize txtMonederoNumber;
+@synthesize btnOk;
+@synthesize btnCancel;
+
+// The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+/*
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization.
+    }
+    return self;
+}
+*/
+
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+	//cardreader SDK
+	scanDevice = [Linea sharedDevice];
+    [scanDevice setDelegate:self];
+	[scanDevice connect];
+	txtMonederoNumber.inputAccessoryView=[Tools inputAccessoryView:txtMonederoNumber];
+	[Styles bgGradientColorPurple:self.view];
+	[Styles silverButtonStyle:btnOk];
+	[Styles silverButtonStyle:btnCancel];
+
+    [super viewDidLoad];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+	[scanDevice removeDelegate:self];
+	[scanDevice disconnect];
+	scanDevice = nil;
+	[super viewWillDisappear:animated];
+}
+/*
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations.
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+*/
+-(IBAction) validateMonederoCard
+{
+	if ([[txtMonederoNumber text] length]==0) {
+		[Tools displayAlert:@"Aviso" message:@"Favor de introducir un monedero"];
+	}else
+		[self startRequestBalanceMonedero:[txtMonederoNumber text]];
+}
+
+-(void) startRequestBalanceMonedero:(NSString*) barCode
+{
+	
+	BalanceRequest *balanceRequest=[[BalanceRequest alloc] init];
+	balanceRequest.delegate=self;
+	NSString* segmentTextType=@"TSCCTE09";
+	NSArray* pars=[NSArray arrayWithObjects:@"",barCode,nil];
+	[balanceRequest sendRequest:segmentTextType forParameters:pars forRequestType:bRequest]; //cambiar a localized string
+	[balanceRequest release];
+	[Tools startActivityIndicator:self.view];
+	
+}
+
+-(void) balanceRequestParsing:(NSData*) data
+{
+	
+	BalanceParser* balanceParser=[[BalanceParser alloc] init];
+	DLog(@"antes de empezar");
+	[balanceParser startParser:data];
+	DLog(@"termino");
+	DLog(@"balance %@ ",[[[balanceParser balanceModel] error] description]);
+	if([[balanceParser balanceModel] isError]){
+		NSLog(@"IsError");
+	}else  if (([balanceParser balanceModel].sa)!=nil) {
+		
+		[Session setMonederoAmount:([balanceParser balanceModel].sa)];
+
+	}else {
+		[Tools displayAlert:@"Aviso" message:@"No se ha podido establecer comunicación con el servidor"];
+	}
+	[balanceParser release];
+	
+	[Tools stopActivityIndicator];
+	[self dismissModalViewControllerAnimated:YES];
+}
+-(void) performResults:(NSData *)receivedData :(RequestType) requestType
+{
+	
+		[self balanceRequestParsing:receivedData];
+
+}
+-(IBAction) exitMonedero
+{
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+//----------------------------------------
+//            BARCODE ANALYSIS
+//----------------------------------------
+#pragma mark -
+#pragma mark BARCODE ANALYSIS
+
+-(void)barcodeData:(NSString *)barcode 
+			  type:(int)type 
+{		
+	NS_DURING {
+	} NS_HANDLER {
+		
+		DLog(@"%@", [localException name]);
+		DLog(@"%@", [localException reason]);
+		
+	} NS_ENDHANDLER
+
+	[Session setMonederoNumber:barcode];
+	txtMonederoNumber.text=barcode;
+
+}
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc. that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[self.view endEditing:YES];
+}
+- (void)dealloc {
+	[btnOk release];
+	[btnCancel release];
+	scanDevice = nil;
+	[txtMonederoNumber release]; txtMonederoNumber=nil;
+    [super dealloc];
+}
+
+
+@end

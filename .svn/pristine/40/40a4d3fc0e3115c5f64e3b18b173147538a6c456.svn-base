@@ -1,0 +1,128 @@
+//
+//  LoginParser.m
+//  CardReader
+//
+//  Created by Gonet on 09/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "LoginParser.h"
+#import "LoginResponse.h"
+
+@implementation LoginParser
+@synthesize currentElement,response;
+@synthesize loginResponse;
+
+#define RETURN		@"return"
+#define CODE		@"code"
+#define NAME		@"name"
+
+
+-(void) startParser:(NSData*) data
+{
+	//-----------------------------------------------------------
+	NSLog(@"***************************************");
+	NSString* aStr;
+	aStr = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+	NSLog(@"Datos %@  ",aStr);
+	[aStr release]; // Cambio Ruben - 18/Enero/2012
+	aStr=nil;
+	NSLog(@"***************************************");	
+	//-----------------------------------------------------------
+	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
+	response=[[NSString alloc] init];
+	loginResponse=[[LoginResponse alloc] init];
+
+
+    [parser setDelegate:self]; // The parser calls methods in this class
+    [parser setShouldProcessNamespaces:NO]; 
+    [parser setShouldReportNamespacePrefixes:NO]; 
+    [parser setShouldResolveExternalEntities:NO]; 
+    [parser parse]; // Parse that data..
+    [parser release];
+}
+
+-(void) parserDidStartDocument:(NSXMLParser *)parser
+{
+}
+- (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError{
+	NSLog(@"Valor %@ - %@ ",loginResponse.code, loginResponse.nameU);
+	NSLog(@"Error %i, Description: %@, Line: %i, Column: %i",
+		  [parseError code], [[parser parserError] localizedDescription],
+		  [parser lineNumber], [parser columnNumber]);
+}
+-(void) parserDidEndDocument:(NSXMLParser *)parser
+{
+	DLog(@"Finalizo parser");
+	NSLog(@"Valor %@ - %@ ",loginResponse.code, loginResponse.nameU);
+}
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
+{
+	currentElement=elementName;
+	//DLog(@"currentElement:%@",currentElement);
+	response=@"";
+}
+
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
+{}
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
+{
+	if (!string) {
+		string=@"";
+	}
+	if ([currentElement isEqualToString:RETURN]) {
+
+		response=[response stringByAppendingString:string];
+	}
+	else if ([currentElement isEqualToString:CODE]) {
+		response=[response stringByAppendingString:string];
+		[loginResponse setCode:[response copy]] ;
+	}
+	else if ([currentElement isEqualToString:NAME]) {
+		response=[response stringByAppendingString:string];
+		[loginResponse setNameU:[response copy]] ;
+	}
+
+}
+-(BOOL) isLoginSuccesful
+{
+	//NSString *trimmedResponse=@"";
+	
+	if ([loginResponse code]!=nil && [[loginResponse code] length] > 0 ) 
+		{	
+			
+			if ([[loginResponse code] isEqualToString:@"OK"]) 
+				return YES;
+			else 
+				return NO;
+		}
+	else
+		{response=@"Error de Conexion Con el Servidor Bridgecore";
+			return NO;
+		}
+}
+-(NSString*) returnErrorMessage
+{
+	return [loginResponse code];
+}
+
+-(NSString*) returnName
+{
+	NSString *trimmedResponse;
+	
+	if ([loginResponse nameU]!=nil && [[loginResponse nameU] length] > 0 ) 
+		trimmedResponse=[loginResponse nameU];
+	else 
+		trimmedResponse=@"Error de Conexion Con el Servidor Bridgecore";
+	
+	DLog(@"returnName %@",trimmedResponse);
+	return trimmedResponse;
+}
+
+-(void)dealloc
+{
+	//[response release];
+	[loginResponse release],loginResponse=nil;
+	[super dealloc];
+}
+@end

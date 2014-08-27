@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+		<dict> 		<key>number</key><string>1</string><key>name</key><string>LIVERPOOL CENTRO</string><key>description</key><string>CENTRO</string></dict>
+		<dict> 		<key>number</key><string>2</string><key>name</key><string>LIVERPOOL INSURGENTES</string><key>description</key><string>INSURGENTES</string></dict>
+		<dict> 		<key>number</key><string>3</string><key>name</key><string>LIVERPOOL POLANCO</string><key>description</key><string>POLANCO</string></dict>
+		<dict> 		<key>number</key><string>4</string><key>name</key><string>LIVERPOOL SATELITE</string><key>description</key><string>SATELITE</string></dict>
+		<dict> 		<key>number</key><string>5</string><key>name</key><string>LIVERPOOL PERISUR</string><key>description</key><string>PERISUR</string></dict>
+		<dict> 		<key>number</key><string>6</string><key>name</key><string>LIVERPOOL COAPA</string><key>description</key><string>COAPA</string></dict>
+		<dict> 		<key>number</key><string>7</string><key>name</key><string>LIVERPOOL SANTA FE</string><key>description</key><string>SANTA FE</string></dict>
+		<dict> 		<key>number</key><string>9</string><key>name</key><string>LIVERPOOL POR TELEFONO</string><key>description</key><string>VENTA TELEFONO</string></dict>
+		<dict> 		<key>number</key><string>10</string><key>name</key><string>FABRICAS DE FRANCIA XALAPA</string><key>description</key><string>FF XALAPA</string></dict>
+		<dict> 		<key>number</key><string>11</string><key>name</key><string>FAB DE FRANCIA CORDOBA</string><key>description</key><string>CORDOBA</string></dict> 
+		<dict> 		<key>number</key><string>12</string><key>name</key><string>FAB DE FRANCIA VILLAHERMOSA</string><key>description</key><string>FF VILLAHERMOSA</string></dict>
+		<dict> 		<key>number</key><string>14</string><key>name</key><string>TUXTLA GUTIERREZ</string><key>description</key><string>TUXTLA GUTIERREZ</string></dict>
+		<dict> 		<key>number</key><string>15</string><key>name</key><string>FAB DE FRANCIA PUEBLA</string><key>description</key><string>FF PUEBLA</string></dict>
+		<dict> 		<key>number</key><string>16</string><key>name</key><string>F.DE FRANCIA COATZACOALCOS</string><key>description</key><string>FF COATZACOALCOS</string></dict>
+		<dict> 		<key>number</key><string>17</string><key>name</key><string>FAB DE FRANCIA POZA RICA</string><key>description</key><string>POZA RICA</string></dict>
+		<dict> 		<key>number</key><string>19</string><key>name</key><string>FAB DE FRANCIA TAPACHULA</string><key>description</key><string>TAPACHULA</string></dict>
+		<dict> 		<key>number</key><string>21</string><key>name</key><string>LIVERPOOL VILLAHERMOSA</string><key>description</key><string>VILLAHERMOSA</string></dict>
+		<dict> 		<key>number</key><string>22</string><key>name</key><string>LIVERPOOLMTY CENTRO</string><key>description</key><string>MONTERREY CENTRO</string></dict>
+		<dict> 		<key>number</key><string>23</string><key>name</key><string>FAB FRANCIA MTY SAN AGUSTIN</string><key>description</key><string>SAN AGUSTIN</string></dict>
+		<dict> 		<key>number</key><string>25</string><key>name</key><string>FAB FRANCIA GDL GRAN PLAZA</string><key>description</key><string>GDL.G.PLAZA</string></dict>
+		<dict> 		<key>number</key><string>26</string><key>name</key><string>FAB FRANCIA MAZ GRAN PLAZA</string><key>description</key><string>MAZATLAN GP</string></dict>
+		<dict> 		<key>number</key><string>27</string><key>name</key><string>FAB FRANCIA ACAPULCO</string><key>description</key><string>ACAPULCO</string></dict>
+		<dict> 		<key>number</key><string>28</string><key>name</key><string>FAB FRANCIA VERACRUZ</string><key>description</key><string>FF VERACRUZ</string></dict>
+		<dict> 		<key>number</key><string>29</string><key>name</key><string>FAB FRANCIA PERINORTE</string><key>description</key><string>PERINORTE</string></dict>
+		<dict> 		<key>number</key><string>31</string><key>name</key><string>LIVERPOOL MONTERREY</string><key>description</key><string>MONTERREY</string></dict>
+		<dict> 		<key>number</key><string>34</string><key>name</key><string>FAB FRANCIA CHIHUAHUA</string><key>description</key><string>FF CHIHUAHUA</string></dict>
+		<dict> 		<key>number</key><string>35</string><key>name</key><string>FAB FRANCIA CD. JUAREZ CHI.</string><key>description</key><string>CD. JUAREZ</string></dict>
+		<dict> 		<key>number</key><string>36</string><key>name</key><string>FAB FRANCIA SAN LUIS POTOSI</string><key>description</key><string>SAN LUIS POTOSI</string></dict>
+		<dict> 		<key>number</key><string>37</string><key>name</key><string>FAB FRANCIA OAXACA</string><key>description</key><string>OAXACA</string></dict>
+		<dict> 		<key>number</key><string>38</string><key>name</key><string>PERISALDOS</string><key>description</key><string>PERISALDOS</string></dict>
+		<dict> 		<key>number</key><string>39</string><key>name</key><string>INTERNET.</string><key>description</key><string>INTERNET.</string></dict>
+		<dict> 		<key>number</key><string>40</string><key>name</key><string>MERCADO LATINO X INTERNET</string><key>description</key><string>MER. LATINO INT.</string></dict>
+		<dict> 		<key>number</key><string>41</string><key>name</key><string>LIVERPOOL TAMPICO</string><key>description</key><string>TAMPICO</string></dict>
+		<dict> 		<key>number</key><string>42</string><key>name</key><string>LIVERPOOL CHIHUAHUA</string><key>description</key><string>CHIHUAHUA</string></dict>
+		<dict> 		<key>number</key><string>43</string><key>name</key><string>LIVERPOOL TORREON</string><key>description</key><string>TORREON</string></dict>
+		<dict> 		<key>number</key><string>44</string><key>name</key><string>LIVERPOOL QUERETARO</string><key>description</key><string>QUERETARO</string></dict>
+		<dict> 		<key>number</key><string>45</string><key>name</key><string>LIVERPOOL MTY VALLE</string><key>description</key><string>MONTERREY VALLE</string></dict>
+		<dict> 		<key>number</key><string>46</string><key>name</key><string>CULIACAN</string><key>description</key><string>CULIACAN</string></dict>
+		<dict> 		<key>number</key><string>47</string><key>name</key><string>IRAPUATO</string><key>description</key><string>IRAPUATO</string></dict>
+		<dict> 		<key>number</key><string>48</string><key>name</key><string>PACHUCA</string><key>description</key><string>PACHUCA</string></dict>
+		<dict> 		<key>number</key><string>50</string><key>name</key><string>LIVERPOOL HERMOSILLO</string><key>description</key><string>HERMOSILLO</string></dict>
+		<dict> 		<key>number</key><string>51</string><key>name</key><string>FABRICAS DE FRANCIA CENTRO</string><key>description</key><string>GDL. CENTRO</string></dict>
+		<dict> 		<key>number</key><string>52</string><key>name</key><string>FAB FRANCIA PLAZA DEL SOL</string><key>description</key><string>PLAZA DEL SOL</string></dict>
+		<dict> 		<key>number</key><string>53</string><key>name</key><string>FAB DE FRANCIA PLAZA PATRIA</string><key>description</key><string>PLAZA PATRIA</string></dict>
+		<dict> 		<key>number</key><string>54</string><key>name</key><string>FABRICAS DE FRANCIA TEPIC</string><key>description</key><string>TEPIC</string></dict>
+		<dict> 		<key>number</key><string>55</string><key>name</key><string>FABRICAS FRANCIA MAZATLAN</string><key>description</key><string>MAZATLAN</string></dict>
+		<dict> 		<key>number</key><string>56</string><key>name</key><string>FABRICAS DE FRANCIA LEON</string><key>description</key><string>LEON</string></dict>
+		<dict> 		<key>number</key><string>57</string><key>name</key><string>FABRICAS FRANCIA MORELIA</string><key>description</key><string>MORELIA</string></dict>
+		<dict> 		<key>number</key><string>58</string><key>name</key><string>FAB FRANCIA AGUASCALIENTES</string><key>description</key><string>AGUASCALIENTES</string></dict>
+		<dict> 		<key>number</key><string>60</string><key>name</key><string>FAB. FRANCIA CD. OBREGON</string><key>description</key><string>CD. OBREGON</string></dict>
+		<dict> 		<key>number</key><string>63</string><key>name</key><string>MERCADO LATINO X TELEFONO</string><key>description</key><string>MER. LATINO TEL.</string></dict>
+		<dict> 		<key>number</key><string>70</string><key>name</key><string>FAB FRANCIA BRISAS TEP.</string><key>description</key><string>BRISAS T.</string></dict>
+		<dict> 		<key>number</key><string>71</string><key>name</key><string>LIVERPOOL LEON</string><key>description</key><string>LEON</string></dict>
+		<dict> 		<key>number</key><string>72</string><key>name</key><string>LIVERPOOL PUEBLA</string><key>description</key><string>PUEBLA</string></dict>
+		<dict> 		<key>number</key><string>73</string><key>name</key><string>LIVERPOOL VERACRUZ</string><key>description</key><string>VERACRUZ</string></dict>
+		<dict> 		<key>number</key><string>74</string><key>name</key><string>LIVERPOOL METEPEC</string><key>description</key><string>METEPEC</string></dict>
+		<dict> 		<key>number</key><string>75</string><key>name</key><string>LIVERPOOL CANCUN</string><key>description</key><string>CANCUN</string></dict>
+		<dict> 		<key>number</key><string>76</string><key>name</key><string>LIVERPOOL MERIDA</string><key>description</key><string>MERIDA</string></dict>
+		<dict> 		<key>number</key><string>77</string><key>name</key><string>LIVERPOOL CUERNAVACA</string><key>description</key><string>CUERNAVACA</string></dict>
+		<dict> 		<key>number</key><string>78</string><key>name</key><string>LIVERPOOL GUADALAJARA</string><key>description</key><string>LIV. GUADALAJARA</string></dict>
+		<dict> 		<key>number</key><string>79</string><key>name</key><string>LIVERPOOL CHETUMAL</string><key>description</key><string>CHETUMAL</string></dict>
+		<dict> 		<key>number</key><string>80</string><key>name</key><string>LIVERPOOL ECATEPEC</string><key>description</key><string>ECATEPEC</string></dict>
+		<dict> 		<key>number</key><string>81</string><key>name</key><string>PARQUE DELTA</string><key>description</key><string>PARQUE DELTA</string></dict>
+		<dict> 		<key>number</key><string>82</string><key>name</key><string>LIVERPOOL XALAPA</string><key>description</key><string>XALAPA</string></dict>
+		<dict> 		<key>number</key><string>83</string><key>name</key><string>LIVERPOOL LINDAVISTA</string><key>description</key><string>LINDAVISTA</string></dict>
+		<dict> 		<key>number</key><string>84</string><key>name</key><string>LIVERPOOL COLIMA</string><key>description</key><string>COLIMA</string></dict>
+		<dict> 		<key>number</key><string>85</string><key>name</key><string>LIVERPOOL COATZACOALCOS</string><key>description</key><string>COATZACOALCOS</string></dict>
+		<dict> 		<key>number</key><string>86</string><key>name</key><string>LIVERPOOL AGUASCALIENTES</string><key>description</key><string>AGUASCALIENTES</string></dict>
+		<dict> 		<key>number</key><string>201</string><key>name</key><string>INFERNO</string><key>description</key><string>INFERNO</string></dict>
+		<dict> 		<key>number</key><string>202</string><key>name</key><string>PUPA PERISUR</string><key>description</key><string>PUPA PERISUR</string></dict>
+		<dict> 		<key>number</key><string>203</string><key>name</key><string>MAC PERISUR</string><key>description</key><string>MAC PERISUR</string></dict>
+		<dict> 		<key>number</key><string>204</string><key>name</key><string>LA ISLA</string><key>description</key><string>LA ISLA</string></dict>
+		<dict> 		<key>number</key><string>205</string><key>name</key><string>MON CARAMEL</string><key>description</key><string>MON CARAMEL</string></dict>
+		<dict> 		<key>number</key><string>206</string><key>name</key><string>PUPA</string><key>description</key><string>PUPA</string></dict>
+		<dict> 		<key>number</key><string>207</string><key>name</key><string>MAC DELTA</string><key>description</key><string>MAC DELTA</string></dict>
+		<dict> 		<key>number</key><string>208</string><key>name</key><string>MAC GUADALAJARA</string><key>description</key><string>MAC GUADALAJARA</string></dict>
+		<dict> 		<key>number</key><string>209</string><key>name</key><string>SPA. C. PERISUR</string><key>description</key><string>SPA C. PERISUR</string></dict>
+		<dict> 		<key>number</key><string>210</string><key>name</key><string>SPA. C. MONTERREY</string><key>description</key><string>SPA C. MONTERREY</string></dict>
+		<dict> 		<key>number</key><string>224</string><key>name</key><string>SPA. C. SATELITE</string><key>description</key><string>SPA C. SATELITE</string></dict>
+		<dict> 		<key>number</key><string>225</string><key>name</key><string>PUPA LINDAVISTA</string><key>description</key><string>PUPA LINDAVISTA</string></dict>
+		<dict> 		<key>number</key><string>300</string><key>name</key><string>LIVERPOOL TEHUACAN</string><key>description</key><string>TEHUACAN</string></dict>
+		<dict> 		<key>number</key><string>103</string><key>name</key><string>INTERLOMAS</string><key>description</key><string>INTERLOMAS</string></dict>
+</array>
+</plist>

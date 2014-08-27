@@ -1,0 +1,67 @@
+//
+//  CardReaderAppDelegate.h
+//  CardReader
+//
+//  Created by Raúl Horacio Valencia Tenorio on 7/13/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "FindItemModel.h"
+#import "Promotions.h"
+#import "ScanViewController.h"
+@interface CardReaderAppDelegate : UIResponder
+								   <UIApplicationDelegate, 
+								   UITabBarDelegate>
+{
+	UIWindow               *window;
+	UITabBarController     *aTabBarController;
+	UITabBar			   *aTabBar;
+	UINavigationController *aNavigationControllerScan;
+	UINavigationController *aNavigationControllerRecord;
+	UINavigationController *aNavigationControllerConfig;
+	UINavigationController *aNavigationControllerLogin;
+	UIViewController	   *loginViewController;
+	UIViewController	   *transactionMenu;
+	ScanViewController		*scanViewController;
+}
+
+@property (retain, nonatomic) IBOutlet UIWindow             *window;
+@property (retain, nonatomic) IBOutlet UITabBarController   *aTabBarController;
+@property (retain, nonatomic) IBOutlet UINavigationController *aNavigationControllerScan;
+@property (retain, nonatomic) IBOutlet UINavigationController *aNavigationControllerRecord;
+@property (retain, nonatomic) IBOutlet UINavigationController *aNavigationControllerConfig;
+@property (retain, nonatomic) IBOutlet UINavigationController *aNavigationControllerLogin;
+@property (assign, nonatomic)			UIViewController		*loginViewController;
+@property (assign, nonatomic)			UIViewController		*transactionMenu;
+@property (assign, nonatomic) IBOutlet 	ScanViewController		*scanViewController;
+@property (assign, nonatomic) IBOutlet 	UITabBar			   *aTabBar;
+
+
+
+-(void) loginScreen;
+-(void) mainScreen;
+-(void) transactionMenuScreen;
+-(void) transactionF5MenuScreen;
+-(void) removeTransactionMenuScreen;
+-(void) airTimeScreen;
+-(void) consultSKUScreen;
+-(void) removeConsultSKUScreen;
+-(void) removeAirTimeScreen;
+-(void) transactionBalanceScreen;
+-(void) installmentsScreen:(Promotions*) promo;
+-(void) removeInstallmentsScreen;
+-(void) promoScreen:(Promotions*) promo;
+-(void) removePromoScreen;
+-(void) detailItemScreen:(FindItemModel*) itemModel;
+-(void) itemDiscountScreen:(FindItemModel*) itemModel;
+-(void) itemPromotionScreen:(NSMutableArray*) aProductList;
+-(void) removeDiscountScreen;
+-(void) paymentPlanScreen:(NSMutableArray*)originalPromotions :(NSMutableArray*) promotionGroupChoosed;
+-(void) removePaymentPlanScreen;
+-(void) paymentScreen:(NSMutableArray*)aProductList :(NSMutableArray*)aPromoGroup;
+-(void) removePaymentScreen;
+-(void) hideTabBar;
+
+-(void) removeScreensToSaleView;
+@end

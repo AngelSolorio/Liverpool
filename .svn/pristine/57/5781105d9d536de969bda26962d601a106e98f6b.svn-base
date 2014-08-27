@@ -1,0 +1,60 @@
+//
+//  Card.m
+//  CardReader
+//
+//  Created by Gonet on 19/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "Card.h"
+
+
+@implementation Card
+
+@synthesize track1,track2,track3,authCode,cardNumber,cardType,expireDate,userName,monederoNumber;
+@synthesize planId;
+@synthesize amountToPay;
+@synthesize planInstallment;
+@synthesize planDescription;
+@synthesize authNumber;
+-(id) copyWithZone: (NSZone *) zone
+{
+	Card *cardCopy = [[Card allocWithZone: zone] init];
+	
+	// Cambio Ruben - Se agrego autorelease a los copy - 18/Enero/2012
+	[cardCopy setTrack1:[[track1 copy]autorelease]];
+	[cardCopy setTrack2:[[track2 copy]autorelease]];
+	[cardCopy setTrack3:[[track3 copy]autorelease]];
+	[cardCopy setAuthCode:[[authCode copy]autorelease]];
+	[cardCopy setCardNumber:[[cardNumber copy]autorelease]];
+	[cardCopy setCardType:[[cardType copy]autorelease]];
+	[cardCopy setExpireDate:[[expireDate copy]autorelease]];
+	[cardCopy setUserName:[[userName copy]autorelease]];
+	[cardCopy setAmountToPay:[[amountToPay copy]autorelease]];
+	[cardCopy setPlanId:[[planId copy]autorelease]];
+	[cardCopy setPlanInstallment:[[planInstallment copy]autorelease]];
+	[cardCopy setPlanDescription:[[planDescription copy]autorelease]];
+	[cardCopy setAuthNumber:[[authNumber copy]autorelease]];
+	return cardCopy;
+}
+
+
+-(void) dealloc
+{
+	[authNumber release];
+	[planDescription release];
+	[planId release];
+	[amountToPay release];
+	[userName release];
+	[track1 release];
+	[track2 release];
+	[track3 release];
+	[authCode release];
+	[cardNumber release];
+	[cardType release];
+	[expireDate release];
+	[monederoNumber release];
+	[super dealloc];
+}
+
+@end

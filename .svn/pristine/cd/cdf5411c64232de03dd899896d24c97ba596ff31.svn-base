@@ -1,0 +1,37 @@
+//
+//  SynchonizeViewController.h
+//  CardReader
+//
+//  Created by Martha Patricia Sagahon Azua on 03/10/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+@class Store;
+@class StoreViewController;
+@protocol TerminalDelegate
+	-(void) isShowConfigView;
+	-(void) showModal:(UIViewController*) aViewController;
+	-(void) showViewsForStoreData;
+
+@end
+
+
+@interface TerminalViewController : UIViewController<UITextFieldDelegate> {
+	UIButton* btnStore;
+	UIButton* btnSave;
+	UITextField* txtTerminal;
+	id<TerminalDelegate> delegate;
+	Store* storeData;
+	StoreViewController *storeViewController;
+
+}
+
+@property (nonatomic,retain)IBOutlet UIButton* btnStore; 
+@property (nonatomic,retain)IBOutlet UIButton* btnSave; 
+@property (nonatomic,retain)IBOutlet UITextField* txtTerminal;
+@property (nonatomic,retain) 	Store* storeData;
+@property(nonatomic,retain)	id<TerminalDelegate> delegate;
+-(void) storeSelection:(id)sender;
+-(void) save:(id)sender; 
+@end

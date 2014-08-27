@@ -1,0 +1,22 @@
+//
+//  PrinterConfigViewController.h
+//  CardReader
+//
+//  Created by Gonet on 29/08/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "LiverPoolRequest.h"
+#import "PrinterListParser.h"
+@interface PrinterConfigViewController : UIViewController <UITableViewDelegate,WsCompleteDelegate> {
+	UITableView		*aTableView;
+	NSArray			*printerList;
+	NSIndexPath		*previousIndex;
+}
+@property (nonatomic, retain) IBOutlet 	UITableView *aTableView;
+-(void) startRequest;
+-(void) findPrinterRequestParsing:(NSData*) data;
+-(void) selectedPrinter:(int) printerIndex;
+
+@end

@@ -1,0 +1,136 @@
+//
+//  PaymentViewController.h
+//  CardReader
+//
+//  Created by Raúl Horacio Valencia Tenorio on 7/17/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
+#import "LineaSDK.h"
+#import "MATCGlossyButton.h"
+#import "ScanViewController.h"
+#import "SignPrintView.h"
+#import "Card.h"
+#import "NumberKeypadDecimalPoint.h"
+
+@interface PaymentViewController : UIViewController
+<MFMailComposeViewControllerDelegate,
+LineaDelegate,UIPrintInteractionControllerDelegate,WsCompleteDelegate,UITextFieldDelegate>
+{
+	CGFloat animatedDistance;
+	IBOutlet UILabel                   *lblTitle;
+	IBOutlet UILabel                   *lblCard;
+	IBOutlet UILabel                   *lblCardNumber;
+	IBOutlet UILabel                   *lblUser;
+	IBOutlet UILabel                   *lblUserText;
+	IBOutlet UILabel                   *lblDate;
+	IBOutlet UILabel                   *lblDateText;
+	IBOutlet UILabel                   *lblSubtitle;
+	IBOutlet UILabel                   *lblOperation;
+	IBOutlet UILabel                   *lblBalance;
+
+	IBOutlet UIButton				   *btnPay;
+	IBOutlet UIBarButtonItem           *barBtnCancel;
+	IBOutlet UIBarButtonItem           *barBtnSMS;
+	IBOutlet UIBarButtonItem           *barBtnEmail;
+	IBOutlet UIBarButtonItem           *barBtnDone;
+	IBOutlet UIButton					*btnHideAuthCode;
+	IBOutlet UIButton					*btnPromo;
+	IBOutlet UITextField			   *txtAuthCode;
+	IBOutlet UITextField			   *txtAmount;
+	IBOutlet UISegmentedControl		   *ctrlPaymentType;
+	NSArray								*productList;
+	NSArray								*productListWithPromos;
+
+	int                                total;
+	
+	Linea                              *scanDevice;
+	NSMutableString						*status;
+	ScanViewController					*scanView;
+	
+	Card								*cardData;
+	NSString							*typeOfTransaction;
+	BOOL								loadedOnce;
+	BOOL								firstPaymentDone;
+	NSMutableArray						*cardsArray;
+	NSString							*balanceToPay;
+	NSMutableArray						*filteredPlanGroup;
+	NSMutableArray						*promotionGroup;
+	NSMutableArray						*originalPromotionGroup;
+    NumberKeypadDecimalPoint			*numberKeyPad;
+
+}
+
+@property (retain, nonatomic) IBOutlet UILabel                   *lblTitle;
+@property (retain, nonatomic) IBOutlet UILabel                   *lblCard;
+@property (retain, nonatomic) IBOutlet UILabel                   *lblCardNumber;
+@property (retain, nonatomic) IBOutlet UILabel                   *lblUser;
+@property (retain, nonatomic) IBOutlet UILabel                   *lblUserText;
+@property (retain, nonatomic) IBOutlet UILabel                   *lblDate;
+@property (retain, nonatomic) IBOutlet UILabel                   *lblDateText;
+@property (retain, nonatomic) IBOutlet UILabel                   *lblSubtitle;
+@property (retain, nonatomic) IBOutlet UILabel                   *lblOperation;
+@property (retain, nonatomic) IBOutlet UILabel                   *lblBalance;
+
+@property (retain, nonatomic) IBOutlet UITextField			     *txtAuthCode;
+@property (retain, nonatomic) IBOutlet UITextField			     *txtAmount;
+@property (retain, nonatomic) IBOutlet UIButton					 *btnPay;
+@property (retain, nonatomic) IBOutlet UIBarButtonItem			 *barBtnCancel;
+@property (retain, nonatomic) IBOutlet UIBarButtonItem			 *barBtnSMS;
+@property (retain, nonatomic) IBOutlet UIBarButtonItem			 *barBtnEmail;
+@property (retain, nonatomic) IBOutlet UIBarButtonItem			 *barBtnDone;
+@property (retain, nonatomic) IBOutlet UIButton					 *btnHideAuthCode;
+@property (retain, nonatomic) IBOutlet UISegmentedControl		 *ctrlPaymentType;
+@property (retain, nonatomic)			NSString				 *typeOfTransaction;
+@property (assign, nonatomic)		   NSArray					 *productList;
+@property (assign, nonatomic)		   NSArray					 *productListWithPromos;
+
+@property (retain, nonatomic)		   NSMutableArray			 *cardsArray;
+@property (assign, nonatomic)		   ScanViewController		 *scanView;
+@property (assign, nonatomic)		   NSMutableArray			 *filteredPlanGroup;
+@property (assign, nonatomic)		   	NSMutableArray			*promotionGroup;
+@property (assign, nonatomic)		   	NSMutableArray			*originalPromotionGroup;
+
+@property (nonatomic, retain) NumberKeypadDecimalPoint *numberKeyPad;
+
+
+
+//-(void)animationDidEnd:(id)animation;
+-(void)animationDidEnd:(NSString*) message forResult:(BOOL) paymentDone;
+-(IBAction)dismissSelf:(id)sender;
+-(IBAction)dismissSelfToLogin;
+-(IBAction)sendMail:(id)sender;
+//-(void)changeTotalValue:(int)amount;
+-(void) startRequest;
+-(void) paymentRequestParsing:(NSData*) data;
+//-(IBAction)printContent:(id)sender;
+//-(UIView*)getTicketView;
+-(IBAction) printTicket;
+-(void) printingRequestParsing:(NSData*) data;
+-(IBAction)authorization:(id)sender;
+-(BOOL) validatePaymentData;
+-(IBAction) selectedPaymentType;
+-(IBAction) printPDFRequest;
+-(IBAction) hideAuthCodeForNewDilisa;
+-(void) logoutRequest;
+-(void) startRequestBalanceMonedero:(NSString*) barCode;
+-(void) balanceRequestParsing:(NSData*) data;
+-(void) promotionValidForTransaction;
+-(void) startFirstDeferredPaymentRequest;
+-(void) firstPaymentDone:(NSData*) data;
+-(void) startSecondDeferredPaymentRequest;
+-(void) secondPaymentDone:(NSData*) data;
+-(BOOL) canPrint;
+-(BOOL) isValidAmountValue;
+-(void) addCardToCardArray;
+-(void) blockPaymentOptionsAfterFirstPayment;
+
+-(void) showPromosForMonedero;
+-(IBAction) showPromos;
+-(IBAction) printTicketTwoPays;
+-(void) resetLabels;
+-(void) keyboardSlideDown: (UITextField *) textField;
+-(void) keyboardSlideUp: (UITextField *) textField;
+@end

@@ -1,0 +1,112 @@
+//
+//  TransactionsMenu.m
+//  CardReader
+//
+//  Created by Gonet on 05/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "TransactionsMenuViewController.h"
+#import "Styles.h"
+#import "CardReaderAppDelegate.h"
+#import "EmployeeSaleViewController.h"
+#import "Session.h"
+@implementation TransactionsMenuViewController
+@synthesize btnClientSale,btnEmployeeSale,/*btnBalance,*/btnQuerySKU,btnAirTime,btnBalance;
+
+// The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+/*
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization.
+    }
+    return self;
+}
+*/
+
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+	
+	
+	[super viewDidLoad];
+	
+	[Styles bgGradientColorPurple:self.view];
+	[Styles silverButtonStyle:btnClientSale];
+	[Styles silverButtonStyle:btnAirTime];
+	[Styles silverButtonStyle:btnEmployeeSale];
+	[Styles silverButtonStyle:btnBalance];
+	[Styles silverButtonStyle:btnQuerySKU];
+}
+
+/*
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations.
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+*/
+
+-(IBAction) clientSaleTransact
+{
+	[Session setIsEmployeeSale:NO];
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) mainScreen];
+	
+	[Session setEmployeeAccount:@""];
+}
+-(IBAction) SKUQueryTransact
+{
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) consultSKUScreen];
+
+}
+-(IBAction) AirTimeTransact
+{
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) airTimeScreen];
+
+}
+-(IBAction) BalanceQueryTransact
+{
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) transactionBalanceScreen];
+}
+-(IBAction) EmployeeSale
+{
+	[Session setIsEmployeeSale:YES];
+
+	//[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) employeeSaleScreen];
+	EmployeeSaleViewController *employeeView=[[EmployeeSaleViewController alloc] initWithNibName:@"EmployeeSaleViewController" bundle:nil];
+	employeeView.title=@"Venta Empleado";
+	[self presentModalViewController:employeeView animated:YES];
+	[employeeView release];
+}
+-(IBAction) logout
+{
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) loginScreen];
+
+}
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc. that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+- (void)dealloc {
+	[btnClientSale release];
+	/*[btnEmployeeSale release];
+	[btnBalance release];*/
+	[btnQuerySKU release];
+	[btnAirTime release];
+	[btnBalance release];
+
+    [super dealloc];
+}
+
+
+@end

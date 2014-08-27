@@ -1,0 +1,88 @@
+//
+//  Session.h
+//  CardReader
+//
+//  Created by Gonet on 30/08/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+typedef enum {
+	INVALID_SESSION,
+	VALID_SESSION, 
+	CLOSE_SESSION
+	
+}Status;
+@interface Session : NSObject 
+	NSString *printerName;
+	NSString *user;
+	NSString *password;
+	NSString *terminal;
+	NSString *idStore;
+	NSString *store;
+	NSString *docTo;
+	NSString *monederoNumber;
+	NSString *monederoAmount;
+	NSString *monederoPercentage;
+	NSString *name;
+	NSString *monthyInterest;
+	NSString *bank;
+	Status status;
+	BOOL isEmployeeSale;
+	int		 indexPromoGroup;
+NSString *planId;
+NSString *planInstallment;
+NSString *planDescription;
+
+NSString *employeeAccount;
+
+
++(void)setPrinterName:(NSString*) aPrinterName;
++(void) setUserName:(NSString*) aUserName;
++(void) setPassword:(NSString*) aPassword;
++(void) setTerminal:(NSString*) aTerminal;
++(void) setStore:(NSString*) aStore;
++(void) setIdStore:(NSString*) aIdStore;
++(void) setDocTo:(NSString*) adocTo;
++(void) setMonederoNumber:(NSString*) amonederoNumber;
++(void) setMonederoAmount:(NSString*) amonederoAmount;
++(void) setMonederoPercent:(NSString*) amonederoPercent;
++(void) setUName:(NSString*) aName;
++(void) setMonthyInterest:(NSString*) aInterest;
++(void) setBank:(NSString*)aBank;
++(void) setStatus:(Status) status;
++(void) setIsEmployeeSale:(BOOL) flag;
++(void) setIndexPromoGroup:(int)aIndexPromoGroup;
++(void) setPlanId:(NSString*) aPlanId;
++(void) setPlanInstallment:(NSString*) aPlanInstallment;
++(void) setPlanDescription:(NSString*) aPlanDescription;
+
++(void) setEmployeeAccount:(NSString*) employeeAccount;
+
++(NSString*)getPrinterName;
++(NSString*)getUserName;
++(NSString*)getPassword;
++(NSString*)getTerminal;
++(NSString*)getStore;
++(NSString*)getIdStore;
++(NSString*)getIdStore;
++(NSString*)getDocTo;
++(NSString*)getMonederoNumber;
++(NSString*)getMonederoAmount;
++(NSString*)getMonederoPercent;
++(NSString*)getUName;
++(NSString*)getMonthyInterest;
++(NSString*)getBank;
++(int) getIndexPromoGroup;
++(NSString*)getPlanId;
++(NSString*)getPlanInstallment;
++(NSString*)getPlanDescription;
++(NSString*)getEmployeeAccount;
+
+
++(Status) getStatus;
++(BOOL) getIsEmployeeSale;
+
+
+@end

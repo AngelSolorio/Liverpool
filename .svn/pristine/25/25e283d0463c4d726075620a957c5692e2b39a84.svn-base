@@ -1,0 +1,43 @@
+//
+//  PromotionInstallmentViewController.h
+//  CardReader
+//
+//  Created by Gonet on 15/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "Promotions.h"
+
+@interface PromotionInstallmentViewController : UIViewController <UITableViewDataSource, 
+																	UITableViewDelegate> {
+
+	NSArray *installmentArray;
+	UITableView *aTableView;
+	Promotions *promo;
+	UILabel *lblBg;
+	UILabel *lblPromoName;
+	UILabel *lblPromoPrice;
+	UILabel *lblPromoDiscount;
+	UILabel *lblPromoFinalPrice;
+	UILabel *lblDescription;
+	UIButton *btnReturn;
+}
+
+@property (nonatomic,retain)			NSArray *installmentArray;
+@property (nonatomic,retain) IBOutlet	UITableView *aTableView;
+@property (nonatomic,assign)			Promotions *promo;
+@property (nonatomic,retain) IBOutlet	UILabel *lblBg;
+@property (nonatomic,retain) IBOutlet	UILabel *lblPromoName;
+@property (nonatomic,retain) IBOutlet	UILabel *lblPromoPrice;
+@property (nonatomic,retain) IBOutlet	UILabel *lblPromoDiscount;
+@property (nonatomic,retain) IBOutlet	UILabel *lblPromoFinalPrice;
+@property (nonatomic,retain) IBOutlet	UILabel *lblDescription;
+@property (nonatomic,retain) IBOutlet	UIButton *btnReturn;
+
+
+-(void) showInstallmentsTable;
+-(void) showPromoDescription;
+-(IBAction) goBack;
+
+@end

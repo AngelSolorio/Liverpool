@@ -1,0 +1,28 @@
+//
+//  AirtimeParser.h
+//  CardReader
+
+
+#import <Foundation/Foundation.h>
+#import "PaymentResponse.h"
+
+
+@interface AirtimeParser : NSObject  <NSXMLParserDelegate>{
+	
+	NSString *currentElement;
+	NSString *msgResponse;
+	PaymentResponse *payment;
+
+}
+@property (nonatomic,retain) 	NSString *currentElement;
+@property (nonatomic,retain) 	NSString *msgResponse;
+@property (nonatomic,retain) 	PaymentResponse *payment;
+
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict;
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName;
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string;
+- (void) startParser:(NSData*) data;
+-(NSString*) getMessageResponse;
+-(BOOL) getStateOfMessage;
+@end

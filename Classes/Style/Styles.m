@@ -1,0 +1,198 @@
+
+
+#import "Styles.h"
+#import <QuartzCore/QuartzCore.h>
+
+@implementation Styles
+
++(void) estiloGeneralDelBoton:(UIButton*)aBoton{
+	CAGradientLayer *gradient = [CAGradientLayer layer];
+	gradient.frame = aBoton.bounds;
+	gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[[UIColor magentaColor] CGColor], nil];
+	[aBoton.layer insertSublayer:gradient atIndex:0];
+	
+	[[aBoton layer] setCornerRadius:8.0f];
+	[[aBoton layer] setMasksToBounds:YES];
+	[[aBoton layer] setBorderWidth:1.0f];
+
+}
+/*+(void) menuButtonStyle:(UIButton*)aButton
+{
+	UIImage *buttonBackground = [[UIImage imageNamed:@"l6alL.png"] stretchableImageWithLeftCapWidth:40 topCapHeight:10 ];
+	[aButton setBackgroundImage:buttonBackground forState:UIControlStateNormal];
+	[aButton setBackgroundImage:buttonBackground forState:UIControlStateHighlighted];
+
+}*/
++(void) cornerView:(UIView*)aView{
+	
+	[[aView layer] setCornerRadius:8.0f];
+	[[aView layer] setMasksToBounds:YES];
+	[[aView layer] setBorderWidth:0.2f];
+	 aView.layer.shouldRasterize = YES;
+}
+
++(void) bgGradientColorPurple:(UIView*) aView 
+{
+	UIImageView *imagenFondo = [[UIImageView alloc] init];
+	imagenFondo.frame = CGRectMake(0, 0, 320, 480);
+    //imagenFondo.frame = aView.frame; //patch 1.4.4
+    DLog(@"viewframe %@",aView);
+	UIImage *fondo = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"bg6" ofType:@"jpg"]];
+	imagenFondo.image = fondo;
+	[aView addSubview:imagenFondo];
+	[aView sendSubviewToBack:imagenFondo];
+	[imagenFondo release];
+}
+
++(void) bgGradientButtonEmpty:(UIButton*) aButton
+{
+	CALayer *bgLayer=[CALayer layer];
+	bgLayer.frame=aButton.bounds;
+	bgLayer.cornerRadius=8.0f;
+	bgLayer.masksToBounds=YES;
+	bgLayer.borderWidth=1.0f;
+	bgLayer.borderColor=[[UIColor whiteColor]CGColor];
+	
+	CAGradientLayer *gradient = [CAGradientLayer layer];
+	gradient.frame = aButton.bounds;
+	
+	gradient.colors = [NSArray arrayWithObjects:
+					   (id)[[UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1 ] CGColor]
+					   , (id)[[UIColor colorWithRed:131/255 green:26/255 blue:130/255 alpha:1 ] CGColor]
+					   , nil];
+	
+	[bgLayer addSublayer:gradient];
+	
+	[aButton.layer insertSublayer:bgLayer atIndex:0];
+	aButton.layer.shadowColor=[[UIColor whiteColor]CGColor];
+	aButton.layer.shadowOpacity=0.8;
+	aButton.layer.shadowRadius=3;
+	aButton.layer.shadowOffset=CGSizeMake(3.0f, 3.0f);
+	aButton.layer.shouldRasterize = YES;
+}
++(void) bgGradientButtonBusy:(UIButton*) aButton
+{
+	CALayer *bgLayer=[CALayer layer];
+	bgLayer.frame=aButton.bounds;
+	bgLayer.cornerRadius=8.0f;
+	bgLayer.masksToBounds=YES;
+	bgLayer.borderWidth=1.0f;
+	bgLayer.borderColor=[[UIColor whiteColor]CGColor];
+		
+	CAGradientLayer *gradient = [CAGradientLayer layer];
+	gradient.frame = aButton.bounds;
+	
+	gradient.colors = [NSArray arrayWithObjects:
+					   (id)[[UIColor colorWithRed:0.8 green:0.1 blue:0.1 alpha:1 ] CGColor]
+					   , (id)[[UIColor colorWithRed:131/255 green:26/255 blue:130/255 alpha:1 ] CGColor]
+					   , nil];
+	
+	[bgLayer addSublayer:gradient];
+	
+	[aButton.layer insertSublayer:bgLayer atIndex:0];
+	aButton.layer.shadowColor=[[UIColor redColor]CGColor];
+	aButton.layer.shadowOpacity=0.8;
+	aButton.layer.shadowRadius=3;
+	aButton.layer.shadowOffset=CGSizeMake(3.0f, 3.0f);
+	aButton.layer.shouldRasterize = YES;
+	
+	[aButton setEnabled:NO];
+	[aButton setAlpha:0.5f];
+
+}
++(void) bgGradientButtonSelected:(UIButton*) aButton
+{
+	CALayer *bgLayer=[CALayer layer];
+	bgLayer.frame=aButton.bounds;
+	bgLayer.cornerRadius=8.0f;
+	bgLayer.masksToBounds=YES;
+	bgLayer.borderWidth=1.0f;
+	bgLayer.borderColor=[[UIColor whiteColor]CGColor];
+	
+	CAGradientLayer *gradient = [CAGradientLayer layer];
+	gradient.frame = aButton.bounds;
+	
+	gradient.colors = [NSArray arrayWithObjects:
+					   (id)[[UIColor colorWithRed:0.1 green:0.8 blue:0.1 alpha:1 ] CGColor]
+					   , (id)[[UIColor colorWithRed:131/255 green:26/255 blue:130/255 alpha:1 ] CGColor]
+					   , nil];
+	
+	[bgLayer addSublayer:gradient];
+	
+	CALayer *previousLayer=[aButton.layer.sublayers objectAtIndex:0];
+	
+	[aButton.layer insertSublayer:bgLayer atIndex:0];
+	[previousLayer removeFromSuperlayer];
+
+	aButton.layer.shadowColor=[[UIColor greenColor]CGColor];
+	aButton.layer.shadowOpacity=0.8;
+	aButton.layer.shadowRadius=3;
+	aButton.layer.shadowOffset=CGSizeMake(3.0f, 3.0f);
+	aButton.layer.shouldRasterize = YES;
+
+}
++(void) scanReaderViewStyle:(UIView*) aView
+{
+	[self cornerView:aView];
+	[[aView layer] setBorderColor:[[UIColor whiteColor]CGColor]];
+	[[aView layer] setBorderWidth:2];
+
+}
+
++(void) purpleButtonStyle:(UIButton*) aButton
+{
+	UIImage *imagen = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"PurpleBtn" ofType:@"png"]] ;
+    UIImage *imagen2 = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"PurpleBtnSelected" ofType:@"png"]] ;
+
+	[aButton setBackgroundImage:imagen forState:UIControlStateNormal];
+	[aButton setBackgroundColor:[UIColor clearColor]];
+    [aButton setBackgroundImage:imagen2 forState:UIControlStateSelected];
+	[aButton setBackgroundImage:imagen2 forState:UIControlStateHighlighted];
+	[aButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+}
+
++(void) silverButtonStyle:(UIButton*) aButton
+{
+	UIImage *imagen = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"SilverBtn" ofType:@"png"]] ;
+	UIImage *imagen2 = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"SilverBtnSelected" ofType:@"png"]] ;
+	//UIColor *color = UIColorFromRGBWithAlpha(0X9C4280,1);
+	
+	[aButton setBackgroundImage:imagen forState:UIControlStateNormal];
+	[aButton setBackgroundImage:imagen2 forState:UIControlStateSelected];
+	[aButton setBackgroundImage:imagen2 forState:UIControlStateHighlighted];
+	
+	[aButton setBackgroundColor:[UIColor clearColor]];
+	[aButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+	[aButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+	[aButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+}
+
++(void) menuTransactionButtonStyle:(UIButton*) aButton
+{
+	UIImage *imagen = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"BtnMenuPurple" ofType:@"png"]] ;
+	UIImage *imagen2 = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"BtnMenuPurple" ofType:@"png"]] ;
+	//UIColor *color = UIColorFromRGBWithAlpha(0X9C4280,1);
+	
+	[aButton setBackgroundImage:imagen forState:UIControlStateNormal];
+	[aButton setBackgroundImage:imagen2 forState:UIControlStateSelected];
+	[aButton setBackgroundImage:imagen2 forState:UIControlStateHighlighted];
+	
+	[aButton setBackgroundColor:[UIColor clearColor]];
+	[aButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+	[aButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+	[aButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+}
+
++(void)	purpleLabelText:(UILabel*)aLabel
+{
+	UIColor *color = UIColorFromRGBWithAlpha(0X9C4280,1);
+	aLabel.textColor = color;
+}
+
++(void)	purpleLabelBackground:(UILabel*)aLabel
+{
+	UIColor *color = UIColorFromRGBWithAlpha(0X9C4280,1);
+	aLabel.backgroundColor = color;
+}
+
+@end

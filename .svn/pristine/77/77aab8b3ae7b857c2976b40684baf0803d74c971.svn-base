@@ -1,0 +1,29 @@
+//
+//  PaymentResponse.h
+//  CardReader
+//
+//  Created by Martha Patricia Sagahon Azua on 14/10/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+
+@interface PaymentResponse : NSObject {
+	Boolean isError;
+	NSString* message;
+	NSString* docto;
+	NSString* monthlyInterest;
+	NSString* bank;
+	NSString* balanceToPay;
+	NSString* authorizationCode;
+}
+@property (nonatomic)	Boolean isError;
+@property (nonatomic,retain)	NSString* message;
+@property (nonatomic,retain)	NSString* docto;
+@property (nonatomic,retain)	NSString* monthlyInterest;
+@property (nonatomic,retain)	NSString* bank;	
+@property (nonatomic,retain)	NSString* balanceToPay;
+@property (nonatomic,retain)	NSString* authorizationCode;
+
+@end

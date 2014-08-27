@@ -1,0 +1,740 @@
+version 1.4.5 rev 8
+20140620 - Solucion Track 15500, 15501 y 15502
+Actualizacion 22 julio 2014
+
+Update 
+---------------------
+-se redujo el tamaño de la aplicacion removiendo archivos obsoletos
+-Nueva funcionalidad PROMOCIONES TENTATIVAS, desarrollo las siguientes reglas:
+	-% descuento extra adicional si se paga con dilisa/LPC (VENTA EMPLEADO)
+		-se considera un % descuento adicional sucesivo
+	-% monedero extra adicional si se paga con dilisa/LPC (VENTA cliente)
+		-El monedero se suma al % monedero ya existente
+	-No se calcula el adicional dilisa/LPC hasta que se paga con dichas tarjetas (se ignoran)
+	
+Bug Fixes
+---------------------
+-se corrigio un error en venta de empleado donde se aplicaba 10% de descuento en SKU que no aplican descuento de empleado,
+	lo cual ocasionaba que solicitara una segunda tarjeta al momento de pagar.
+-se corrigio un mensaje erroneo en la pantalla de SKU
+-se corrigio un error en el boton ok, en la pantalla de venta que cerraba la aplicacion ocasionalmente.
+-
+
+version 1.4.5 rev 7
+ENTREGA.12042013.BridgeCoreyRollo_Electronico
+Actualizacion 21 de marzo 2014
+
+Update 
+---------------------
+-NUEVO:se agrego mensajes de error cuando falla el proceso de promociones
+-NUEVO:al agregar una propina el teclado se oculta automaticamente y el campo de texto queda en blanco.
+-Se cambio el porcentaje admitido de descuento en BC para evitar el error de "monto de descuento
+supera el maximo admitido".
+
+Bug Fixes
+---------------------
+-Se corrigio un error donde al remover posmovil de la terminal dejaba atrapado la sesion del vendedor
+-se corrigio un error donde al pagar con dos tarjetas, y el segundo pago era efectivo, al borrar la cantidad
+	restante a pagar y se dejaba el campo de monto vacio, pagaba la cantidad completa de la transaccion,
+	(deberia solo cobrar el restante faltante de la transaccion.
+-se corrigio el error donde SKU sin promociones no permitian avanzar de la ventana de promociones, ahora
+	al no encontrar promociones avanza automaticamente a la ventana de pago.
+-CRITICO se corrigio un error donde al tratar de realizar el segundo pago sin leer la tarjeta se cerraba la aplicacion.
+-Se corrigio un error donde al remover posmovil de la terminal dejaba atrapado la sesion del vendedor
+-CRITICO: se corrigio un error donde al fallar un proceso de promociones y regresar a la ventana
+	de escaneo de productos, al intentar borrar el SKU cerraba la aplicacion. (fallo memoria)
+
+
+
+version 1.4.5 rev 6
+ENTREGA.12042013.BridgeCoreyRollo_Electronico
+Actualizacion 11 de marzo 2014
+
+Update 
+---------------------
+-Se actualizo la interfaz de cancelacion de eglobals.
+-NUEVO: se agrego titulo a la ventana de retiro de efectivo.
+-NUEVO: se agrego una nueva validacion para descuento % manual, y su mensajes de error asociados.
+
+Bug Fixes
+---------------------
+-CRITICO: se corrigio un error de memoria (segmentation fault 11) en uno de los strings de cancelacion.
+-CRITICO: se corrigio un error de memoria (segmentation fault 11) en uno de los strings de retiro de efectivo el cual ocasionalmente 
+	cerraba la aplicacion.
+-CRITICO: se corrigio un error que cerraba la aplicacion en retiro de efectivo causado por las animaciones.
+		 (CoreAnimation defered too long).
+-CRITICO: se corrigio un error donde se intentaba validar el objeto CARDDATA cuando este ya no existia en memoria, el objeto
+	ahora es asignado a NIL despues de haber sido liberado para evitar llamar a un puntero de memoria inexistente a su vez 
+	ocasionando el cierre de la aplicacion.
+-Se corrigio un error donde al leer una tarjeta si vale la reconocia como BIN de DILISA.
+-Se corrigio un error de impresion donde no imprimia el cambio en la venta de restaurante con efectivo
+-Se corrigio un error en la venta de restaurant con efectivo donde el cambio no era calculado correctamente.
+-Se corrigio un error donde cerrar terminal aumentaba dos numeros de Doctos a la vez.
+-Se corrigio un error en retiro de efectivo donde agregaba un retiro extra no intencionado.
+-Se corrigio un error en retiro de efectivo donde no se podia borrar un retiro de la lista.
+-Se corrigio una validacion en descuento manual fijo donde permitia introducir un descuento de 0%
+-Se corrigio un error donde se podia imprimir mas de un ticket cuando se presionaba muchas veces el boton imprimir.
+-Se corrigio un error en la lectura de abono a monedero donde al seleccionar la opcion salir se cerraba la aplicacion
+-Se corrigio un error ocasional donde se cerraba la aplicacion al leer un abono a monedero.
+-Se corrigio el error en la cancelacion de venta de empleado.
+-Se corrigio un error donde al ocurrir un fallo en la venta de restaurant la comanda se quedaba atrapada
+-Se corrigio un error donde se calculaba las promociones despues de la accion de pago en BC, alterando el total lo cual 
+	ocasionaba que al tratar de cancelarlo fallara.
+	
+
+
+version 1.4.5 rev 5
+ENTREGA.12042013.BridgeCoreyRollo_Electronico
+Actualizacion 6 de febrero 2014
+
+Update 
+---------------------
+-Nuevo:Ahora se muestra mensaje de error al procesar las promociones
+-Nuevo:Funcionalidad Anular / regresar en el pos movil.
+-Se agrego la leyenda "PAGARÉ NEGOCIABLE ÚNICAMENTE CON INSTITUCIONES DE CRÉDITO" en el boucher
+-Se mejoro ligeramente el tiempo de respuesta para las ventas.
+-se actualizaron  la reglas para venta de empleado respecto a promociones.
+-Se actualizo el proceso de retiro de efectivo, ahora revisa al iniciar si hay un retiro pendiente.
+-Se agrego la linea CLIENTE en la impresion del ticket correspondiendo al formato.
+-Se actualizo la informacion de numeros telefonicos de asistencia en la impresion de ticket.
+
+Bug Fixes
+---------------------
+-Se corrigio un error donde no se imprimia la boleta para las tarjetas Eglobal en la cancelacion
+-CRITICO:Se corrigio un error donde al cancelar una boleta cerraba la aplicacion
+-Se corrigio un error donde no se permitia avanzar si la tarjeta no tenia codigo de seguridad
+-Ya no solicita el monedero por segunda vez al momento de pagar con este.
+-Se corrigio un error donde al remover una terminal posmovil de un controlador y registrarla en otro controlador,
+	los numeros de afiliacion del primer controlador permanecian guardados ignorando las afiliaciones del controlador actual.
+-se corrigio un error donde un articulo cuya descripcion incluia "ñ" no se imprimia el ticket de manera correcta.	
+-se corrigio un error de impresion donde el monto obtenido de monedero era cero.
+-CRITICO:se corrigio un error donde se aplicaba descuentos a ventas de dulceria si la primera opcion default tenia descuento de % 
+	(venta dulceria  calculatePromotion(false).
+-se corrigieron los mensajes de pantalla e impresion para un monedero en ceros.
+-CRITICO:Se corrigio un error en la venta de empleado con dos tarjetas, el error (arrayIndexOutOfBounds) se daba cuando el segundo
+	pago trataba de hacerlo como venta cliente ocasionando que el calculo de secuencias de promocion no concordaran 
+	(empleado y cliente tienen secuencias diferentes).
+-Se corrigio un error donde al fallar un pago, al intentar de nuevo podias continuar la transaccion sin leer la tarjeta
+	ignorando las validaciones de lectura de tarjeta (antigua tarjeta permanecia en la variable temporal) ocasionando 
+	que la aplicacion se cerrara.
+-CRITICO: se corrigio un error donde se intentaba validar el objeto CARDDATA cuando este ya no existia en memoria, el objeto
+	ahora es asignado a NIL despues de haber sido liberado para evitar el cierre de la aplicacion.
+
+version 1.4.5 rev 4
+ENTREGA.12042013.BridgeCoreyRollo_Electronico
+Actualizacion 20 de diciembre 2013
+
+Update 
+---------------------
+-se cambiaron los valores de los botones porcentajes de los descuentos manuales a 10%-20%-30% respectivamente
+-se agrego una nueva regla para venta empleado, solo permite un descuento manual por SKU.
+-se agrego una regla para escaneo de items, al mostrar la ventana de error no se permite escanear otro numero hasta que
+se presione "aceptar" en la ventana de error.
+
+Bug Fixes
+---------------------
+-se corregio un error de calculo de los descuentos cuando se involucraba descuentos manuales en modo empleado.
+
+version 1.4.5 rev 3 
+JAR 20131122 - Impuestos NegativosPDA (pendiente 20131129 - Track 14454 Cancelacion en linea tarjetas de debito Bancomer-Banamex)
+Actualizacion 5 de diciembre 2013
+
+Update 
+---------------------
+-SE ACTUALIZO LA DIRECCION FISCAL DE LIVERPOOL
+-Mejora: despues de escanear un SKU se desconecta momentaneamente el lector hasta haber recibido respuesta de
+	servidor
+-Se redujo considerablemente el tamaño de archivo de la aplicacion .IPA se removieron archivos e imagenes redundantes(reduccion 40%) 
+-Se agrego un mensaje de respuesta de error al procesar las promociones (antes no existia)
+-Se agrego una nueva funcion de timeout al no recibir respuesta.	
+-Mejora: al no recibir respuesta del mapa de promociones debido a un error, automaticamente se regresa a la pantalla de scaneo
+	avisando el error al usuario.
+-Mejora: se cambiaron los valores de los atajos para descuentos manuales de 5%,10%,15% a 10%,20%,30%
+
+Bug Fixes
+---------------------
+-se corrigio un error donde al vender con monedero y efectivo mostraba opciones de pago (
+	(no debe mostrar opciones solo presupuesto).
+-Se agrego la leyenda "PAGARE NEGOCIABLE UNICAMENTE CON INSTITUCIONES DE CREDITO" en el voucher de tarjetas externas
+-Se corrigio un error donde GenericoptionView reportaba un indice de seleccion erroneo (+1) del indice seleccionado.
+	(corrige el error donde selecciona un plazo que no corresponde al elegido)
+-Se corrigio un error donde se podia leer multiples SKUS antes de recibir respuesta del anterior lo cual ocasionaba
+	que la animacion de "procesando" se quedara siempre visible.
+-Ya no se muestra dos veces el plazo seleccionado "15 15 MESES SIN INTERESES"
+-Se corrigio un error donde ocasionalmente imprimia la leyenda  PAGARE NEGOCIABLE CON INSTITUCIONES DE CREDITO en tarjetas dilisa
+
+version 1.4.5 rev 1
+JAR arregla cancelacion de abono a monedero
+Actualizacion 27 de noviembre 2013
+
+Update 
+---------------------
+-Mejora de aplicacion :Se rediseño la pantallas de venta para hacerlo mas simple y similar al flujo de venta en BridgePos
+-Mejora de aplicacion :Se cambio el fondo de pantalla.
+-Mejora de aplicacion :Se cambio el diseño de las celdas de las tablas
+-Mejora de aplicacion :Se mejoro ligeramente el rendimiento al dibujar las celdas (se removio coregraphics round corners) y se evito
+	la redundancia de dibujar las celdas mas de una vez.
+-Mejora de aplicacion :se agregaron la opcion de regresar en las pantallas de practicas de servicio y ventas.
+-Se cambio el texto de impresion RECARGA A MONEDERO por MONEDERO.
+
+	
+Bug Fix
+---------------------
+-se corrigio un error donde al vender con dos tarjetas y una tener una tarjeta monedero el saldo era incorrecto.
+-se corrigio un error donde al ser el segundo pago en efectivo no puedes introducir la cantidad en efectivo por que el campo esta bloqueado.
+-se corrigio un error donde al mostrar la animacion de bateria y salir de una ventana rapidamente cerraba la aplicacion.
+-se corrigio un error donde monedero pedia numero de autorizacion en la interface.
+-se corrigio un error donde el planID de un pago anterior que fallo se guardaba para el siguiente pago provocando que el siguiente pago exitoso
+tuviera el planID y plazos del pago anterior fallido.
+-Se corrigio un error donde al cancelar la lectura de abono a monedero cerraba la aplicacion
+
+version 1.4.5 rev 5
+JAR PENDIENTE arregla cancelacion de abono a monedero
+Actualizacion 15 de noviembre 2013
+
+Update 
+---------------------
+-Mejora de aplicacion : se agrego una funcionalidad de monitoreo de bateria del case.
+	-Cuando el posmovil sale de suspension o se minimizo la aplicacion muestra los niveles de carga de la bateria
+	-Muestra los niveles de carga en intervalos de 5,20,40,60,80,100 % de la bateria
+	-Se agrego una animacion de entrada y salida.
+	-Se agrego un sonido de alerta cuando el nivel de la bateria es inferior a 20%.
+	
+	
+	
+Bug Fix
+---------------------
+-Se corrigio un error donde el monitoreo de bateria provocaba que le case dejara de leer codigos de barras
+	en ciertas ocasiones (Problema de delegados).
+	
+
+
+version 1.4.4.5 rev 4
+JAR PENDIENTE arregla cancelacion de abono a monedero
+Actualizacion 6 de noviembre 2013
+
+Update 
+---------------------
+
+Bug Fix
+---------------------
+-Se corrigio un error donde al escanear un item agregarle un descuento manual de porcentaje y luego la cantidad,
+	a la hora de imprimir estos valores no son correctos (la venta es correcta no es afectada por este error grafico)
+-Se corrigio un error donde No se imprimi el numero de monedero cuando se realiza una venta de tarjeta externa/lpc/dilisa/efectivo con promo de abono a monedero.
+-Se corrigio un error donde al tener una promo de abono a monedero, en la ventana para leer monedero no valida si el numero va vacio.
+-Se corrigio un error donde  al tener una promo de abono a monedero, en la ventana para leer monedero al cancelar la lectura cierra la aplicacion.
+-Se corrigio un error en la impresion de totales de abono a monedero es incorrecta cuando el item tiene dos descuentos manuales.
+-Se corrigio un error donde  al tener una promo de abono a monedero al imprimir el saldo del monedero mostraba en ceros sus valores, solo
+cuando es la segunda vez intentando imprimir (despues del primer intento de impresion reseteaba los valores del monedero a cero).
+
+
+
+version 1.4.4.5 rev 3
+JAR PENDIENTE arregla cancelacion de abono a monedero
+Actualizacion 3 de noviembre 2013
+
+Update 
+---------------------
+
+Bug Fix
+---------------------
+-Error SDK Se encontro un error donde al poner la impresora en modo sleep al tratar de imprimir falla (pasa con la app del SDK)
+-Se corrigio un error donde al mandar a imprimir al mismo tiempo que encender la impresora ocasionaba un loop que ya no permitia
+volver a imprimir ni continuar con la aplicacion.
+-se corrigio un error donde al tener un pago con plazos y abono a monedero, no se mostraba la ventana para leer el monedero,ademas
+de cerrar la aplicacion.
+-Se corrigio un error donde el saldo del monedero se imprimia erroneamente como cero cuando se hacia una venta con monedero normal.
+	-Se corrigio el error en base al comportamiento de saldo de monedero
+	-Al vender con monedero el dato del saldo proviene del campo ValeMonederoPaymentResultDTO.getTender().getValeMonederoBalance()
+	-AL vender con cualquier otra tarjeta el saldo proviene del campo despues de la venta TicketLiverpool.getValeMonederoOldBalance()
+		este dato viene con los decimales recorridos dos unidades a la izquierda.
+	Se crearon todas las validaciones para los dos campos diferentes, y su conversion de decimales para que pueda funcionar.
+-Se corrigio un error de NULL pointer cuando se trataba de sacar el saldo del monedero una venta (aunque no involucrara monedero)
+-Se corrigio un error donde al pagar con efectivo mostraba una pantalla blanca.
+
+
+version 1.4.4.5 rev 2
+JAR PENDIENTE arregla cancelacion de abono a monedero
+Actualizacion 1 de noviembre 2013
+
+Update 
+---------------------
+-se actualizo SDK linea pro y sus correspondientes metodos
+-se actualizo SDK de star micronics y sus correspondientes metodos.
+-Mejora de aplicacion:se integro funciones para monitorear el estado de la bateria del case lineapro
+-Mejora de aplicacion: cuando no hay promociones disponibles para el medio de pago automaticamente selecciona presupuesto
+	sin tener que entrar a la ventana de forma de pagos.
+-Mejora de aplicacion: cuando se tiene una promocion de pago en meses y solo tiene una opcion se elije automaticamente
+	sin tener que entrar a la ventana de plazos.
+-Mejora de aplicacion: en la lectura de monedero de abono a monedero al cancelar te devuelve hasta la ventana de escaneo de items
+	(no se puede hacer una venta con abono a monedero sin leer monedero, se debe bloquear la venta si no se recibe # de monedero)
+-Mejora de aplicacion: se diseñaron nuevos metodos para la impresion:
+	-Se reconoce la desconexion, apagado y falta de papel con su respectivo mensaje informando al usuario.
+	-Se redujo considerablemente el tiempo de respuesta en caso de error.
+	-Se mejoro la estabilidad en el codigo de impresion.
+	-Se reconocen mas status de errores de impresion que antes.
+-Mejora de aplicacion: se rediseño la ventana de retiro de efectivo, y se integraron nuevas etiquetas para la tabla de retiro.
+
+
+Bug Fix
+---------------------
+-ya no falla al imprimir un voucher por falta de papel , apagado o apertura de tapa.
+-se corrigio el error Cuando se manda a imprimir el ticket manda mensaje "Impresora apagada o fuera del alcance", 
+sin embargo al ver la impresora ésta se encuentra encendida. Se tiene que reiniciar la impresora para que se 
+imprima el documento. 
+-se corrigio el error cuando en ocasiones al prenderse o apagarse la impresora, se cierra la aplicación.
+PENDIENTE-se corrigio un error donde al cancelar una venta con abono a monedero no regresaba el abono al cancelar (synthesis jar)
+-se corrigio un error en la impresion de ticket donde se imprimia el saldo incorrectamente en ciertas ocasiones.
+-se corrigio un error donde en ocasiones al estar imprimiendo  la aplicación se cierra y por consiguiente no se termina de imprimir el ticket
+-se corrigio un error donde el nivel de carga de la bateria se reportaba solo una vez al cargar la aplicacion 
+(ahora actualiza su info de carga cada que se escanea un item para evitar el llamado constante de la funcion).
+-Se corrigio un error donde las impresiones no se completaban y la aplicacion no reportaba la falla
+-Se corrigio un error donde al pagar en efectivo y tener abono a monedero, realizaba la venta sin pedir el monedero ni abonar.
+-Se corrigio un error donde al pagar con dos tarjetas con promo de abono a monedero se pedia el numero de monedero cada vez (solo debe pedirla una vez)
+-Se corrigio un error donde al pagar con dos tarjetas y tener promo de abono de monedero no se imprimia el saldo del monedero
+-se corrigio un error donde al poner un descuento manual de % al item y luego aplicarle cantidad/gramaje el calculo era erroneo.
+
+	
+version 1.4.5 build 1
+
+JARLIB:20130905 -Track Artículos Pesables
+Actualizacion 17 de septiembre 2013
+
+Update 
+---------------------
+-se integro la impresion de retiro de caja
+-se integro la interface de retiro de caja
+-se integro una funcion que revisa constantemente el estado de la conexion con la impresora bluetooth
+
+
+Bug Fix
+---------------------
+-se corrigio un error donde no se imprimia el balance del monedero al pagar con una tarjeta que no fuera monedero
+-se corrigio un error donde al cerrar la terminal mandaba el mensaje de multiples sesiones
+-se corrigio un error donde no se calculaba de manera correcta el monto a abonar al monedero si los productos incluina descuentos.
+-se corrigio un error donde no se calculaba de manera correcta el monto a abonar al monedero si los productos incluian descuento y era pago con dos tarjetas
+-se corrigio un error donde al apagarse la impresora bluetooth se cerraba la aplicacion.
+-se corrigio un error al realizar el pago con Tarjeta Externa, a meses sin intereses o pagos fijos, los montos mensuales salen diferentes al Pos Fisico. 
+
+
+version 1.4.4 build 2
+
+JARLIB:20130905 -Track Artículos Pesables
+Actualizacion 17 de septiembre 2013
+
+Update 
+---------------------
+-se integro pago en efectivo
+-se integro retiro de caja
+
+Bug Fix
+---------------------
+-se corrigió un bug donde al imprimir la cancelación de un pago en efectivo mandaba el numero de autorización en cero (efectivo no tiene numero de autorización)
+-se corrigió un error importante en el pago con primer día divisa donde al intentar pagar mandaba error.
+
+
+
+
+version 1.4.4
+
+JARLIB:correccion 01062013 reverso/ 03062013 Ejournal qty item
+Actualizacion 31 de julio 2013
+
+Update 
+---------------------
+-pago en dulceria ahora se va directo a presupuesto sin procesar el mapa de promociones.
+-se agrego pago en efectivo que consta de las siguientes reglas:
+	-al pagar en efectivo el cambio es representado por un valor (returned()) en bridgecore
+	-Realizando el pago en dos partes:
+		-si se introduce el primer pago como efectivo el monto a ingresar debe ser sin cambio, debido a la regla anterior del balance
+		negativo representando el cambio, si se introduce un numero que no supera el monto a pagar no es posible calcular un valor de 
+		cambio a entregar al cliente.
+		-se puede realizar los dos pagos en cualquier orden Efectivo-tarjeta o tarjeta-efectivo
+		-pago efectivo no genera voucher
+		-pago en efectivo no genera numero de authorizacion
+-se actualizo SDK star micronic para dar soporte a impresoras Bluetooth	
+	-se actualizaron comandos de impresion
+	-se actualizaron espacios y formato de ticket	
+-Ahora se tiene la opcion de configurar una impresora Bluetooth o una WiFi desde el menu de configuracion.
+-Se actualizaron algunas menus de la interface.
+
+
+Bug Fix
+---------------------
+-se corrigio un error al realizar un pago en efectivo no se genera un numero de authorizacion y la aplicacion se cerraba, 
+	se agrego una validacion para evitar este error.
+-se corrigio un error en la opcion de pago en efectivo que trataba el pago como si fuera monedero.
+-se corrigio un error en la ventana de consulta de saldos donde al encender la impresora bluetooth se cerraba la aplicacion.
+-se corrigio un error donde se imprimia el numero consecutivo del voucher siempre como 0.
+-se corrigio un error en la consulta de saldo donde se inicializaba el dispositivo de lectura de tarjetas dos veces lo cual 
+	provocaba que ocasionalmente se cerrara la aplicacion.
+-se corrigio un error donde al mandar a pagar la transaccion sin seleccionar un modo de pago manda el error "la transaccion no esta pagada"	
+-Se corrigio un error donde al usar el SKU 13540586  CIGARRO BENSON &, provoca un error de caracteres, 
+	esto se debe a que el "&" es un caracter invalido. se reemplaza por "&amp;" al enviar la peticion al servidor tomcat para evitar errores.
+-Se corrigio un error de calculo de descuento cuando se aplicar un segundo descuento manual de porcentaje a un producto que tuviera gramaje/cantidad.	
+	
+version 1.4.3.3
+JARLIB:correccion 23052013 reverso/ 28052013 Cancelacion
+Actualizacion 13 de junio 2013
+
+
+Update 
+---------------------
+-se elimino el limite de caracteres (4) en el descuento por tecla de monto fijo
+-se agrego el punto decimal en el
+
+Bug Fix
+---------------------
+-se corrigio el error en el calculo de descuentos fijos cuando el producto tenia X cantidad o gramaje
+
+
+
+version 1.4.3.2 v2
+JARLIB:correccion 23052013 reverso/ 28052013 Cancelacion
+Actualizacion 6 de junio 2013
+
+
+Update 
+---------------------
+-se actualizo la interfaz grafica (evento bodas)
+-se agrego un navigation bar con la opcion de regresar en la ventana de detalle de producto para poder volver a la pantalla de escaneo de productos.
+-al seleccionar descuento  manual fijo oporcentual en el SKU ahora se limpia el cuadro de texto.
+Hot Fix 
+---------------------
+-Se corrigio un error donde al aplicar un descuento manual y darle una cantidad al producto, este no se calculaba correctamente.
+	y mandaba error al momento de realizar la venta.
+-se corrigio un error donde no se permitia dar un descuento fijo mayor al precio original ya que no toma en cuenta el valor del SKU multiplicado por su cantidad	
+	
+version 1.4.3.2
+JARLIB:correccion 23052013 reverso/ 28052013 Cancelacion
+Actualizacion 31 de mayo 2013
+
+
+Update 
+---------------------
+-se actualizo la interfaz grafica
+
+
+Bug Fixes 
+---------------------
+-se corrigio un error en el escaneo de SKU F5, donde se daba un valor incorrecto de precio.
+-se corrigio un error en el reverso (JAR) cuando se anula el primer pago de una transaccion
+-se corrigio un error donde el reverso no devolvia el pago cuando se cancelaba un ticket (JAR)
+-se corrigo un error donde los codigos de barras de 10 digitos no se convertian correctamente al usar padding con ceros.
+-se corrigio un error en el formato de codigo de barra tenia le formato incorrecto de dia-mes-año se cambio a año-mes-dia
+-se corrigio el formato de codigo de barras de ticket de regalo
+-se corrigio un error en el ticket de regalo donde el formato era incorrecto.
+-se corrigio un error donde si eliges que la venta no es para regalo, pero marcas manualmente el item en su pantalla de detalles, no imprime su ticket de regalo
+-se corrigio un error en la generacion de codigo de barra del ticket de regalo , el SKU era afectado por el padding de zeros a las izquierda generando un SKU diferente
+
+version 1.4.3.1 
+JARLIB:correccion eaulaut 2013
+Actualizacion 2 de mayo 2013
+
+Update 
+---------------------
+-se agrego una nueva funcion para la venta con dos tarjetas:
+	-se puede cancelar una vez realizado el primer pago y no se desea hacer el segundo.
+
+Bug Fixes 
+---------------------
+-se corrigio un error donde al liberar la terminal mandaba un error de timeout y dejaba la sesion abierta
+-se corrigio lo siguiente en la venta con dos tarjetas:
+	-al fallar el segundo pago y volver a la pantalla de productos no permitia continuar la transaccion
+	-al hacer el primer pago no se podia cancelar la transaccion.
+-se corrigio un error de impresion donde los "X pagos a meses" no se redondeaba la cantidad
+-se corrigio un error donde al introducir un numero de vendedor invalido marcaba el error "error al acceder a la BD"
+
+version 1.4.3 
+JARLIB:correccion eaulaut 2013
+Actualizacion 14 de abril 2013
+
+Update 
+---------------------
+-se agrego una funcion que remueve acentos ya que no son soportados en la impresion de ticket.
+-Se agrego la devolucion
+-se rediseño la impresion de voucher para permitir los cambios de devolucion
+-se agrego el formato de voucher y de ticket devolucion
+-se agrego la transaccion venta de dulceria
+-se agrego bold type al formato de impresion
+-se agrego una validacion para cuando se introduce un numero de empleado vacio en la ventana de modo de empleado
+-Al seleccionar la info del producto y seleccionar que es para regalo, 
+	se regresa a la pantalla escaneo de items automaticamente.
+-se actualizo la linea de TOTAL en la impresion de ticket para hacerlo identico a la version de BRIDGEPOS
+-se actualizo la linea de descripcion total en letra para hacerlo identico a la version de BRIDGEPOS
+
+Bug Fixes 
+---------------------
+-se corrigio un error donde no se validaba un numero de empleado vacio en la ventana de modo de empleado que ocasionaba
+	que la aplicacion se cerrara.
+-se corrigio un error en la impresion de ticket donde no se imprimia correctamente los valores de saldos de devolucion
+-se corrigio un error donde al cambiar la cantidad/peso del producto no podias salir de dicha ventana
+-se corrigio un error donde en la venta de dulceria no podias borrar items de la lista
+-se corrigio un error en la impresion de tickets donde el acento no se imprime de manera correcta ( se removieron los acentos)
+
+Actualizacion 24 de enero 2013
+Update 
+---------------------
+-se integro el codigo de facturacion en linea en el ticket
+-se integro devolucion de producto
+
+Bug Fixes 
+---------------------
+-se corrigio un error donde al realizar una venta y logear el TABBAR de configuracion desaparece
+-se corrigio un error donde no se generaba codigo de facturacion para ventaRestaurant
+-se corrigio un error donde al pagar restaurant con una sola tarjeta mandaba error 
+-se corrigio un error que cerraba la aplicacion al consultar un SKU
+-se corrigio un error donde se mostraba la barra de navegacion en vistas incorrectamente
+-se corrigio un error donde al fallar el pago con una tarjeta te cerraba toda la transaccion y no dejaba continuar.
+
+Actualizacion 7 de diciembre 2012
+Update 
+---------------------
+-se recompilo el codigo para IOS 6.0
+
+
+Bug Fixes 
+---------------------
+-se actualizaron 49 metodos marcados como "deprecated" en IOS 6.0
+-se corrigio un error con la aplicacion que hacia que la vista se mostrara de manera incorrecta.
+-se removieron metodos que no funcionan en ios 6.0
+
+
+Version 1.4.1 
+ rolloelectronico.zip
+Actualizacion 20 de noviembre 2012
+Update 
+---------------------
+-se agrego los distintos formatos de impresion de SOMS
+-se agrego la venta con cualquier combinacion de tarjetas
+-se agrego una validacion en venta de empleado, debe usar la misma tarjeta que se uso al inicio de la transaccion
+para poder realizar la compra
+-se actualizo el codigo de calcularintereses() para recibir los nuevos planID para pagos fijos clientes a 874 PFijo Cliente y 
+875 Pfijo Empleado (antes 812 y 813 respectivamente)
+-se agrego una validacion nueva con las siguientes combinaciones: 
+	-solo se permite un tipo de cada descuento manual (solo 1 porcentual y un monto fijo maximo) 
+	-solo se permite un descuento manual de monto fijo (no se permite otro descuento de ningun tipo)
+	-se permite dos descuentos manuales porcentuales
+-se diseño una nueva funcion para la venta con monedero, ahora imprime siempre los valores de saldo del monedero aun estando
+en el ambiente de desarrollo	
+-se removio codigo deprecated en ticketviewcontroller:
+	-printTicket
+	-PrintTicketMonedero
+-se rediseño la venta con monedero con los siguientes cambios:
+	-el saldo se sigue obteniendo desde internet
+	-el saldo al hacer la venta no aparecera con 0 en ambiente de desarrollo
+	-el abono a monedero se carga al ultimo monedero introducido
+	-soporta venta con dos monederos
+	
+	
+	
+Bug Fixes 
+---------------------
+-se cambio la leyenda "presupuesto" a "PRESUPUESTO"
+-se amplio el tamaño de la tabla de promociones de planes en el caso de que los planes sean mayores a 5 sean visibles.
+-se corrigio un error donde el total de la transaccion siempre era cero
+-se corrigio un error donde se imprimia en el ticket la leyenda de pagos mensuales cuando no tenia promocion
+-se corrigio  un error donde la leyeda decia "CASA" deberia ser "VENTA CASA"
+-se corrigio un error donde al pagar con una tarjeta el cliente erroneamente se quedaba en espera del segundo 
+pago (aunque marcaba como transaccion finalizada en el ipod), lo cual dejaba la sesion abierta y la transaccion se anulaba
+-se corrigio un error donde al pagar soms con monedero fallaba al calcular el interes (no debe calcular nada) y anulaba la 
+transaccion
+-se corrigio un error en el calculo de promociones, se calculaba los descuentos y se aplicaban al final del ciclo, lo cual 
+permitia aplicar los descuentos fijos primero y los porcentuales hasta el final, AHORA se calculan segun el orden en el que 
+se agregaron
+-se corrigio un error donde no se imprimia los saldos de monederos y no permitia la venta con dos monederos
+-se corrigio un error en la impresion de venta con dos monederos donde no imprimia los cargos de manera correcta.
+-se corrigio un error en la cancelacion del ticket donde se quedaba atrapada la sesion al cancelar un ticket.
+-se corrigio un error donde al pagar con dos tarjetas una venta de SOMS no se imprimia el voucher de SOMS ç
+-se corrigio un error nullpointerexception en el pago con una tarjeta provocado por la variable balancetoPay
+-se corrigio un error donde al vender con una tarjeta dilisa una parte de la venta el POSMOVIL avisaba como que el pago fue completado
+-se corrigio un error donde el abono a monedero se imprimia en ambos monederos en el caso de pago con dos monederos.
+-se corrigio un error donde al pagar con una tarjeta externa a presupuesto sus datos de plazo , installment amount son nulos, se agrego
+	una excepcion para evitar el error.
+-se corrigio el error en el ticket de cancelacion donde aleatoriamente imprimia $1000.00 como $0.00
+-se corrigio un error donde el numero de monedero que se utizo en un abono anterior se mantenia en memoria y se aplicaba en el siguiente abono.
+-se corrigio un error en la impresion cuando al seleccionar algun tipo de plan con dos tarjetas este aparecia repetido en la descripcion del producto.
+Version 1.4.0 (NO COMPATIBLE CON anteriores)
+ Autocode.zip
+
+
+Actualizacion 24 de octubre 2012
+Update 
+---------------------
+-se rediseño la venta con tarjetas, ahora permite hacer cualquier combinacion de tarjetas para la venta
+-se cambio la funcion del metodo blockafterpayment
+-se eliminaron los metodos de firstpayment y secondpayment para la venta con dos tarjetas, ahora se utiliza solo un metodo
+	para realizar la venta normal
+-se agrego la funcion de imprimir un voucher por cada tarjeta de pago
+-se agrego la funcion de poder seleccionar dos planes de pago (uno por tarjeta)
+-Se agrego la funcion de resetear la interfaz al hacer el primer pago.
+-se elimino el metodo de impresion para un solo medio de pago, ahora el metodo de pago funciona tanto para una tarjeta como para 
+	pago con dos tarjetas
+	
+
+
+Bug Fixes 
+---------------------
+-no se muestra el segundo plan de pago en la impresion del ticket cuando se seleccionan dos planes de pago (uno por tarjeta)
+-se corrigio un error donde no se imprimian los valores de meses con interes de manera correcta
+-se corrigio un error en la impresion donde no aparecia el segundo medio de pago
+-se corrigio un error donde al realizar el segundo pago la respuesta del pago no incluia las promociones de la venta por lo tanto
+no se imprimian en el ticket.
+-se corrigio un error donde no se imprimia un voucher por cada medio de pago.
+
+
+
+Version 1.3.4 (NO COMPATIBLE CON V1.3.3 o anteriores)
+ Autocode.zip
+Actualizacion 12 de octubre 2012
+Update 
+---------------------
+-se oculto el numero de tarjeta en la consulta de saldo
+
+
+Bug Fixes 
+---------------------
+-se corrigio el error en pago de restaurant con dos tarjetas
+-se corrigio un error donde la propina no era agregada al total de la transaccion
+-se corrigio un error al aplicar descuento manual en la venta de soms (el descuento tiene que ser un numero entero)
+
+
+Version 1.3.3
+Actualizacion 12 de octubre 2012
+Update 
+---------------------
+-se agrego venta con una o dos tarjetas para restaurant
+-se agrego la venta soms
+-se agrego el multiplicador de articulos
+-se agrego el decimal para los articulos
+-se agrego leyendas correspondientes en la impresion del ticket cuando se usa un decimal, o un multimplicador para la lista
+de productos.
+-se realizo un cambio en la transaccion para decimal en BC, ahorase utiliza el parametro quantity para con decimales para realizar 
+la venta por decimal.
+-Se resideño el metodo de anularTransaccion, incorrectamente usaba un metodo FINISHTRANSACTION para todos los tipos de transacciones se cambio 
+el metodo para que reciba todos los tipos de FINISHTRANSACTION para cada tipo de transaccion (FOOD,SOMS,NORMAL)
+-Se creo un metodo que fusiona el metodo de venta con una tarjeta , y venta con dos tarjetas, se simplifico el codigo para hacer que el metodo de venta
+funcione para realizar ambas transacciones (solo aplica para FOOD y SOMS).
+-Se actualizo  el codigo para anular Transacciones
+-Se agrego la cancelacion de venta.
+-Se modifico el decimal y multiplicador para que sea una sola ventana.
+-se agrego validacion cuando no se encuentra un SKU en la lista de maestros y no agregue un producto "dummie"
+- se agrego el boton de salir para la ventana de agregar decimal/multiplicador
+-se agrego boton salir para la cancelacion de ticket.
+-CRITICO: se agrego la siguiente validacion , cuando la venta esta en proceso ahora se bloquea el case de lectura
+de tarjetas hasta que se termine este proceso, sin esta validacion el ipod puede registrar una tarjeta completamente
+diferente al del que se realizo el pago y esta tarjeta seria la que apareceria en el ticket
+-Se unifico el metodo de impresion para dos tarjetas y una tarjeta, ahora se utiliza solo un metodo para realizar ambas impresiones.
+
+
+Bug Fixes 
+---------------------
+-se elimino el precio en la impresion de ticket de regalo
+-se corrigio un error donde se imprimia el nombre de la tienda  completo, se debe imprimir el nombre de la tienda
+ con su nombre para impresion.
+ -se corrigio un error donde no se calculaba el subtotal y el total cuando el producto tenia un multiplicador en la interface de
+ lista de items y venta.
+-se corrigio el calculo del total en la impresion del ticket
+-se corrigio el calculo del precio cuando se aplicaba decimal o cantidad
+-se corrigo el calculo de total en la venta de scaneo de items y en la vista de pago.
+-se corrigio un error donde no se calculaba los descuentos en base a precio con decimal/cantidad
+ -se corrigio un error donde no se enviaba el monto a cobrar por la transaccion para restaurant debido a cambios hechos por  
+ la funcion de decimal.
+ -Se corrigio un error en el metodo de java ventaAlimentos, donde al vender con una tarjeta no cerraba la sesion correctamente.
+ -se corrigio un error en la venta de alimentos donde el total no se calculaba correctamente.
+- se corrigio un error en la venta con dos tarjetas donde al fallar el segundo pago la comanda se queda atrapada. 
+-se corrigio un error en la cancelacion de ticket donde no cerraba la transaccion correctamente
+-se corrigio un error en la cancelacion de ticket donde la conversion del dato cantidad original de transaccion era incorrecta
+-se corrigio un error donde no se imprimia la cantidad de ticket de regalo necesarios en una venta de regalo cuanto el producto era
+mas de uno en cantidad.
+
+Version 1.3.2
+
+Actualizacion 24 agosto 2012
+Update 
+---------------------
+-se agrego la interface,webservices,el codigo IOS/java para la venta de SOMS normal
+-Se agrego la interface,webservices, codigo IOS/JAVA para la venta de comandas.
+-Se renombro el nombre gonet de los imports en java
+-Se removio el acceso a log en el ipa (solo se puede ver logs en modo Debug)
+-se corrigio un error en cierre de terminal, donde no se imprimia el ticket en ciertas ocasiones.
+-se agrego la impresion de ticket de restaurant
+
+Bug Fixes 
+---------------------
+-se corrigio un error donde la aplicacion mostraba incorrectamente la interfaz para soms/venta/restaurante
+
+Version 1.3.1
+Actualizacion 9 agosto 2012
+Update 
+---------------------
+-se agrego nuevos mensajes para los errores de impresion en cola (no hay papel, tapa abierta etc)
+-se agrego un indicador de actividad cuando se manda a imprimir para hacer mas visible el proceso de impresion
+-se removieron los multiples mensajes de intentos de impresion por uno mas simplificado.
+-se agrego un indicador de actividad cuando se introduce un producto a la lista.
+-se cambio la accion dilisapayment a anycardpayment action, por sugerencia de synthesis.
+-se agrego el relleno de ceros para los codigos de barra hasta 10 digitos.
+-se agrego la opcion de liberar terminal en la pantalla de inicio de la aplicacion
+-se agrego una descripcion mas simple para los errores de impresion
+-se agrego cierre de terminal
+-se cambio el boton para liberar la terminal hacia la ventana de configuracion de impresora
+
+Bug Fixes
+---------------------------
+-se corrigio la alineacion de las celdas de productos
+-se corrigio un error de impresion donde no aparecia la direccion de la tienda en el ticket
+-se corrigio el envio de multiples mensajes de error cuando se intentaba imprimir 
+-se corrigio un error donde al introducir la tarjeta en modo manual, el nombre del banco es null, se introdujo un fix para evitar el crash por null pointer exception
+-se corrigio un error donde al seleccionar cualquier promocion cerraba la aplicacion
+-se corrigio un error donde la impresion del codigo de barras aparecia incorrectamente.
+-se corrigio un error que impedia que cargara la aplicacion
+-se corrigio un error en el ticket donde los centavos no se imprimian en la descripcion textual del total
+-se corrigio un error donde el boton de imprimir no se activa de nuevo cuando la impresion falla.
+-Se corrigio un error donde la aplicacion se cerraba al enviar el ticket por correo y la cuenta no estaba configurada
+-Se corrigio un error de calculo que se da cuando hay un descuento manual al producto y la cantidad a abonar al monedero se tomaba
+ en base al precio base del producto (debe ser en base al producto con descuento).
+-Se corrigio un error en la la ventana de pago si el teclado en pantalla esta visible y cambias a la ventana de seleccion de plazo
+ la interfaz movia los componentes de su lugar haciendo imposible continuar usando, la aplicacion.
+ -Se corrigio un error al pagar con dos tarjetas dilisa y monedero, se restructuro la venta de DILISAPAYMENTACTION por ANYCARDPAYMENTACTION,
+  DILISPAYMENTACTION esta descontinuado.
+-Se corrigio un error donde al realizar una venta y pagar con monedero la aplicacion se cerro.
+-Se corrigio un error donde al seleccionar venta de empleado con pagos fijos 36 o 48 meses la transaccion no podia completarse 
+-Se corrigio un error donde al intentar imprimir una venta con intereses, la segunda vez que se intentaba imprimir el interes ya no era aplicado
+-se actualizo el valor de % de descuento permitido en liverpoolconfiguration.xml 
+
+Version 1.3.0
+Actualizacion ¿?
+Update 
+---------------------
+
+Bug Fixes
+---------------------------
+-se corrigio un error en la impresion del ticket de compra monedero abono a monedero, donde la promocion del producto aparecia como su descripcion.
+
+Version 1.2.5
+Actualizacion 28 junio 2012
+
+Update 
+---------------------
+-se integro un servicio de cola de impresion para el SDK starmicronic
+-se integro el servicio de compra con ticket de regalo 
+-se integro el servicio para registrar un numero de terminal solo una vez
+-las promociones de descuento y monedero ahora muestran la cantidad a abonar/descontar en moneda respectivamente
+-se cambio la leyenda para las promociones de descuento (DESC x PROM ahora dice Descuento)
+-se cambio la leyenda para las promociones de abono a monedero (ABONO A MONEDERO ahora dice Monedero)
+-se cambio la leyenda para el boton pagar en la pantalla de escaneo de producto (PAGAR ahora dice Registro)
+-se cambio la leyenda para el boton promociones en la pantalla de venta (PROMO ahora dice Plan de pago)
+-se cambio la leyenda para el boton autorizar en la pantalla de venta (AUTORIZAR ahora dice Registro)
+-se cambio el formato de codebar29 a ITF en el codigo de barra en la impresion del ticket
+-se integro un temporizador para la impresion, si no se logra tener conexion con la impresora en 20 segs se cancela la impresion.
+-se integro mensajes de ayuda para la impresion.
+-se integro el numero consecutivo en la impresion de voucher
+
+Bug Fixes
+---------------------------
+-se corrigio un error cuando aparece la ventana que pregunta si sera ticket para regalo provocaba que se cerraba la aplicacion
+-se corrigio un error al relogear el usuario en la aplicacion el lector de codigo de barras de numero de empleado dejaba de funcionar
+-Al introducir un sku manual su campo de codigo de barras se limpia al terminar
+-se corrigio un error en el icono de conexion del escanner en la ventana de escaneo de productos
+
+

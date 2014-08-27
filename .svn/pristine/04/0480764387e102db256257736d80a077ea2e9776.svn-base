@@ -1,0 +1,29 @@
+//
+//  PrinterResponseParser.h
+//  CardReader
+//
+//  Created by Gonet on 30/08/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+
+@interface PrinterResponseParser : NSObject <NSXMLParserDelegate>{
+	NSString *currentElement;
+	NSString *msgResponse;
+	NSString *urlPDF;
+}
+@property (nonatomic,retain) 	NSString *currentElement;
+@property (nonatomic,retain) 	NSString *msgResponse;
+@property (nonatomic,retain) 	NSString *urlPDF;
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict;
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName;
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string;
+- (void) startParser:(NSData*) data;
+- (BOOL) getStateOfMessage;
+-(NSString*) returnErrorMessage;
+-(NSString*) returnURLPDF;
+
+@end

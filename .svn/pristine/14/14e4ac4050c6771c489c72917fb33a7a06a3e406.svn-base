@@ -1,0 +1,32 @@
+//
+//  Rules.h
+//  CardReader
+//
+//  Created by Gonet on 19/11/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "TicketGeneratorViewController.h"
+#import "Promotions.h"
+@interface Rules : NSObject {
+
+	paymentType payType;
+}
+//+(void) validateCardTransaction:(paymentType) aPayType;
+//+(BOOL) isValidTransactionCredit:(NSArray*) aProductList :(NSString*) aCardNumber;
+//+(BOOL) itemWithPaymentPlanPromoMonedero:(NSArray*) aProductList; // cambio Ruben 18/Enero/2012
++(NSArray*) getPrefixesFromPaymentPlan:(Promotions*) aPromo;
++(NSArray*) getExcludePrefixesFromPaymentPlan:(Promotions*) aPromo;
++(NSString*) getTenderFromPaymentPlan:(Promotions*) aPromo;
++(NSString*) getBINCard:(NSString*) aCardNumber;
++(BOOL) prefixInBINCard:(NSString*) aCardNumber maxRange:(int)aRange withPrefixs:(NSArray*) aPrefixList;
++(BOOL) prefixInDilisaLPCCard:(NSString*) aCardNumber aPrefixList:(NSArray*)aPrefixList;
+//+(BOOL) isValidTransactionLPCDILISA:(NSArray *)aProductList :(NSString *)aCardNumber;
++(BOOL) isEmployeeCard:(NSString*) aCardNumber;
++(void) validPayTypeForEmployee:(UISegmentedControl*) aType;
++(NSMutableArray*) filterPromotionCreditCar:(NSMutableArray *)aPromotionGroup :(NSString *)aCardNumber;
++(NSMutableArray*) filterPromotionLPCDilisa:(NSMutableArray *)aPromotionGroup :(NSString *)aCardNumber;
++(NSMutableArray*) filterPromotionMonedero:(NSMutableArray *)aPromotionGroup :(NSString *)aCardNumber;
+
+@end

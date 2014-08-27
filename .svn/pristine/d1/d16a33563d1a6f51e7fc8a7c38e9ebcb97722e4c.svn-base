@@ -1,0 +1,344 @@
+//
+//  CardReaderAppDelegate.m
+//  CardReader
+//
+//  Created by Raúl Horacio Valencia Tenorio on 7/13/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "CardReaderAppDelegate.h"
+#import "ItemDetailViewController.h"
+#import "ItemDiscountsViewController.h"
+#import "ConsultSKUViewController.h"
+#import "LoginViewController.h"
+#import "TransactionsMenuViewController.h"
+#import "AirtimeViewController.h"
+#import "PromotionInstallmentViewController.h"
+#import "BalanceViewController.h"
+#import "Tools.h"
+#import "PaymentPlanViewController.h"
+#import "PaymentViewController.h"
+#import "Session.h"
+
+@implementation CardReaderAppDelegate
+
+@synthesize window;
+@synthesize loginViewController,transactionMenu;
+@synthesize aTabBarController,aNavigationControllerScan,aNavigationControllerConfig,aNavigationControllerRecord;
+@synthesize aNavigationControllerLogin;
+@synthesize scanViewController;
+@synthesize aTabBar;
+-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{	
+	[self loginScreen];
+    [self.window makeKeyAndVisible];
+	
+	// load the last printer used
+	//[Tools loadPrinter];
+	
+	return YES;
+}
+-(void) loginScreen
+{	/*
+	loginViewController=[[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+	loginViewController.view.frame = CGRectMake(0, 20, 320, 460);
+	[aTabBarController.view removeFromSuperview];
+	[self.window addSubview:loginViewController.view];
+    [self.window makeKeyAndVisible];
+	[aTabBarController.view removeFromSuperview];
+	*/
+	[scanViewController removeProductsFromList];
+	[aNavigationControllerLogin popToRootViewControllerAnimated:NO];
+	[aNavigationControllerScan popToRootViewControllerAnimated:NO];
+	//[scanViewController viewWillDisappear:NO];
+//	[scanViewController.tableData removeAllObjects];
+//	[scanViewController.productList removeAllObjects];
+
+	//[Session setStatus:CLOSE_SESSION];
+
+	[self.window addSubview:aNavigationControllerLogin.view];
+	[aNavigationControllerLogin viewWillAppear:NO];
+}
+-(void) mainScreen{
+	[aNavigationControllerLogin.view removeFromSuperview];
+	
+	[[[[aTabBarController tabBar] items] objectAtIndex:0] 
+	 setTitle:NSLocalizedString(@"Escaner",@"Tabbar item 1")];
+	[[[[aTabBarController tabBar] items] objectAtIndex:1] 
+	 setTitle:NSLocalizedString(@"Configuración",@"Tabbar item 2")];
+	[[[[aTabBarController tabBar] items] objectAtIndex:2] 
+	 setTitle:NSLocalizedString(@"Salir",@"Tabbar item 3")];
+		
+	[aTabBarController.view removeFromSuperview];
+	[self.window addSubview:aTabBarController.view];
+	[aTabBarController viewWillAppear:NO];
+
+}
+
+
+/*
+-(void) terminalScreen
+{
+	[loginViewController.view removeFromSuperview];
+	[loginViewController release];
+	[self.window addSubview:terminalsViewController.view];
+}*/
+-(void) consultSKUScreen
+{
+	ConsultSKUViewController *sku=[[ConsultSKUViewController alloc] initWithNibName:@"ConsultSKUViewController" bundle:nil];
+	[aNavigationControllerLogin pushViewController:sku animated:YES];
+	//[transactionMenu presentModalViewController:sku animated:YES];
+	[sku release];	
+}
+-(void) removeConsultSKUScreen
+{
+	//[transactionMenu dismissModalViewControllerAnimated:YES];
+	[aNavigationControllerLogin popViewControllerAnimated:YES];
+}
+-(void) airTimeScreen
+{
+	AirtimeViewController *airTime=[[AirtimeViewController alloc] initWithNibName:@"AirtimeViewController" bundle:nil];
+	[transactionMenu presentModalViewController:airTime animated:YES];
+	[airTime release];
+}
+-(void) removeAirTimeScreen
+{
+	[transactionMenu dismissModalViewControllerAnimated:YES];
+	
+}
+-(void) transactionMenuScreen
+{
+	transactionMenu=[[TransactionsMenuViewController alloc] initWithNibName:@"TransactionsMenuViewController" bundle:nil];	
+	[aNavigationControllerLogin pushViewController:transactionMenu animated:YES];
+	[transactionMenu release];
+}
+-(void) transactionBalanceScreen
+{
+	BalanceViewController* balance=[[BalanceViewController alloc] initWithNibName:@"BalanceViewController" bundle:nil];
+	//[transactionMenu presentModalViewController:balance animated:YES];
+	[aNavigationControllerLogin pushViewController:balance animated:YES];
+	[balance release];
+}
+-(void) removeTransactionMenuScreen
+{
+	[aNavigationControllerLogin popViewControllerAnimated:YES];
+}
+-(void) transactionF5MenuScreen
+{
+	transactionMenu=[[TransactionsMenuViewController alloc] initWithNibName:@"TransactionsF5MenuViewController" bundle:nil];	
+	[aNavigationControllerLogin pushViewController:transactionMenu animated:YES];
+	[transactionMenu release];
+
+}
+-(void) detailItemScreen:(FindItemModel*) itemModel
+{
+	[aNavigationControllerScan popViewControllerAnimated:YES];
+	ItemDetailViewController *itemDetailViewController=[[ItemDetailViewController alloc] initWithNibName:@"ItemDetailViewController" bundle:nil];
+	[aNavigationControllerScan pushViewController:itemDetailViewController animated:YES];
+	[itemDetailViewController displayItemInfo:itemModel];
+	[itemDetailViewController release];
+}
+-(void) itemDiscountScreen:(FindItemModel*) itemModel
+{
+	ItemDiscountsViewController *itemDiscViewController=[[ItemDiscountsViewController alloc] initWithNibName:@"ItemDiscountsViewController" bundle:nil];
+	itemDiscViewController.title=@"Descuento Manual";
+	[itemDiscViewController setItemModel:itemModel];
+	[aNavigationControllerScan pushViewController:itemDiscViewController animated:YES];
+	[itemDiscViewController release];
+}
+-(void) removeDiscountScreen
+{
+	[aNavigationControllerScan popViewControllerAnimated:YES];
+}
+-(void) itemPromotionScreen:(NSMutableArray*) aProductList
+{
+	ItemDiscountsViewController *itemDiscViewController=[[ItemDiscountsViewController alloc] initWithNibName:@"ItemPromotionsViewController" bundle:nil];
+	itemDiscViewController.title=@"Promociones";
+	[itemDiscViewController setItemModel:[aProductList lastObject]];
+	[itemDiscViewController setProductList:aProductList];
+	[itemDiscViewController startPromoRequest];
+	[aNavigationControllerScan pushViewController:itemDiscViewController animated:YES];
+	[itemDiscViewController release];
+}
+-(void) installmentsScreen:(Promotions*) promo
+{
+	PromotionInstallmentViewController *promoInstallment=[[PromotionInstallmentViewController alloc] initWithNibName:@"PromotionInstallmentViewController" bundle:nil];
+	promoInstallment.title=@"Plazos";
+	[promoInstallment setPromo:promo];
+	[promoInstallment showInstallmentsTable];
+	[aNavigationControllerScan pushViewController:promoInstallment animated:YES];
+	//[aNavigationControllerLogin pushViewController:promoInstallment animated:YES];  // Ruben
+
+	[promoInstallment release];
+}
+-(void) removeInstallmentsScreen
+{
+	[aNavigationControllerScan popViewControllerAnimated:NO];	
+	[aNavigationControllerScan popViewControllerAnimated:YES];
+
+	//[aNavigationControllerLogin popViewControllerAnimated:YES];  // Ruben
+
+}
+-(void) promoScreen:(Promotions*) promo
+{
+	PromotionInstallmentViewController *promoInstallment=[[PromotionInstallmentViewController alloc] initWithNibName:@"PromotionInstallmentDescription" bundle:nil];
+	promoInstallment.title=@"Plazos";
+	[promoInstallment setPromo:promo];
+	[aNavigationControllerScan pushViewController:promoInstallment animated:YES];
+	//[aNavigationControllerLogin pushViewController:promoInstallment animated:YES];  // Ruben
+	
+	[promoInstallment release];
+}
+-(void) removePromoScreen
+{
+	[aNavigationControllerScan popViewControllerAnimated:YES];
+	//[aNavigationControllerLogin popViewControllerAnimated:YES];  // Ruben
+}
+
+-(void) paymentPlanScreen:(NSMutableArray*)originalPromotions :(NSMutableArray*) filteredPromotions
+{
+	PaymentPlanViewController *payPlan=[[PaymentPlanViewController alloc] initWithNibName:@"PaymentPlanViewController" bundle:nil];
+	payPlan.title=@"PaymentPlan";
+	[payPlan setPromotionGroup:originalPromotions]; 
+	[payPlan setFilteredPlanGroup:filteredPromotions];//release after
+
+	[aNavigationControllerScan pushViewController:payPlan animated:YES];
+	[payPlan release];
+}
+-(void) removePaymentPlanScreen
+{
+	[aNavigationControllerScan popViewControllerAnimated:YES];
+	//[aNavigationControllerLogin popViewControllerAnimated:YES];  // Ruben
+}
+-(void) paymentScreen:(NSMutableArray*)aProductList :(NSMutableArray*)aPromoGroup
+{
+	NSString *paymentNib; // Cambio Ruben - 19/enero/2012
+	
+	if ([Session getIsEmployeeSale]) { // Cambio Ruben - 19/enero/2012
+		paymentNib = @"EmployeePaymentView";
+	}
+	else { // Cambio Ruben - 19/enero/2012
+		paymentNib = @"PaymentView";
+	}
+	
+	PaymentViewController *pay = [[PaymentViewController alloc] initWithNibName:paymentNib bundle:nil];
+	pay.title=@"Pago";
+	[pay setProductList:aProductList];
+	[pay setPromotionGroup:[aPromoGroup mutableCopy]];
+	[pay setFilteredPlanGroup:[aPromoGroup mutableCopy]];//release after
+	[pay setOriginalPromotionGroup:[aPromoGroup mutableCopy]];//release after
+
+	[aNavigationControllerScan pushViewController:pay animated:YES];
+	[pay release];
+}
+-(void) removePaymentScreen
+{
+	[aNavigationControllerScan popViewControllerAnimated:YES];
+	//[aNavigationControllerLogin popViewControllerAnimated:YES];  // Ruben
+}
+
+-(void) removeScreensToSaleView
+{
+	[aNavigationControllerScan popToRootViewControllerAnimated:YES];
+}
+
+
+-(void) hideTabBar
+{
+	aTabBar.hidden=(aTabBar.hidden==TRUE)?FALSE:TRUE;
+	BOOL hiddenTabBar=!aTabBar.hidden;
+	
+	//[UIView beginAnimations:nil context:NULL];
+	//[UIView setAnimationDuration:0.1];
+	
+	for(UIView *view in aTabBarController.view.subviews)
+	{
+		
+		if([view isKindOfClass:[UITabBar class]])
+		{
+			
+			if (hiddenTabBar) {
+				[view setFrame:CGRectMake(view.frame.origin.x, 431, view.frame.size.width, view.frame.size.height)];
+			} else {
+				[view setFrame:CGRectMake(view.frame.origin.x, 480, view.frame.size.width, view.frame.size.height)];
+			}
+		} else {
+			if (hiddenTabBar) {
+				[view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, 431)];
+			} else {
+				[view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, 480)];
+			}
+			
+		}
+	}
+	
+	//[UIView commitAnimations];
+
+}
+-(void)applicationWillResignActive:(UIApplication *)application
+{
+}
+
+-(void)applicationDidEnterBackground:(UIApplication *)application
+{
+	// load the last printer used
+	//[Tools savePrinter];
+}
+
+-(void)applicationWillEnterForeground:(UIApplication *)application
+{
+	
+}
+
+-(void)applicationDidBecomeActive:(UIApplication *)application
+{
+}
+
+-(void)applicationWillTerminate:(UIApplication *)application
+{
+	// load the last printer used
+	//[Tools savePrinter];
+	
+}
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+	int newIndex=self.aTabBarController.selectedIndex;
+	DLog(@"selecciono view %i",self.aTabBarController.selectedIndex);
+	if (newIndex==2) {
+		[scanViewController logout];
+		[aTabBarController setSelectedIndex:0];
+	}	
+}
+
+
+//----------------------------------------
+//            APPLICATION'S DOCUMENTS DIRECTORY
+//----------------------------------------
+#pragma mark -
+#pragma mark APPLICATION'S DOCUMENTS DIRECTORY
+
+-(NSURL *)applicationDocumentsDirectory
+{
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory 
+												   inDomains:NSUserDomainMask] lastObject];
+}
+
+//----------------------------------------
+//            APPLICATION'S MEMORY MANAGMENT
+//----------------------------------------
+- (void)dealloc {
+	[aTabBar release];
+	scanViewController=nil;
+	[window release], window =nil;
+	[aTabBarController release],aTabBarController=nil;
+	[aNavigationControllerScan release],aNavigationControllerScan=nil;
+	[aNavigationControllerRecord release],aNavigationControllerRecord=nil;
+	[aNavigationControllerConfig release],aNavigationControllerConfig=nil;
+	[loginViewController release],loginViewController=nil;
+	[transactionMenu release]; transactionMenu=nil;
+	[aNavigationControllerLogin release]; aNavigationControllerLogin=nil;
+    [super dealloc];
+}
+
+
+@end

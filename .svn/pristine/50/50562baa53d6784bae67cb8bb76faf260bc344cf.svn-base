@@ -1,0 +1,35 @@
+//
+//  TransactionsMenu.h
+//  CardReader
+//
+//  Created by Gonet on 05/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+
+@interface TransactionsMenuViewController : UIViewController {
+
+	UIButton *btnClientSale;
+	UIButton *btnEmployeeSale;
+	//UIButton *btnbtnBalance;
+	UIButton *btnbtnQuerySKU;
+	UIButton *btnAirTime;
+	UIButton *btnBalance;
+}
+@property (nonatomic,retain) IBOutlet UIButton *btnClientSale;
+@property (nonatomic,retain) IBOutlet UIButton *btnEmployeeSale;
+//@property (nonatomic,retain) IBOutlet UIButton *btnBalance;
+@property (nonatomic,retain) IBOutlet UIButton *btnQuerySKU;
+@property (nonatomic,retain) IBOutlet UIButton *btnAirTime;
+@property (nonatomic,retain) IBOutlet UIButton *btnBalance;
+
+-(IBAction) clientSaleTransact;
+-(IBAction) SKUQueryTransact;
+-(IBAction) AirTimeTransact;
+-(IBAction) BalanceQueryTransact;
+-(IBAction) logout;
+-(IBAction) EmployeeSale;
+
+@end

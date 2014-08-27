@@ -1,0 +1,300 @@
+//
+//  BalanceParser.m
+//  CardReader
+//
+//  Created by Martha Patricia Sagahon Azua on 03/10/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "BalanceParser.h"
+#import "Balance.h"
+
+#import "Tools.h"
+
+@implementation BalanceParser
+@synthesize currentElement,response, balanceModel;
+
+#define RESPUESTA		@"liv:respuestaXML"
+#define ERROR			@"Error"
+#define EPURSEBALANCE	@"SaldoMonedero"
+#define NC				@"nc"
+
+#define SA				@"sa="
+#define SUC				@"suc="
+#define SV				@"sv="
+#define SVC				@"svc="
+#define PM				@"pm="
+#define PMNI				@"pmni="
+#define FLP				@"flp="
+#define TIPO_CUENTA				@"tipoCuenta="
+#define PM_SINRE				@"pm_sinrefin="
+#define PM_CONREFIN				@"pm_conrefin="
+#define FE                      @"fe="
+#define SEPARADOR                      @"\""
+
+
+#define NUMBER			@"Número"
+#define DESCRIPTION		@"Descripción"
+#define INICIO			@"<![CDATA[<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
+#define FIN				@"</liv:TSCCRE03Response>"
+
+
+
+
+
+-(void) startParser:(NSData*) data
+{
+	//	NSString* aStr;
+	//	aStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	//	NSLog(@"Data %@ ",aStr);
+	//	NSInteger inicio=[Tools string:aStr indexOf:INICIO]+[INICIO length];
+	//	NSInteger fin=[Tools string:aStr indexOf:FIN];
+	//	NSRange range = NSMakeRange (inicio, fin);
+	//
+	//	NSString* newData=[aStr substringWithRange:range];
+	//	NSData* ndata=[newData dataUsingEncoding:NSUTF8StringEncoding];
+	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
+	response=[[NSString alloc] init];
+	
+    [parser setDelegate:self]; // The parser calls methods in this class
+    [parser setShouldProcessNamespaces:NO]; 
+    [parser setShouldReportNamespacePrefixes:NO]; 
+    [parser setShouldResolveExternalEntities:NO]; 
+    [parser parse]; // Parse that data..
+    [parser release];
+}
+
+-(void) parserDidStartDocument:(NSXMLParser *)parser
+{
+	
+}
+- (void)parser:(NSXMLParser *)parser foundCDATA:(NSData *)CDATABlock{
+	NSLog(@"foundCDATA");
+	NSString* aStr;
+	aStr = [[NSString alloc] initWithData:CDATABlock encoding:NSUTF8StringEncoding];
+	NSLog(@"Data %@ ",aStr);
+	NSError *error = NULL;
+	balanceModel=[[Balance alloc]init];
+	//@"Descripción=\"(...)*"
+	NSRegularExpression *regexError = [NSRegularExpression regularExpressionWithPattern:@"Descripción=\"(...)*"
+									   
+																				options:NSRegularExpressionCaseInsensitive
+									   
+																				  error:&error];
+	NSRegularExpression *regexComilla = [NSRegularExpression regularExpressionWithPattern:@"\""
+										 
+																				  options:NSRegularExpressionCaseInsensitive
+										 
+																					error:&error];
+	
+	
+	NSRegularExpression *regexSaldo = [NSRegularExpression regularExpressionWithPattern:@"sa=\"(...)*"
+									   
+																				options:NSRegularExpressionCaseInsensitive
+									   
+																				  error:&error];
+	NSRange rangeOfFirstMatch = [regexError rangeOfFirstMatchInString:aStr options:0 range:NSMakeRange(0, [aStr length])];
+	
+	if (!NSEqualRanges(rangeOfFirstMatch, NSMakeRange(NSNotFound, 0))) {
+		
+		
+		
+		NSString *substringForFirstMatch = [aStr substringWithRange:rangeOfFirstMatch];
+		NSLog(@"SubstringForFirstMatch** %@ ",substringForFirstMatch);
+		NSRange rangeOfFirstMatchClear = [regexComilla rangeOfFirstMatchInString:substringForFirstMatch options:0 range:NSMakeRange(0, [substringForFirstMatch length])];
+		NSInteger length=[substringForFirstMatch length]-rangeOfFirstMatchClear.location;
+		rangeOfFirstMatchClear.length=length;
+		NSString *substringForFirstMatchClear = [substringForFirstMatch substringWithRange:rangeOfFirstMatchClear];
+		
+		
+		NSString* mensaje=[substringForFirstMatchClear stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+		mensaje=[mensaje substringToIndex:([mensaje length]-1)];
+		[[balanceModel error] setNumber:@"1"];
+		[[balanceModel error] setDescription:[mensaje copy]];
+		
+		NSLog(@"substringForFirstMatch*** %@ ",substringForFirstMatch);
+		NSLog(@"Error %@", balanceModel.error.description);
+		
+	}else {
+		NSRange rangeOfFirstMatchSaldo = [regexSaldo rangeOfFirstMatchInString:aStr options:0 range:NSMakeRange(0, [aStr length])];
+		if (!NSEqualRanges(rangeOfFirstMatchSaldo, NSMakeRange(NSNotFound, 0))) {
+			
+			NSString *substringForFirstMatchSaldo = [aStr substringWithRange:rangeOfFirstMatchSaldo];
+			
+			
+			
+			
+			
+			NSLog(@"substringForFirstMatch %@ ",substringForFirstMatchSaldo);
+			[self parseInfo:[substringForFirstMatchSaldo copy]];
+//			NSString* saldo=[substringForFirstMatchSaldo stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+//			saldo=[saldo stringByReplacingOccurrencesOfString:@"sa=" withString:@""];
+//			saldo=[saldo substringToIndex:([saldo length]-1)];
+//			[balanceModel setSa:[saldo copy]];
+//			NSLog(@"Error %@", balanceModel.error.description);
+			
+		}
+		
+	}
+	
+	
+	
+}
+-(void) parseInfo:(NSString *)cadena{
+	NSLog(@"procesaInfo");
+	NSString* resultado=[self parseCad:SA from:cadena];
+	if(resultado!=nil){
+		[balanceModel setSa:[resultado copy]];
+	}
+	resultado=[self parseCad:SUC from:cadena];
+	
+	if(resultado!=nil){
+		
+		[balanceModel setSuc:[resultado copy]];
+		
+	}
+	resultado=[self parseCad:SV from:cadena];
+	
+	if(resultado!=nil){
+		
+		[balanceModel setSv:[resultado copy]];
+		
+		
+	}
+	resultado=[self parseCad:SVC from:cadena];
+	
+	if(resultado!=nil){
+		
+		[balanceModel setSvc:[resultado copy]];
+		
+		
+	}
+	resultado=[self parseCad:PM from:cadena];
+	
+	
+	if(resultado!=nil){
+		[balanceModel setPm:[resultado copy]];
+		
+		
+	}
+	resultado=[self parseCad:PMNI from:cadena];
+	
+	if(resultado!=nil){
+		[balanceModel setPmni:[resultado copy]];
+		
+	}
+	resultado=[self parseCad:FLP from:cadena];
+	
+	if(resultado!=nil){
+		[balanceModel setFlp:[resultado copy]];
+		
+	}
+	resultado=[self parseCad:TIPO_CUENTA from:cadena];
+	
+	if(resultado!=nil){
+		[balanceModel setTipoCuenta:[resultado copy]];
+		
+		
+	}
+	resultado=[self parseCad:PM_SINRE from:cadena];
+	
+	if(resultado!=nil){
+		[balanceModel setPm_sinrefin:[resultado copy]];
+		
+	}
+	resultado=[self parseCad:PM_CONREFIN from:cadena];
+	
+	if(resultado!=nil){
+		[balanceModel setPm_conrefin:[resultado copy]];
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+}
+-(NSString*) parseCad:(NSString*)aCad from:(NSString*)aString{
+	NSInteger index=[Tools string: aString indexOf: aCad];
+	NSLog(@"index %d",index);
+	if(index>=0){
+		index+=([aCad length]+1);
+		NSString* last=[aString substringFromIndex:index];
+		NSInteger sepator=[Tools string: last indexOf: SEPARADOR];
+		sepator=sepator+index;
+		NSInteger size=sepator-index;
+
+		NSRange rango=NSMakeRange(index, size);
+		NSString* res =[aString substringWithRange:rango];
+		
+		return [res copy];
+		
+	}
+	return nil;
+}
+- (void)parser:(NSXMLParser *)parser foundProcessingInstructionWithTarget:(NSString *)target data:(NSString *)data{
+	NSLog(@"ZZZZZ");
+}
+-(void) parserDidEndDocument:(NSXMLParser *)parser
+{
+	DLog(@"Finalizo parser");
+	
+	
+}
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
+{
+	//	currentElement=elementName;
+	//	NSLog(@"atribute dic: %@",attributeDict);
+	//	NSLog(@"didStartElement %@ ", currentElement);
+	//	 if ([currentElement isEqualToString:ERROR]) {
+	//		balanceModel=[[Balance alloc]init];
+	//		NSString* number=[attributeDict objectForKey:NUMBER];
+	//		NSString* description=[attributeDict objectForKey:DESCRIPTION];
+	//		balanceModel.error.number=number;
+	//		balanceModel.error.description=description;
+	//	}else if ([currentElement isEqualToString:EPURSEBALANCE]) {
+	//		balanceModel=[[Balance alloc]init];
+	//		NSString* nc=[attributeDict objectForKey:NC];
+	//		NSString* sa=[attributeDict objectForKey:SA];
+	//		balanceModel.nc=nc;
+	//		balanceModel.sa=sa;
+	//	}
+	
+	
+	//DLog(@"currentElement:%@",currentElement);
+	
+}
+
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
+{}
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
+{
+	if (!string) {
+		string=@"";
+	}
+	//	if ([currentElement isEqualToString:RESPUESTA]) {
+	//		response=[response stringByAppendingString:string];
+	//	}
+	NSLog(@"foundCharacters %@ ",string);
+	
+}
+
+-(NSString*)returnReponseMessage
+{
+	return response;
+}
+-(NSString*) returnErrorMessage
+{
+	return response;
+}
+-(void)dealloc
+{
+	//[currentElement release];
+	[balanceModel release];
+	//[response release];
+	[super dealloc];
+}
+
+@end

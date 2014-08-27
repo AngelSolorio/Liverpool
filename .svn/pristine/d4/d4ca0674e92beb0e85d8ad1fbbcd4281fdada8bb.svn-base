@@ -1,0 +1,25 @@
+//
+//  Settings.h
+//  IOPhoneTest
+//
+//  Created by sdtpig on 8/12/09.
+//  Copyright 2009 Star Micronics Co., Ltd.. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+#define C_AutoCutterFullCut "\x1b\x64\x30"
+#define C_LineFeedx6 "\x0a\x0a\x0a\x0a\x0a\x0a"
+#define C_LineFeedx6_Size 6
+#define C_AutoCutterFullCut_Size 3
+
+@interface Settings : UIViewController <UITextFieldDelegate>{
+	IBOutlet UITextField *textField_ipAddress;
+	IBOutlet UITextField *textField_portSettings;	
+	UIButton *btnOk;
+}
+
+@property(nonatomic,retain)IBOutlet UIButton *btnOk;
+
+-(IBAction)Ok;
+@end

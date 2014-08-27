@@ -1,0 +1,25 @@
+//
+//  PaymentPlanViewController.h
+//  CardReader
+//
+//  Created by Gonet on 15/12/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+
+@interface PaymentPlanViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>{
+
+	NSMutableArray* filteredPlanGroup;
+	NSMutableArray* promotionGroup;
+	UITableView   *	aTableView;
+	NSIndexPath	*promotionIndex;
+}
+@property (nonatomic,assign)			NSMutableArray* filteredPlanGroup;
+@property (nonatomic,assign)			NSMutableArray* promotionGroup;
+@property (nonatomic,retain)	IBOutlet UITableView   *	aTableView;
+
+-(void) isPromoWithInstallment;
+
+@end

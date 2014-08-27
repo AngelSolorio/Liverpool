@@ -1,0 +1,24 @@
+//
+//  AmountsViewController.h
+//  CardReader
+//
+//  Created by Gonet on 13/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+
+@interface AmountsViewController : UIViewController<UITableViewDataSource, UITableViewDelegate> {
+	UITableView* amountsTable;
+	NSArray* amounts;
+	NSIndexPath *amountSelectedIndex;
+}
+@property(nonatomic,retain) IBOutlet	UITableView* amountsTable;
+@property(nonatomic,retain)				NSIndexPath *amountSelectedIndex;
+
+-(void) loadAmounts;
+-(BOOL) isAmountSelected;
+-(NSString*) getAmountSelected;
+
+@end

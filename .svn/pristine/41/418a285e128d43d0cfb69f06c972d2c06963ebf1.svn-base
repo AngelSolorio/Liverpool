@@ -1,0 +1,32 @@
+//
+//  PromotionListParser.h
+//  CardReader
+//
+//  Created by Gonet on 05/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "Promotions.h"
+
+@interface PromotionListParser : NSObject <NSXMLParserDelegate>{
+
+	NSString *currentElement;
+	NSMutableArray *promotionsArray;
+	NSMutableArray *promotionSubGroup;
+	Promotions * promos;
+	int option;
+}
+@property (nonatomic,retain) 	NSString *currentElement;
+@property (nonatomic,retain) 	NSMutableArray *promotionsArray;
+@property (nonatomic,retain) 	NSMutableArray *promotionSubGroup;
+
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict;
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName;
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string;
+- (void) startParser:(NSData*) data;
+- (NSMutableArray*) returnPromoList;
+-(NSString*) trimString:(NSString*) aString;
+
+@end

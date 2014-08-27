@@ -1,0 +1,259 @@
+//
+//  ConsultSKUViewController.m
+//  CardReader
+//
+
+#import "ConsultSKUViewController.h"
+#import "CardReaderAppDelegate.h"
+#import "FindItemModel.h"
+#import "FindItemParser.h"
+#import "ItemDetailViewController.h"
+#import "ItemDiscountsViewController.h"
+#import "Tools.h"
+#import "Styles.h"
+#import "Session.h"
+@implementation ConsultSKUViewController
+@synthesize itemModel,itemDetailView,itemDiscountView,productSearch,txtBarcode,btnRegister;
+
+// The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+/*
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization.
+    }
+    return self;
+}
+*/
+
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+	
+	scanDevice = [Linea sharedDevice];
+    [scanDevice setDelegate:self];
+	[scanDevice connect];
+	
+	[Styles scanReaderViewStyle:productSearch];
+	txtBarcode.inputAccessoryView=[Tools inputAccessoryView:txtBarcode];
+	[super viewDidLoad];
+	
+	[Styles bgGradientColorPurple:self.view];
+	[Styles silverButtonStyle:btnRegister];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+	[self connectionState:scanDevice.connstate];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+	[scanDevice removeDelegate:self];
+	[scanDevice disconnect];
+	scanDevice = nil;
+}
+//-(void)viewDidUnload
+//{
+//	[scanDevice removeDelegate:self];
+//	[scanDevice disconnect];
+//	scanDevice = nil;
+//    [super viewDidUnload];
+//}
+
+/*
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations.
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+*/
+
+
+-(IBAction) scanCode
+{	
+	if ([txtBarcode.text length]==0) {
+		[Tools displayAlert:@"Aviso" message:@"Favor de introducir un SKU valido"];
+		return;
+	}
+	//[Tools hideViewAnimation:productSearch];
+	[self startRequest:txtBarcode.text];
+	[self.view endEditing:YES];
+	//[productSearch setHidden:YES];
+
+}
+-(IBAction) showBarcodeTextfield
+{
+	//[Tools showViewAnimation:productSearch];
+	//[productSearch setHidden:NO];
+	//[txtBarcode becomeFirstResponder];
+	
+}
+//----------------------------------------
+//            SCAN DEVICE HANDLER
+//----------------------------------------
+#pragma mark -
+#pragma mark SCAN DEVICE HANDLER
+
+-(void)buttonPressed:(int)whichButton
+{
+	//[self setBarbuttonImage:barButtonScanning];
+}
+
+-(void)buttonReleased:(int)which
+{
+	//[self setBarbuttonImage:barButtonConnected];
+}
+
+-(void)connectionState:(int)state
+{
+	switch (state) {
+			
+		case CONN_DISCONNECTED:
+			
+		case CONN_CONNECTING:
+			
+		//	[self setBarbuttonImage:barButtonDisconnected];
+			break;
+			
+		case CONN_CONNECTED:
+			
+			//[self setBarbuttonImage:barButtonConnected];
+			
+			NS_DURING {
+				
+				[scanDevice msEnable:nil];
+				//[scanDevice setBarcodeTypeMode:BARCODE_TYPE_EXTENDED];
+				//[self enableCharging];
+				
+			/*	[btnScan setTitle:NSLocalizedString(@"Escanear Código", @"Scan with accessory to iPhone/iPod") 
+						 forState:UIControlStateNormal];
+				[btnScan setUserInteractionEnabled:YES];*/
+				
+			} NS_HANDLER {
+				
+				DLog(@"%@", [localException name]);
+				DLog(@"%@", [localException reason]);
+				
+			} NS_ENDHANDLER
+			
+			//[self updateBattery];
+			break;
+	}
+}
+-(void)enableCharging
+{
+	NS_DURING {
+		
+		//[scanDevice setCharging:YES];
+        [scanDevice setCharging:YES error:nil];
+		
+	} NS_HANDLER {
+		
+	} NS_ENDHANDLER
+}
+
+//----------------------------------------
+//            REQUEST HANDLERS
+//----------------------------------------
+#pragma mark -
+#pragma mark REQUEST HANDLERS
+-(void) startRequest:(NSString*) barCode
+{
+	// find item request code 
+	LiverPoolRequest *liverPoolRequest=[[LiverPoolRequest alloc] init];
+	liverPoolRequest.delegate=self;
+    NSString *terminal=[Session getTerminal];
+	NSArray *pars=[NSArray arrayWithObjects:barCode,@"",terminal,nil];
+	[liverPoolRequest sendRequest:@"buscaProducto" forParameters:pars forRequestType:consultSKURequest]; //cambiar a localized string
+	[liverPoolRequest release];
+	//[Tools startActivityIndicator:self.view];
+}
+-(void) performResults:(NSData *)receivedData :(RequestType)requestType
+{
+	[self findItemRequestParsing:receivedData];
+}
+-(void) findItemRequestParsing:(NSData*) data
+{
+	FindItemParser *findParser=[[FindItemParser alloc] init];
+	DLog(@"antes de empezar");
+	[findParser startParser:data];
+	DLog(@"termino");
+	/*if (itemModel) {
+		[itemModel release];
+	}*/
+	itemModel=findParser.findItemModel;
+	[itemDetailView displayItemInfo:itemModel];
+	[itemDiscountView setItemModel:itemModel];
+	[self validateResponse];
+	[findParser release];
+	//[Tools stopActivityIndicator];
+}
+-(void) validateResponse
+{
+	if(itemModel.barCode ==nil)
+		[Tools displayAlert:@"Error" message:@"Articulo no encontrado"];
+	else
+		[itemDiscountView startPromoRequest];
+
+	
+}	
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc. that aren't in use.
+}
+
+
+
+//----------------------------------------
+//            BARCODE ANALYSIS
+//----------------------------------------
+#pragma mark -
+#pragma mark BARCODE ANALYSIS
+
+-(void)barcodeData:(NSString *)barcode 
+			  type:(int)type 
+{	
+	//	self.lastBarcode=barcode;
+	//	self.lastBarcodeType=[linea barcodeType2Text:type];
+	
+	/*[status setString:@""];
+	[status appendFormat:@"Type: %d\n",type];
+	[status appendFormat:@"Type text: %@\n",[scanDevice barcodeType2Text:type]];
+	[status appendFormat:@"Barcode: %@",barcode];
+	DLog(@"%@", status);
+	/*/
+	[self startRequest:barcode];
+	//[self setDataIntoArray:barcode];
+	
+	NS_DURING {
+		
+		//[self updateBattery];
+		
+	} NS_HANDLER {
+		
+		DLog(@"%@", [localException name]);
+		DLog(@"%@", [localException reason]);
+		
+	} NS_ENDHANDLER
+}
+
+-(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[self.view endEditing:YES];
+	[productSearch endEditing:YES];
+//	[super touchesBegan:touches withEvent:event];
+}
+- (void)dealloc {
+	[itemDetailView release];
+	[productSearch release];
+	[itemDiscountView release];	//[itemModel release];
+	[txtBarcode release];
+	[btnRegister release], btnRegister = nil;
+    [super dealloc];
+}
+
+
+@end

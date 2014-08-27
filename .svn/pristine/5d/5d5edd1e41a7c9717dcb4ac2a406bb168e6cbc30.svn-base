@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Products</key>
+	<array>
+		<string>Perfume</string>
+		<string>Camisa Caballero</string>
+		<string>iPad 3G</string>
+		<string>MacBook Pro</string>
+		<string>TV Plasta 42&apos;&apos;</string>
+		<string>Bolsa de Piel</string>
+		<string>Zapatos Dama</string>
+		<string>Herramienta para Carro</string>
+		<string>Disco Compacto</string>
+		<string>BlueRay Los Casadores</string>
+		<string>Ford Kuga Coupé</string>
+	</array>
+</dict>
+</plist>

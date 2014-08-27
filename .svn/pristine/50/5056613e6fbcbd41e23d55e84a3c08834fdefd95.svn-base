@@ -1,0 +1,101 @@
+//
+//  AirtimeParser.m
+//  CardReader
+//
+//  Created by Gonet on 22/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "AirtimeParser.h"
+
+
+@implementation AirtimeParser
+
+@synthesize currentElement,msgResponse;
+@synthesize payment;
+
+#define RETURN				@"return"
+#define ISERROR				@"isError"
+#define MESSAGE				@"message"
+#define DOCTO				@"docto"
+
+-(void) startParser:(NSData*) data
+{
+	//currentElement=[[NSString alloc] init];
+	msgResponse=[[NSString alloc] init];
+	payment=[[PaymentResponse alloc] init];
+	[payment setMessage:[[NSString alloc] init]];
+	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
+	
+    [parser setDelegate:self]; // The parser calls methods in this class
+    [parser setShouldProcessNamespaces:NO]; 
+    [parser setShouldReportNamespacePrefixes:NO]; //
+    [parser setShouldResolveExternalEntities:NO]; 
+	
+    [parser parse]; // Parse that data..
+	/*
+	 NSError *err;
+	 if (err && [parser parserError]) {
+	 err = [parser parserError];
+	 }*/
+	
+    [parser release];
+}
+
+-(void) parserDidStartDocument:(NSXMLParser *)parser
+{
+}
+-(void) parserDidEndDocument:(NSXMLParser *)parser
+{
+	NSLog(@"Finalizo parser");
+}
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict
+{
+	currentElement=elementName;
+}
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
+{}
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
+{
+	if (!string) {
+		string=@"";
+	}
+	if ([currentElement isEqualToString:RETURN]) {
+		msgResponse=[msgResponse stringByAppendingString:string];
+	}else if ([currentElement isEqualToString:ISERROR]) {
+		if([string isEqualToString:@"false"]){
+			[payment setIsError:false];
+		}else {
+			[payment setIsError:true];
+			
+			
+		}
+		
+		
+	}else if ([currentElement isEqualToString:MESSAGE]) {
+		[payment setMessage:[payment.message stringByAppendingString:string]];
+		
+	}else if ([currentElement isEqualToString:DOCTO]) {
+		[payment setDocto:string];
+	}
+	
+}
+
+-(NSString*) getMessageResponse{
+	return [payment message];
+}
+-(BOOL) getStateOfMessage{
+	DLog(@"payparserMesagge %@", payment.message);
+	if(![payment isError])
+		return YES;
+	else 
+		return NO;
+}
+-(void)dealloc
+{	
+	[payment release],payment=nil;
+	//[response release];
+	[super dealloc];
+}
+
+@end

@@ -1,0 +1,38 @@
+//
+//  FindItemModel.m
+//  CardReader
+//
+//  Created by Gonet on 10/08/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "FindItemModel.h"
+
+
+@implementation FindItemModel
+@synthesize barCode,brand,department,generic,itemCount,itemType;
+@synthesize lineType,price,description,discounts,promo;
+
+-(id)init
+{
+	if ((self = [super init])) {
+		discounts=[[NSMutableArray alloc] init];	
+	}
+	
+	return self;
+}
+-(void) dealloc
+{
+	[barCode release];
+	[brand release];
+	[department release];
+	[generic release]; 
+	[itemCount release];
+	[itemType release];
+	[lineType release];
+	[price release];
+	[description release];
+	[discounts release];
+	[super dealloc];
+}
+@end

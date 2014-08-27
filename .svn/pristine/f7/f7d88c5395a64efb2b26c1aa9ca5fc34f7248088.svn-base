@@ -1,0 +1,24 @@
+//
+//  Seller.m
+//  CardReader
+//
+//  Created by Gonet on 20/09/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "Seller.h"
+
+
+@implementation Seller
+
+@synthesize userName,password,name;
+
+
+-(void) dealloc
+{
+	[name release];
+	[userName release];
+	[password release];
+	[super dealloc];
+}
+@end

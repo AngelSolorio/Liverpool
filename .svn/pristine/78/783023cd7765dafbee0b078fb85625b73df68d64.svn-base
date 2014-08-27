@@ -1,0 +1,154 @@
+//
+//  SynchonizeViewController.m
+//  CardReader
+//
+//  Created by Martha Patricia Sagahon Azua on 03/10/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "TerminalViewController.h"
+#import "Tools.h"
+#import "StoreViewController.h"
+#import "Store.h"
+#import "Styles.h"
+#import "Session.h"
+
+@implementation TerminalViewController
+@synthesize btnStore,btnSave,txtTerminal,delegate, storeData;
+// The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+/*
+ - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+ self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+ if (self) {
+ // Custom initialization.
+ }
+ return self;
+ }
+ */
+
+/*
+ // Implement loadView to create a view hierarchy programmatically, without using a nib.
+ - (void)loadView {
+ }
+ */
+
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+    [super viewDidLoad];
+	[Styles bgGradientColorPurple:self.view];
+	txtTerminal.inputAccessoryView=[Tools inputAccessoryView:txtTerminal];
+
+}
+
+
+/*
+ // Override to allow orientations other than the default portrait orientation.
+ - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+ // Return YES for supported orientations.
+ return (interfaceOrientation == UIInterfaceOrientationPortrait);
+ }
+ */
+
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc. that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+
+- (void)dealloc {
+	[btnStore release],btnStore=nil;
+	[btnSave release],btnSave=nil;
+	[txtTerminal release], txtTerminal=nil;
+	[storeData release], storeData=nil;
+	/*[delegate release],*/delegate=nil;
+	[storeViewController release];
+    [super dealloc];
+}
+//----------------------------------------
+//            ACTIONS 
+//----------------------------------------
+-(void) storeSelection:(id)sender{
+	
+	
+	/**/
+	if (storeViewController==nil) {
+		//Get info for plist 
+		NSString *path = [[NSBundle mainBundle] pathForResource:
+						  @"stores" ofType:@"plist"];
+		
+		// Build the array from the plist  
+		NSMutableArray *array = [[NSMutableArray alloc] initWithContentsOfFile:path];
+		NSMutableArray *listStore= [[NSMutableArray alloc] init];
+		// Show the string values  
+		for (NSDictionary *dictio in array){
+			NSLog(@"Dictio %@", dictio);
+			Store* aStore=[Store productWithType:((NSString*)[dictio objectForKey:@"number"]) 
+											name:((NSString*)[dictio objectForKey:@"name"]) 
+									 description:((NSString*)[dictio objectForKey:@"description"])];
+			
+			[listStore addObject:aStore];
+		}
+		//Create new instance of StoreViewController
+		storeViewController = [[StoreViewController alloc] initWithNibName:@"StoreView" bundle:nil];
+		
+		storeViewController.listContent = listStore;
+		[storeViewController setStoreData:storeData];
+		[listStore release];
+	}
+	
+	[delegate showModal:storeViewController];
+	//[storeViewController release];
+	
+}
+-(void) save:(id)sender{
+	NSLog(@"storeData id %@ ", [Session getIdStore]);
+	NSLog(@"storeData store %@ ", [Session getStore]);
+	NSLog(@"valor %@ ",txtTerminal.text);
+	NSLog(@" terminal %d ", [txtTerminal.text length]);
+	if ((([Session getIdStore]==nil)||([Session getStore]==nil))||(txtTerminal.text==nil||[txtTerminal.text length]<0)) {
+		[Tools displayAlert:@"Error" message:@"verificar los campos vacios"];
+	}else {
+		[Session setTerminal:[txtTerminal text]];
+		[Tools saveStore];
+		//NSString *uuid = [Tools getUniqueID];
+		
+		[delegate isShowConfigView];
+		[delegate showViewsForStoreData];
+		
+	}
+	
+}
+
+//----------------------------------------
+//            TEXTFIELD DELEGATE
+//----------------------------------------
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[textField resignFirstResponder];
+	return NO;
+}
+-(void) textFieldDidBeginEditing:(UITextField *)textField
+{
+	textField.inputAccessoryView=[Tools inputAccessoryView:textField];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+	return YES;
+}
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[self.view endEditing:YES];
+	[super touchesBegan:touches withEvent:event];
+}
+
+
+@end

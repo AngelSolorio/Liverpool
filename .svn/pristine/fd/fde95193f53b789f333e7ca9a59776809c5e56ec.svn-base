@@ -1,0 +1,25 @@
+//
+//  ConfigurationAuthorization.h
+//  CardReader
+//
+//  Created by Gonet on 19/11/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+
+@interface ConfigurationAuthorization : UIViewController /*<UITextFieldDelegate>*/{
+
+	UITextField *txtStoreID;
+	UITextField *txtPassword;
+	UIButton    *btnOk;
+}
+
+@property (nonatomic, retain) IBOutlet	UITextField *txtStoreID;
+@property (nonatomic, retain) IBOutlet	UITextField *txtPassword;
+@property (nonatomic, retain) IBOutlet  UIButton    *btnOk;
+
+-(IBAction) validatePassword;
+
+@end

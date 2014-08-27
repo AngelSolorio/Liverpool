@@ -1,0 +1,45 @@
+/* Authorize Payment
+   Slide Credit Card */
+"Autorizar" = "Autorizar";
+
+/* Connect accessory to iPhone/iPod */
+"Conectar el Dispositivo" = "Conectar el Dispositivo";
+
+/* Slide Credit Card */
+"Deslizar Tarjeta" = "Deslizar Tarjeta";
+
+/* Edit left bar button */
+"Editar" = "Editar";
+
+/* Connect accessory to iPhone/iPod
+   Scan with accessory to iPhone/iPod */
+"Escanear Código" = "Escanear Código";
+
+/* Operation number */
+"Operación Número: %i" = "Operación Número: %i";
+
+/* Point of sale in Pay view
+   Scan view title */
+"Punto de Venta" = "Punto de Venta";
+
+/* Card number */
+"Tarjeta: " = "Tarjeta: ";
+
+/* Done left bar button */
+"Terminar" = "Terminar";
+
+/* Total to pay in Payment View */
+"Total a Pagar: $%i" = "Total a Pagar: $%i";
+
+/* Subtitle text */
+"Transacción realizada" = "Transacción realizada";
+
+/* User name */
+"Usuario: " = "Usuario: ";
+
+/* Expiration Date */
+"Vencimiento: " = "Vencimiento: ";
+
+/* Erase confirmation */
+"¿Borrar?" = "¿Borrar?";
+

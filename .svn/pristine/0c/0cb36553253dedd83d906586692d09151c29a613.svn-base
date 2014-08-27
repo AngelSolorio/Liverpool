@@ -1,0 +1,34 @@
+//
+//  SignPrintViewController.h
+//  CardReader
+//
+//  Created by Gonet on 16/08/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+
+@interface SignPrintView : UIView {
+
+	BOOL mouseSwiped;
+	CGPoint lastPoint;
+	UIImageView *drawImage;
+	UIButton *clearButton;
+	UIButton *okButton;
+
+	BOOL okSign;
+	
+}
+@property(nonatomic, retain) IBOutlet UIImageView *drawImage;
+@property(nonatomic, retain) IBOutlet UIButton *clearButton;
+@property(nonatomic, retain) IBOutlet UIButton *okButton;
+
+@property (nonatomic) 	CGPoint lastPoint;
+@property (nonatomic)	BOOL mouseSwiped;
+
+-(IBAction) clearCanvas;
+-(IBAction) signCheckedOk;
+-(BOOL) isSignDone;
+
+@end

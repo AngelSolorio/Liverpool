@@ -1,0 +1,14 @@
+//
+//  StoreParser.m
+//  CardReader
+//
+//  Created by Martha Patricia Sagahon Azua on 05/10/11.
+//  Copyright 2011 Mittra Software. All rights reserved.
+//
+
+#import "StoreParser.h"
+
+
+@implementation StoreParser
+
+@end
