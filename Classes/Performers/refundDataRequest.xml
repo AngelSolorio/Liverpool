@@ -1,0 +1,9 @@
+<datosDevolucion>
+    <originalDate>#original_date#</originalDate>
+    <originalTerminal>#original_terminal#</originalTerminal>
+    <originalStoreNumber>#original_store_number#</originalStoreNumber>
+    <originalTicketNumber>#original_ticket_number#</originalTicketNumber>
+    <originalEmployee>#original_employee#</originalEmployee>
+    <refundCauseNumber>#refund_cause_number#</refundCauseNumber>
+    <refundType>#refund_type#</refundType>
+</datosDevolucion>

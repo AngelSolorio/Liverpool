@@ -41,6 +41,7 @@
 - (void)viewDidLoad {
 
     [super viewDidLoad];
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	terminalViewController.delegate=self;
 	[self styleApply];
 	

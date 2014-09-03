@@ -1,0 +1,7 @@
+<promocion>
+    <tipo>#type#</tipo>
+    <porcentaje>#percentage#</porcentaje>
+    <descripcion>#description#</descripcion>
+    <plazo>#term#</plazo>
+    <planId>#id_plan#</planId>
+</promocion>

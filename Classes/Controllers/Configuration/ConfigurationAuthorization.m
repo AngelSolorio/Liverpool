@@ -26,7 +26,7 @@
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-	
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	txtStoreID.inputAccessoryView=[Tools inputAccessoryView:txtStoreID];
 	txtPassword.inputAccessoryView=[Tools inputAccessoryView:txtPassword];
 	self.title=@"Configuracion de impresoras";

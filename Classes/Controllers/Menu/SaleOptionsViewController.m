@@ -26,6 +26,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
     [Styles bgGradientColorPurple:self.view];
 	[Styles menuTransactionButtonStyle:btnMesaRegalo];
 	[Styles menuTransactionButtonStyle:btnNormal];

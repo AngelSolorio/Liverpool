@@ -59,6 +59,7 @@ typedef enum {
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
     DLog(@"Viewdidload scanviewcontroller");
 	[self setTitle:@"Liverpool"];
 

@@ -1,0 +1,6 @@
+<vendedor>
+    <usuario>#user#</usuario>
+    <password>#password#</password>
+    <terminal>#terminal#</terminal>
+    <tienda>#store#</tienda>
+</vendedor>

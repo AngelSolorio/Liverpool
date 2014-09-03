@@ -38,7 +38,7 @@ NSString * const MONEY_REQUESTKEY =@"TSCCTE09";
 	
 
     [super viewDidLoad];
-	
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	[Styles bgGradientColorPurple:self.view];
 	[Styles silverButtonStyle:btnBalance];
 	[Styles silverButtonStyle:btnMonedero];

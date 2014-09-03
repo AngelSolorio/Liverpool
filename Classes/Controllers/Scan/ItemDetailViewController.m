@@ -34,6 +34,7 @@
 - (void)viewDidLoad {
 	//testArray=[NSMutableArray arrayWithObjects:@"Promocion verano 20%",@"Venta Nocturna 10%",@"Promocion por tecla 5%",nil];
 	//[testArray retain];
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
     [[self navigationController] setNavigationBarHidden:NO];
 	self.title=@"Producto";
 	//[Styles bgGradientColorPurple:scrollView];

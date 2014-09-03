@@ -33,7 +33,7 @@
 	scanDevice = [Linea sharedDevice];
     [scanDevice setDelegate:self];
 	[scanDevice connect];
-	
+	if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	[Styles scanReaderViewStyle:productSearch];
 	txtBarcode.inputAccessoryView=[Tools inputAccessoryView:txtBarcode];
 	[super viewDidLoad];

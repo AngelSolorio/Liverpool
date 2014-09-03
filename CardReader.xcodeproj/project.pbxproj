@@ -206,6 +206,20 @@
 		AB031B6A18BE6EB7009E3C85 /* CancelParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AB031B6918BE6EB7009E3C85 /* CancelParser.m */; };
 		AB16AA05186A0D35004467AE /* GenericCardReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB16AA03186A0D35004467AE /* GenericCardReaderViewController.m */; };
 		AB16AA06186A0D35004467AE /* GenericCardReaderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB16AA04186A0D35004467AE /* GenericCardReaderViewController.xib */; };
+		AB29BDF119B532C400D893EA /* itemBodyFindRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDF019B532C400D893EA /* itemBodyFindRequest.xml */; };
+		AB29BDF319B537DC00D893EA /* itemPromotionsRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDF219B537DC00D893EA /* itemPromotionsRequest.xml */; };
+		AB29BDF519B5F0A500D893EA /* xmlConstructor.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDF419B5F0A500D893EA /* xmlConstructor.xml */; };
+		AB29BDF719B6044700D893EA /* itemConstructorFindRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDF619B6044700D893EA /* itemConstructorFindRequest.xml */; };
+		AB29BDFA19B673DF00D893EA /* cardDataRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDF919B673DF00D893EA /* cardDataRequest.xml */; };
+		AB29BDFD19B6776E00D893EA /* sellerRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDFC19B6776E00D893EA /* sellerRequest.xml */; };
+		AB29BE0019B678B200D893EA /* giftTableRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDFF19B678B200D893EA /* giftTableRequest.xml */; };
+		AB29BE0319B67A1D00D893EA /* refundDataRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0219B67A1D00D893EA /* refundDataRequest.xml */; };
+		AB29BE0619B6827400D893EA /* userRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0519B6827400D893EA /* userRequest.xml */; };
+		AB29BE0919B73EE900D893EA /* promotionGroupRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0819B73EE900D893EA /* promotionGroupRequest.xml */; };
+		AB29BE0B19B73FC100D893EA /* promotionBodyRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0A19B73FC100D893EA /* promotionBodyRequest.xml */; };
+		AB29BE0D19B742B500D893EA /* promotionsConstructorGroupRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0C19B742B500D893EA /* promotionsConstructorGroupRequest.xml */; };
+		AB29BE1019B7469800D893EA /* withdrawDataListRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0F19B7469700D893EA /* withdrawDataListRequest.xml */; };
+		AB29BE1319B7486800D893EA /* cardDataListRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE1219B7486800D893EA /* cardDataListRequest.xml */; };
 		AB92566D1873498D00E1B2E5 /* CardDataList.m in Sources */ = {isa = PBXBuildFile; fileRef = AB92566C1873498D00E1B2E5 /* CardDataList.m */; };
 		AB97C13E184000E500B3FD04 /* ScreenShot-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB97C13D184000E500B3FD04 /* ScreenShot-568h@2x.png */; };
 		ABB90B3F1860D09F001A91EE /* StarIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB90B3E1860D09F001A91EE /* StarIO.framework */; };
@@ -529,6 +543,20 @@
 		AB16AA02186A0D35004467AE /* GenericCardReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericCardReaderViewController.h; sourceTree = "<group>"; };
 		AB16AA03186A0D35004467AE /* GenericCardReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericCardReaderViewController.m; sourceTree = "<group>"; };
 		AB16AA04186A0D35004467AE /* GenericCardReaderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GenericCardReaderViewController.xib; sourceTree = "<group>"; };
+		AB29BDF019B532C400D893EA /* itemBodyFindRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = itemBodyFindRequest.xml; sourceTree = "<group>"; };
+		AB29BDF219B537DC00D893EA /* itemPromotionsRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = itemPromotionsRequest.xml; sourceTree = "<group>"; };
+		AB29BDF419B5F0A500D893EA /* xmlConstructor.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = xmlConstructor.xml; sourceTree = "<group>"; };
+		AB29BDF619B6044700D893EA /* itemConstructorFindRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = itemConstructorFindRequest.xml; sourceTree = "<group>"; };
+		AB29BDF919B673DF00D893EA /* cardDataRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cardDataRequest.xml; sourceTree = "<group>"; };
+		AB29BDFC19B6776E00D893EA /* sellerRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sellerRequest.xml; sourceTree = "<group>"; };
+		AB29BDFF19B678B200D893EA /* giftTableRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = giftTableRequest.xml; sourceTree = "<group>"; };
+		AB29BE0219B67A1D00D893EA /* refundDataRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = refundDataRequest.xml; sourceTree = "<group>"; };
+		AB29BE0519B6827400D893EA /* userRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = userRequest.xml; sourceTree = "<group>"; };
+		AB29BE0819B73EE900D893EA /* promotionGroupRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = promotionGroupRequest.xml; sourceTree = "<group>"; };
+		AB29BE0A19B73FC100D893EA /* promotionBodyRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = promotionBodyRequest.xml; sourceTree = "<group>"; };
+		AB29BE0C19B742B500D893EA /* promotionsConstructorGroupRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = promotionsConstructorGroupRequest.xml; sourceTree = "<group>"; };
+		AB29BE0F19B7469700D893EA /* withdrawDataListRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = withdrawDataListRequest.xml; sourceTree = "<group>"; };
+		AB29BE1219B7486800D893EA /* cardDataListRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cardDataListRequest.xml; sourceTree = "<group>"; };
 		AB92566B1873498D00E1B2E5 /* CardDataList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CardDataList.h; path = Parsers/ParserData/CardDataList.h; sourceTree = "<group>"; };
 		AB92566C1873498D00E1B2E5 /* CardDataList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CardDataList.m; path = Parsers/ParserData/CardDataList.m; sourceTree = "<group>"; };
 		AB97C13D184000E500B3FD04 /* ScreenShot-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ScreenShot-568h@2x.png"; sourceTree = "<group>"; };
@@ -1040,6 +1068,83 @@
 			name = Style;
 			sourceTree = "<group>";
 		};
+		AB29BDEF19B5319600D893EA /* Item Files */ = {
+			isa = PBXGroup;
+			children = (
+				AB29BDF019B532C400D893EA /* itemBodyFindRequest.xml */,
+				AB29BDF219B537DC00D893EA /* itemPromotionsRequest.xml */,
+				AB29BDF419B5F0A500D893EA /* xmlConstructor.xml */,
+				AB29BDF619B6044700D893EA /* itemConstructorFindRequest.xml */,
+			);
+			name = "Item Files";
+			sourceTree = "<group>";
+		};
+		AB29BDF819B673C100D893EA /* Card Files */ = {
+			isa = PBXGroup;
+			children = (
+				AB29BDF919B673DF00D893EA /* cardDataRequest.xml */,
+			);
+			name = "Card Files";
+			sourceTree = "<group>";
+		};
+		AB29BDFB19B6775500D893EA /* Seller Files */ = {
+			isa = PBXGroup;
+			children = (
+				AB29BDFC19B6776E00D893EA /* sellerRequest.xml */,
+			);
+			name = "Seller Files";
+			sourceTree = "<group>";
+		};
+		AB29BDFE19B6789700D893EA /* Gift Table Files */ = {
+			isa = PBXGroup;
+			children = (
+				AB29BDFF19B678B200D893EA /* giftTableRequest.xml */,
+			);
+			name = "Gift Table Files";
+			sourceTree = "<group>";
+		};
+		AB29BE0119B67A0700D893EA /* Refund Data Files */ = {
+			isa = PBXGroup;
+			children = (
+				AB29BE0219B67A1D00D893EA /* refundDataRequest.xml */,
+			);
+			name = "Refund Data Files";
+			sourceTree = "<group>";
+		};
+		AB29BE0419B6826500D893EA /* User Files */ = {
+			isa = PBXGroup;
+			children = (
+				AB29BE0519B6827400D893EA /* userRequest.xml */,
+			);
+			name = "User Files";
+			sourceTree = "<group>";
+		};
+		AB29BE0719B73ECA00D893EA /* Promotion Group Files */ = {
+			isa = PBXGroup;
+			children = (
+				AB29BE0A19B73FC100D893EA /* promotionBodyRequest.xml */,
+				AB29BE0819B73EE900D893EA /* promotionGroupRequest.xml */,
+				AB29BE0C19B742B500D893EA /* promotionsConstructorGroupRequest.xml */,
+			);
+			name = "Promotion Group Files";
+			sourceTree = "<group>";
+		};
+		AB29BE0E19B7466A00D893EA /* WithdrawData Files */ = {
+			isa = PBXGroup;
+			children = (
+				AB29BE0F19B7469700D893EA /* withdrawDataListRequest.xml */,
+			);
+			name = "WithdrawData Files";
+			sourceTree = "<group>";
+		};
+		AB29BE1119B7484E00D893EA /* CardDataList Files */ = {
+			isa = PBXGroup;
+			children = (
+				AB29BE1219B7486800D893EA /* cardDataListRequest.xml */,
+			);
+			name = "CardDataList Files";
+			sourceTree = "<group>";
+		};
 		C07E09B213D4EB280022B68C /* Utiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -1166,6 +1271,15 @@
 		DF18F94613CDFE7900001371 /* Performers */ = {
 			isa = PBXGroup;
 			children = (
+				AB29BE1119B7484E00D893EA /* CardDataList Files */,
+				AB29BE0E19B7466A00D893EA /* WithdrawData Files */,
+				AB29BE0719B73ECA00D893EA /* Promotion Group Files */,
+				AB29BE0419B6826500D893EA /* User Files */,
+				AB29BDFE19B6789700D893EA /* Gift Table Files */,
+				AB29BE0119B67A0700D893EA /* Refund Data Files */,
+				AB29BDFB19B6775500D893EA /* Seller Files */,
+				AB29BDF819B673C100D893EA /* Card Files */,
+				AB29BDEF19B5319600D893EA /* Item Files */,
 				8574734513F1B6F0004407C4 /* LiverPoolRequest.h */,
 				8574734413F1B6F0004407C4 /* LiverPoolRequest.m */,
 				85215CBF143A3C4B00B44512 /* BalanceRequest.h */,
@@ -1469,6 +1583,8 @@
 				DF15DC0A13D37B69009E7438 /* Connected.png in Resources */,
 				DF15DC0B13D37B69009E7438 /* Connected@2x.png in Resources */,
 				DF15DC0C13D37B69009E7438 /* Disconnected.png in Resources */,
+				AB29BDF719B6044700D893EA /* itemConstructorFindRequest.xml in Resources */,
+				AB29BE0319B67A1D00D893EA /* refundDataRequest.xml in Resources */,
 				DF15DC0D13D37B69009E7438 /* Disconnected@2x.png in Resources */,
 				DF15DC0E13D37B69009E7438 /* Scaning.png in Resources */,
 				DF15DC0F13D37B69009E7438 /* Scaning@2x.png in Resources */,
@@ -1479,6 +1595,7 @@
 				DF15DC1B13D37D43009E7438 /* Records.png in Resources */,
 				DF15DC1C13D37D43009E7438 /* Records@2x.png in Resources */,
 				DF15DC6B13D3CD0F009E7438 /* PaymentView.xib in Resources */,
+				AB29BE1019B7469800D893EA /* withdrawDataListRequest.xml in Resources */,
 				DF15DC6C13D3CD0F009E7438 /* ScanView.xib in Resources */,
 				DFE52ABA13D46FEC00876543 /* 01-refresh.png in Resources */,
 				DFE52ABB13D46FEC00876543 /* 02-redo.png in Resources */,
@@ -1491,15 +1608,18 @@
 				DFE52AC213D46FEC00876543 /* 09-chat-2.png in Resources */,
 				DFE52AC313D46FEC00876543 /* 10-medical.png in Resources */,
 				DFE52AC413D46FEC00876543 /* 11-clock.png in Resources */,
+				AB29BDF319B537DC00D893EA /* itemPromotionsRequest.xml in Resources */,
 				DFE52AC813D4701300876543 /* Images.plist in Resources */,
 				DFE52AC913D4701300876543 /* Products.plist in Resources */,
 				859E21C613FC3D7400D0A0F9 /* logo_liverpool.png in Resources */,
 				859E21C713FC3D7400D0A0F9 /* LogoEncabezado.png in Resources */,
 				859E221F13FC4B9300D0A0F9 /* sign-in.png in Resources */,
+				AB29BE1319B7486800D893EA /* cardDataListRequest.xml in Resources */,
 				859E222013FC4B9300D0A0F9 /* sign-out.png in Resources */,
 				859E22A513FC679F00D0A0F9 /* IntroViewController.xib in Resources */,
 				859E22A613FC679F00D0A0F9 /* LoginViewController.xib in Resources */,
 				4D8BEA9713FD74D800A949FD /* clearButton.png in Resources */,
+				AB29BDFD19B6776E00D893EA /* sellerRequest.xml in Resources */,
 				4DF5DF9C13FD78E200C525B4 /* TerminalsView.xib in Resources */,
 				4D346CD2140C4E9C00EFE830 /* PrinterConfigViewController.xib in Resources */,
 				4D66750A1415754E0022D312 /* TransactionsMenuViewController.xib in Resources */,
@@ -1536,6 +1656,7 @@
 				4DD374B414CDFAFB00E97EC2 /* PaymentPlanViewController.xib in Resources */,
 				4D47CE5614D1B5300071E5D6 /* SilverCell.png in Resources */,
 				4D47CE5714D1B5300071E5D6 /* SilverCellSelected.png in Resources */,
+				AB29BE0D19B742B500D893EA /* promotionsConstructorGroupRequest.xml in Resources */,
 				4D7555D914DC3F9A00C63371 /* AloneCell.png in Resources */,
 				4D7555DA14DC3F9A00C63371 /* AloneCellSelected.png in Resources */,
 				4D7555DB14DC3F9A00C63371 /* BottomCell.png in Resources */,
@@ -1567,12 +1688,15 @@
 				046EF63E174FD0F300504877 /* SilverBtnSelected.png in Resources */,
 				046EF641174FD8B600504877 /* PurpleBtn.png in Resources */,
 				046EF642174FD8B600504877 /* PurpleBtnSelected.png in Resources */,
+				AB29BDF519B5F0A500D893EA /* xmlConstructor.xml in Resources */,
 				04CCF5ED176BCCC000FEDF8C /* ItemDetailViewController.xib in Resources */,
+				AB29BDFA19B673DF00D893EA /* cardDataRequest.xml in Resources */,
 				04BEF3701790705600738E9E /* BtnMenuPurple.png in Resources */,
 				04BEF37A1790A2D900738E9E /* locked.png in Resources */,
 				04BEF37B1790A2D900738E9E /* refresh.png in Resources */,
 				04BEF37C1790A2D900738E9E /* repeat-2.png in Resources */,
 				04BEF37D1790A2D900738E9E /* store.png in Resources */,
+				AB29BE0019B678B200D893EA /* giftTableRequest.xml in Resources */,
 				04BEF37E1790A2D900738E9E /* user-4.png in Resources */,
 				04BEF37F1790A2D900738E9E /* user-card.png in Resources */,
 				04BEF3811790A35000738E9E /* compose-3.png in Resources */,
@@ -1594,14 +1718,17 @@
 				049D5ADC1822BA3700BA2FDB /* Battery10.png in Resources */,
 				049D5ADD1822BA3700BA2FDB /* Battery20.png in Resources */,
 				049D5ADE1822BA3700BA2FDB /* Battery40.png in Resources */,
+				AB29BE0B19B73FC100D893EA /* promotionBodyRequest.xml in Resources */,
 				049D5ADF1822BA3700BA2FDB /* Battery80.png in Resources */,
 				049D5AE01822BA3700BA2FDB /* Battery100.png in Resources */,
+				AB29BE0919B73EE900D893EA /* promotionGroupRequest.xml in Resources */,
 				0415D90B182401AC00A18658 /* Battery60.png in Resources */,
 				04D48DC3182C15A5006C2887 /* BatteryH0.png in Resources */,
 				04D48DC4182C15A5006C2887 /* BatteryH10.png in Resources */,
 				04D48DC5182C15A5006C2887 /* BatteryH100.png in Resources */,
 				04D48DC6182C15A5006C2887 /* BatteryH20.png in Resources */,
 				04D48DC7182C15A5006C2887 /* BatteryH40.png in Resources */,
+				AB29BDF119B532C400D893EA /* itemBodyFindRequest.xml in Resources */,
 				04D48DC8182C15A5006C2887 /* BatteryH80.png in Resources */,
 				04D48DC9182C15A5006C2887 /* batteryTab.png in Resources */,
 				04D48DCD182C199B006C2887 /* BatteryTabView.xib in Resources */,
@@ -1618,6 +1745,7 @@
 				049A86B1183D385200BAA54C /* middleTable2.png in Resources */,
 				049A86B2183D385200BAA54C /* middleTable3.png in Resources */,
 				049A86B3183D385200BAA54C /* oneCell.png in Resources */,
+				AB29BE0619B6827400D893EA /* userRequest.xml in Resources */,
 				049A86B4183D385200BAA54C /* topTable.png in Resources */,
 				049A86B8183D717500BAA54C /* middleTable1.png in Resources */,
 				0442888D183EA24A00EC2B9A /* ScreenShot.png in Resources */,
@@ -1761,8 +1889,8 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)/Classes\\\"",
@@ -1774,7 +1902,7 @@
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Resources/CardReader-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/CardReaderSDK\"",
@@ -1782,7 +1910,7 @@
 					"\"$(SRCROOT)/Classes/CardReaderSDK/Library\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7f armv7k";
@@ -1857,9 +1985,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)/Classes\\\"",
@@ -1871,7 +1999,7 @@
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Resources/CardReader-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/CardReaderSDK\"",
@@ -1893,8 +2021,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)/Classes\\\"",
@@ -1906,7 +2034,7 @@
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Resources/CardReader-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/CardReaderSDK\"",

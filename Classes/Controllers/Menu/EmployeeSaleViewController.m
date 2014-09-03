@@ -29,6 +29,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
 
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	txtCardNumber.inputAccessoryView=[Tools inputAccessoryView:txtCardNumber];
 	[Styles bgGradientColorPurple:self.view];
 	[Styles silverButtonStyle:btnOk];

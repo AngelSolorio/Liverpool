@@ -24,6 +24,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
     [Styles bgGradientColorPurple:self.view];
     [Styles silverButtonStyle:btnGiftY];
     [Styles silverButtonStyle:btnGiftN];

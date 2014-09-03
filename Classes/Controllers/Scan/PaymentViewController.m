@@ -88,7 +88,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-
+     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	lblCard.textColor = [UIColor lightGrayColor];
 	lblUser.textColor = [UIColor lightGrayColor];
 	lblDate.textColor = [UIColor lightGrayColor];

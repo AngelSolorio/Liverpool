@@ -31,6 +31,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	aTableView.backgroundColor=[UIColor clearColor];
 	[Styles bgGradientColorPurple:self.view];
 	[Styles cornerView:txtDiscount];

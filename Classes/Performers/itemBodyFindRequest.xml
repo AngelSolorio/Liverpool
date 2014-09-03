@@ -1,0 +1,11 @@
+    <idProducto>#product_id#</idProducto>
+    <categoria>#category#</categoria>
+    <precio>#price#</precio>
+    <descripcion>#description#</descripcion>
+    <lineType>#line_type#</lineType>
+    <promo>#promotion#</promo>
+    <regalo>#gift#</regalo>
+    <cantidad>#quantity#</cantidad>
+    <precioExtendido>#extended_price#</precioExtendido>
+    <fechaEntrega>#delivery_date#</fechaEntrega>
+            

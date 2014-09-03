@@ -44,6 +44,7 @@
     toPrint=NO;
     
     [super viewDidLoad];
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
     // Do any additional setup after loading the view from its nib.
     [self startClock];
     [self refreshLabelData];

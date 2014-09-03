@@ -1,0 +1,14 @@
+<tarjeta>
+    <noTarjeta>#card_number#</noTarjeta>
+    <tipoTarjeta>#card_type#</tipoTarjeta>
+    <track1>#track1#</track1>
+    <track2>#track2#</track2>
+    <track3>#track3#</track3>
+    <ds>#ds#</ds>
+    <expiracion>#expiration#</expiracion>
+    <monedero>#wallet#</monedero>
+    <plan>#plan#</plan>
+    <plazo>#term#</plazo>
+    <planDescripcion>#plan_description#</planDescripcion>
+    <monto>#ammount#</monto>
+</tarjeta>
