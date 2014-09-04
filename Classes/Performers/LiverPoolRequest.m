@@ -19,6 +19,7 @@
 #import "WithdrawData.h"
 #import "WithdrawDataList.h"
 #import "CardDataList.h"
+#import "NSString+XML.h"
 
 @implementation LiverPoolRequest
 @synthesize receivedData,requestType,delegate;
@@ -155,35 +156,36 @@
 			if ([((NSArray*)par) count]>0 ) {
 				NSObject* obj=[((NSArray*)par) objectAtIndex:0];
 				if ([obj isKindOfClass:[FindItemModel class]]) {
+                    NSLog(@"Read item model");
                     NSMutableString *itemBody = [[[NSMutableString alloc] init] autorelease];
 					for (FindItemModel* fim in (NSArray*) par) {
                         NSString *itemFindPath = [[NSBundle mainBundle] pathForResource:@"itemBodyFindRequest" ofType:@"xml"];
                         NSString *itemFindContent = [[NSString alloc] initWithContentsOfFile:itemFindPath encoding:NSUTF8StringEncoding error:nil];
-                        itemFindContent = [itemFindContent stringByReplacingOccurrencesOfString:@"#product_id#" withString:fim.barCode];
-                        itemFindContent = [itemFindContent stringByReplacingOccurrencesOfString:@"#category#" withString:fim.department];
-                        itemFindContent = [itemFindContent stringByReplacingOccurrencesOfString:@"#price#" withString:fim.price];
-                        itemFindContent = [itemFindContent stringByReplacingOccurrencesOfString:@"#description#" withString:[fim getXMLdescription]];
-                        itemFindContent = [itemFindContent stringByReplacingOccurrencesOfString:@"#line_type#" withString:fim.lineType];
-                        itemFindContent = [itemFindContent stringByReplacingOccurrencesOfString:@"#promotion#" withString:fim.promo?@"true":@"false"];
-                        itemFindContent = [itemFindContent stringByReplacingOccurrencesOfString:@"#gift#" withString:fim.itemForGift?@"true":@"false"];
-                        itemFindContent = [itemFindContent stringByReplacingOccurrencesOfString:@"#quantity#" withString:fim.itemCount];
-                        itemFindContent = [itemFindContent stringByReplacingOccurrencesOfString:@"#extended_price#" withString:fim.priceExtended];
-                        itemFindContent = [itemFindContent stringByReplacingOccurrencesOfString:@"#delivery_date#" withString:fim.deliveryDate];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#product_id#" withValidString:fim.barCode];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#category#" withValidString:fim.department];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#price#" withValidString:fim.price];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#description#" withValidString:[fim getXMLdescription]];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#line_type#" withValidString:fim.lineType];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#promotion#" withValidString:fim.promo?@"true":@"false"];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#gift#" withValidString:fim.itemForGift?@"true":@"false"];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#quantity#" withValidString:fim.itemCount];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#extended_price#" withValidString:fim.priceExtended];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#delivery_date#" withValidString:fim.deliveryDate];
                         [itemBody appendString:itemFindContent];
 
 						for (Promotions *promo in fim.discounts) {
                             NSString *promotionsPath = [[NSBundle mainBundle] pathForResource:@"itemPromotionsRequest" ofType:@"xml"];
                             NSString *promotionsContent = [[NSString alloc] initWithContentsOfFile:promotionsPath encoding:NSUTF8StringEncoding error:nil];
-                            promotionsContent = [promotionsContent stringByReplacingOccurrencesOfString:@"#type#" withString:promo.promoTypeBenefit];
-                            promotionsContent = [promotionsContent stringByReplacingOccurrencesOfString:@"#percentage#" withString:promo.promoDiscountPercent];
-                            promotionsContent = [promotionsContent stringByReplacingOccurrencesOfString:@"#description#" withString:promo.promoDescription];
-                            promotionsContent = [promotionsContent stringByReplacingOccurrencesOfString:@"#term#" withString:promo.promoInstallmentSelected];
-                            promotionsContent = [promotionsContent stringByReplacingOccurrencesOfString:@"#id_plan#" withString:promo.planId];
+                            promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#type#" withValidString:promo.promoTypeBenefit];
+                            promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#percentage#" withValidString:promo.promoDiscountPercent];
+                            promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#description#" withValidString:promo.promoDescription];
+                            promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#term#" withValidString:promo.promoInstallmentSelected];
+                            promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#id_plan#" withValidString:promo.planId];
                             [itemBody appendString:promotionsContent];
 						}
                         NSString *itemBodyPath = [[NSBundle mainBundle] pathForResource:@"itemConstructorFindRequest" ofType:@"xml"];
                         NSString *itemBodyContent = [[NSString alloc] initWithContentsOfFile:itemBodyPath encoding:NSUTF8StringEncoding error:nil];
-                        itemBodyContent = [itemBodyContent stringByReplacingOccurrencesOfString:@"#product_body#" withString:itemBody];
+                        itemBodyContent = [itemBodyContent stringByReplacingXMLOcurrencesOfString:@"#product_body#" withValidString:itemBody];
                         [xmlFormat appendString:itemBodyContent];
 					}
 				}
@@ -197,123 +199,125 @@
      
 		// card space
         if ([par isKindOfClass:[Card class]])
-        {
+        {   NSLog(@"Read Card");
             Card *cardData=(Card*) par;
             NSString *cardDataPath = [[NSBundle mainBundle] pathForResource:@"cardDataRequest" ofType:@"xml"];
             NSString *cardDataContent = [[NSString alloc] initWithContentsOfFile:cardDataPath encoding:NSUTF8StringEncoding error:NULL];
-            cardDataContent = [cardDataContent stringByReplacingOccurrencesOfString:@"#card_number#" withString:cardData.cardNumber];
-            cardDataContent = [cardDataContent stringByReplacingOccurrencesOfString:@"#card_type#" withString:cardData.cardType];
-            cardDataContent = [cardDataContent stringByReplacingOccurrencesOfString:@"#track1#" withString:cardData.track1];
-            cardDataContent = [cardDataContent stringByReplacingOccurrencesOfString:@"#track2#" withString:cardData.track2];
-            cardDataContent = [cardData.track3 length]==0 ? [cardDataContent stringByReplacingOccurrencesOfString:@"#track3#" withString:@""] : [cardDataContent stringByReplacingOccurrencesOfString:@"#track3#" withString:cardData.track3];
-            cardDataContent = [cardData.authCode length]==0 ? [cardDataContent stringByReplacingOccurrencesOfString:@"#ds#" withString:@""] : [cardDataContent stringByReplacingOccurrencesOfString:@"#ds#" withString:cardData.authCode];
-            cardDataContent = [cardData.expireDate length]==0 ? [cardDataContent stringByReplacingOccurrencesOfString:@"#expiration#" withString:@""] : [cardDataContent stringByReplacingOccurrencesOfString:@"#expiration#" withString:cardData.expireDate];
-            cardDataContent = [cardDataContent stringByReplacingOccurrencesOfString:@"#wallet#" withString:cardData.monederoNumber]; //
-            cardDataContent = [cardDataContent stringByReplacingOccurrencesOfString:@"#plan#" withString:cardData.planId];
-            cardDataContent = [cardDataContent stringByReplacingOccurrencesOfString:@"#term#" withString:cardData.planInstallment];
-            cardDataContent = [cardDataContent stringByReplacingOccurrencesOfString:@"#plan_description#" withString:cardData.planDescription];
-            cardDataContent = [cardDataContent stringByReplacingOccurrencesOfString:@"#ammount#" withString:cardData.amountToPay];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#card_number#" withValidString:cardData.cardNumber];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#card_type#" withValidString:cardData.cardType];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#track1#" withValidString:cardData.track1];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#track2#" withValidString:cardData.track2];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#track3#" withValidString:cardData.track3];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#ds#" withValidString:cardData.authCode];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#expiration#" withValidString:cardData.expireDate];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#wallet#" withValidString:cardData.monederoNumber]; //
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#plan#" withValidString:cardData.planId];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#term#" withValidString:cardData.planInstallment];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#plan_description#" withValidString:cardData.planDescription];
+            cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#ammount#" withValidString:cardData.amountToPay];
             [xmlFormat appendString:cardDataContent];
         }
         //---------
 		if ([par isKindOfClass:[Seller class]])
-		{   NSLog(@"Seller");
+		{   NSLog(@"Read Seller");
             Seller *seller=(Seller*) par;
 			NSString *terminal=[Session getTerminal];
             NSString *sellerPath = [[NSBundle mainBundle] pathForResource:@"sellerRequest" ofType:@"xml"];
             NSString *sellerContent = [[NSString alloc] initWithContentsOfFile:sellerPath encoding:NSUTF8StringEncoding error:nil];
-            sellerContent = [sellerContent stringByReplacingOccurrencesOfString:@"#user#" withString:seller.userName];
-            sellerContent = [sellerContent stringByReplacingOccurrencesOfString:@"#password#" withString:seller.password];
-            sellerContent = [sellerContent stringByReplacingOccurrencesOfString:@"#terminal#" withString:terminal];
-            sellerContent = [sellerContent stringByReplacingOccurrencesOfString:@"#store#" withString:[Session getIdStore]];
+            sellerContent = [sellerContent stringByReplacingXMLOcurrencesOfString:@"#user#" withValidString:seller.userName];
+            sellerContent = [sellerContent stringByReplacingXMLOcurrencesOfString:@"#password#" withValidString:seller.password];
+            sellerContent = [sellerContent stringByReplacingXMLOcurrencesOfString:@"#terminal#" withValidString:terminal];
+            sellerContent = [sellerContent stringByReplacingXMLOcurrencesOfString:@"#store#" withValidString:[Session getIdStore]];
             [xmlFormat appendString:sellerContent];
 		}
 		if ([par isKindOfClass:[PromotionGroup class]])
-		{
+		{   NSLog(@"Read promotion group");
             PromotionGroup *promoGroup=(PromotionGroup*) par;
             NSMutableString *promotionsBody = [[[NSMutableString alloc] init] autorelease];
             NSString *promotionGroupPath = [[NSBundle mainBundle] pathForResource:@"promotionGroupRequest" ofType:@"xml"];
             NSString *promotionGroupContent = [[NSString alloc] initWithContentsOfFile:promotionGroupPath encoding:NSUTF8StringEncoding error:nil];
-            promotionGroupContent = [promotionGroupContent stringByReplacingOccurrencesOfString:@"#selected_group#" withString:[NSString stringWithFormat:@"%i",promoGroup.section]];
+            promotionGroupContent = [promotionGroupContent stringByReplacingXMLOcurrencesOfString:@"#selected_group#" withValidString:[NSString stringWithFormat:@"%i",promoGroup.section]];
             [promotionsBody appendString:promotionGroupContent];
 			
 			for (Promotions *promo in promoGroup.promotionGroupArray) {
+                NSLog(@"Read promotions array");
+                NSLog(@"%@ %@ %@ %@ %@",promo.promoTypeBenefit,promo.promoDescription,promo.promoInstallmentSelected,promo.planId,promo.promoBaseAmount);
                 NSString *promotionPath = [[NSBundle mainBundle] pathForResource:@"promotionBodyRequest" ofType:@"xml"];
                 NSString *promotionContent = [[NSString alloc] initWithContentsOfFile:promotionPath encoding:NSUTF8StringEncoding error:nil];
-                promotionContent = [promotionContent stringByReplacingOccurrencesOfString:@"#type#" withString:promo.promoTypeBenefit];
-                promotionContent =  [promo.promoDiscountPercent length]==0 ? [promotionContent stringByReplacingOccurrencesOfString:@"#percentage#" withString:@""] : [promotionContent stringByReplacingOccurrencesOfString:@"#percentage#" withString:promo.promoDiscountPercent];
-                promotionContent = [promotionContent stringByReplacingOccurrencesOfString:@"#description#" withString:promo.promoDescription];
-                promotionContent = [promotionContent stringByReplacingOccurrencesOfString:@"#term#" withString:promo.promoInstallmentSelected];
-                promotionContent = [promotionContent stringByReplacingOccurrencesOfString:@"#plan_id#" withString:promo.planId];
-                promotionContent = [promotionContent stringByReplacingOccurrencesOfString:@"#base_ammount#" withString:promo.promoBaseAmount];
+                promotionContent = [promotionContent stringByReplacingXMLOcurrencesOfString:@"#type#" withValidString:promo.promoTypeBenefit];
+                promotionContent = [promotionContent stringByReplacingXMLOcurrencesOfString:@"#percentage#" withValidString:promo.promoDiscountPercent];
+                promotionContent = [promotionContent stringByReplacingXMLOcurrencesOfString:@"#description#" withValidString:promo.promoDescription];
+                promotionContent = [promotionContent stringByReplacingXMLOcurrencesOfString:@"#term#" withValidString:promo.promoInstallmentSelected];
+                promotionContent = [promotionContent stringByReplacingXMLOcurrencesOfString:@"#plan_id#" withValidString:promo.planId];
+                promotionContent = [promotionContent stringByReplacingXMLOcurrencesOfString:@"#base_ammount#" withValidString:promo.promoBaseAmount];
                 [promotionsBody appendString:promotionContent];
 			}
             NSString *promotionsBodyPath = [[NSBundle mainBundle] pathForResource:@"promotionsConstructorGroupRequest" ofType:@"xml"];
             NSString *promotionsBodyContent = [[NSString alloc] initWithContentsOfFile:promotionsBodyPath encoding:NSUTF8StringEncoding error:nil];
-            promotionsBodyContent = [promotionsBodyContent stringByReplacingOccurrencesOfString:@"#promotions_body#" withString:promotionsBody];
+            promotionsBodyContent = [promotionsBodyContent stringByReplacingXMLOcurrencesOfString:@"#promotions_body#" withValidString:promotionsBody];
             [xmlFormat appendString:promotionsBodyContent];
 		}
         if ([par isKindOfClass:[MesaDeRegalo class]])
-		{
+		{   NSLog(@"Read mesa de regalo");
             MesaDeRegalo *mesa=(MesaDeRegalo*) par;
             NSString *giftTablePath = [[NSBundle mainBundle] pathForResource:@"giftTableRequest" ofType:@"xml"];
             NSString *giftTableContent = [[NSString alloc] initWithContentsOfFile:giftTablePath encoding:NSUTF8StringEncoding error:nil];
-            giftTableContent = [giftTableContent stringByReplacingOccurrencesOfString:@"#father_name#" withString:mesa.fatherName];
-            giftTableContent = [giftTableContent stringByReplacingOccurrencesOfString:@"#mother_name#" withString:mesa.momName];
-            giftTableContent = [giftTableContent stringByReplacingOccurrencesOfString:@"#r_name#" withString:mesa.nameR];
+            giftTableContent = [giftTableContent stringByReplacingXMLOcurrencesOfString:@"#father_name#" withValidString:mesa.fatherName];
+            giftTableContent = [giftTableContent stringByReplacingXMLOcurrencesOfString:@"#mother_name#" withValidString:mesa.momName];
+            giftTableContent = [giftTableContent stringByReplacingXMLOcurrencesOfString:@"#r_name#" withValidString:mesa.nameR];
             [xmlFormat appendString:giftTableContent];
 		}
         
         if ([par isKindOfClass:[RefundData class]])
-		{
+		{   NSLog(@"Read refund data");
             RefundData *refund=(RefundData*) par;
             NSString *refundDataPath = [[NSBundle mainBundle] pathForResource:@"refundDataRequest" ofType:@"xml"];
             NSString *refundDataContent = [[NSString alloc] initWithContentsOfFile:refundDataPath encoding:NSUTF8StringEncoding error:nil];
-            refundDataContent = [refundDataContent stringByReplacingOccurrencesOfString:@"#original_date#" withString:refund.saleDate];
-            refundDataContent = [refundDataContent stringByReplacingOccurrencesOfString:@"#original_terminal#" withString:refund.originalTerminal];
-            refundDataContent = [refundDataContent stringByReplacingOccurrencesOfString:@"#original_store_number#" withString:refund.originalStore];
-            refundDataContent = [refundDataContent stringByReplacingOccurrencesOfString:@"#original_ticket_number#" withString:refund.originalDocto];
-            refundDataContent = [refundDataContent stringByReplacingOccurrencesOfString:@"#original_employee#" withString:refund.originalSeller];
-            refundDataContent = [refundDataContent stringByReplacingOccurrencesOfString:@"#refund_cause_number#" withString:refund.refundCauseNumber];
-            refundDataContent = [refundDataContent stringByReplacingOccurrencesOfString:@"#refund_type#" withString:refund.refundReason];
+            refundDataContent = [refundDataContent stringByReplacingXMLOcurrencesOfString:@"#original_date#" withValidString:refund.saleDate];
+            refundDataContent = [refundDataContent stringByReplacingXMLOcurrencesOfString:@"#original_terminal#" withValidString:refund.originalTerminal];
+            refundDataContent = [refundDataContent stringByReplacingXMLOcurrencesOfString:@"#original_store_number#" withValidString:refund.originalStore];
+            refundDataContent = [refundDataContent stringByReplacingXMLOcurrencesOfString:@"#original_ticket_number#" withValidString:refund.originalDocto];
+            refundDataContent = [refundDataContent stringByReplacingXMLOcurrencesOfString:@"#original_employee#" withValidString:refund.originalSeller];
+            refundDataContent = [refundDataContent stringByReplacingXMLOcurrencesOfString:@"#refund_cause_number#" withValidString:refund.refundCauseNumber];
+            refundDataContent = [refundDataContent stringByReplacingXMLOcurrencesOfString:@"#refund_type#" withValidString:refund.refundReason];
             [xmlFormat appendString:refundDataContent];
 		}
 
         if ([par isKindOfClass:[WithdrawDataList class]])
-		{
+		{   NSLog(@"Read Withdraw data list");
             WithdrawDataList *drawList=(WithdrawDataList*) par;
             NSMutableString *withdrawDataListBody = [[[NSMutableString alloc] init] autorelease];
 
 			for (WithdrawData *data in [drawList withdrawList]) {
                 NSString *withdrawDataListPath = [[NSBundle mainBundle] pathForResource:@"withdrawDataListRequest" ofType:@"xml"];
                 NSString *withdrawDataListContent = [[NSString alloc] initWithContentsOfFile:withdrawDataListPath encoding:NSUTF8StringEncoding error:nil];
-                withdrawDataListContent = [withdrawDataListContent stringByReplacingOccurrencesOfString:@"#quantity#" withString:data.quantity];
-                withdrawDataListContent = [withdrawDataListContent stringByReplacingOccurrencesOfString:@"#designation#" withString:data.amount];
+                withdrawDataListContent = [withdrawDataListContent stringByReplacingXMLOcurrencesOfString:@"#quantity#" withValidString:data.quantity];
+                withdrawDataListContent = [withdrawDataListContent stringByReplacingXMLOcurrencesOfString:@"#designation#" withValidString:data.amount];
                 [withdrawDataListBody appendString:withdrawDataListContent];
             }
             [xmlFormat appendString:withdrawDataListBody];
 		}
         
         if ([par isKindOfClass:[CardDataList class]])
-		{
+		{   NSLog(@"Read card data list");
             CardDataList *cardList=(CardDataList*) par;
             NSMutableString *cardDataListBody = [[[NSMutableString alloc] init] autorelease];
             
 			for (Card *cardData in [cardList getCardList]) {
                 NSString *cardDataListPath = [[NSBundle mainBundle] pathForResource:@"cardDataListRequest" ofType:@"xml"];
                 NSString *cardDataListContent = [[NSString alloc] initWithContentsOfFile:cardDataListPath encoding:NSUTF8StringEncoding error:nil];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#card_number#" withString:cardData.cardNumber];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#card_type#" withString:cardData.cardType];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#track1#" withString:cardData.track1];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#track2#" withString:cardData.track2];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#track3#" withString:cardData.track3];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#ds#" withString:cardData.authCode];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#expiration#" withString:cardData.expireDate];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#wallet#" withString:cardData.monederoNumber];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#plan#" withString:cardData.planId];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#term#" withString:cardData.planInstallment];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#plan_description#" withString:cardData.planDescription];
-                cardDataListContent = [cardDataListContent stringByReplacingOccurrencesOfString:@"#ammount#" withString:cardData.amountToPay];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#card_number#" withValidString:cardData.cardNumber];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#card_type#" withValidString:cardData.cardType];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#track1#" withValidString:cardData.track1];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#track2#" withValidString:cardData.track2];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#track3#" withValidString:cardData.track3];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#ds#" withValidString:cardData.authCode];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#expiration#" withValidString:cardData.expireDate];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#wallet#" withValidString:cardData.monederoNumber];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#plan#" withValidString:cardData.planId];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#term#" withValidString:cardData.planInstallment];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#plan_description#" withValidString:cardData.planDescription];
+                cardDataListContent = [cardDataListContent stringByReplacingXMLOcurrencesOfString:@"#ammount#" withValidString:cardData.amountToPay];
                 [cardDataListBody appendString:cardDataListContent];
             }
             [xmlFormat appendString:cardDataListBody];

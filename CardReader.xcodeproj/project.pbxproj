@@ -220,6 +220,7 @@
 		AB29BE0D19B742B500D893EA /* promotionsConstructorGroupRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0C19B742B500D893EA /* promotionsConstructorGroupRequest.xml */; };
 		AB29BE1019B7469800D893EA /* withdrawDataListRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0F19B7469700D893EA /* withdrawDataListRequest.xml */; };
 		AB29BE1319B7486800D893EA /* cardDataListRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE1219B7486800D893EA /* cardDataListRequest.xml */; };
+		AB29BE1619B8966600D893EA /* NSString+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = AB29BE1519B8966600D893EA /* NSString+XML.m */; };
 		AB92566D1873498D00E1B2E5 /* CardDataList.m in Sources */ = {isa = PBXBuildFile; fileRef = AB92566C1873498D00E1B2E5 /* CardDataList.m */; };
 		AB97C13E184000E500B3FD04 /* ScreenShot-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB97C13D184000E500B3FD04 /* ScreenShot-568h@2x.png */; };
 		ABB90B3F1860D09F001A91EE /* StarIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB90B3E1860D09F001A91EE /* StarIO.framework */; };
@@ -557,6 +558,8 @@
 		AB29BE0C19B742B500D893EA /* promotionsConstructorGroupRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = promotionsConstructorGroupRequest.xml; sourceTree = "<group>"; };
 		AB29BE0F19B7469700D893EA /* withdrawDataListRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = withdrawDataListRequest.xml; sourceTree = "<group>"; };
 		AB29BE1219B7486800D893EA /* cardDataListRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cardDataListRequest.xml; sourceTree = "<group>"; };
+		AB29BE1419B8966600D893EA /* NSString+XML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+XML.h"; sourceTree = "<group>"; };
+		AB29BE1519B8966600D893EA /* NSString+XML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+XML.m"; sourceTree = "<group>"; };
 		AB92566B1873498D00E1B2E5 /* CardDataList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CardDataList.h; path = Parsers/ParserData/CardDataList.h; sourceTree = "<group>"; };
 		AB92566C1873498D00E1B2E5 /* CardDataList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CardDataList.m; path = Parsers/ParserData/CardDataList.m; sourceTree = "<group>"; };
 		AB97C13D184000E500B3FD04 /* ScreenShot-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ScreenShot-568h@2x.png"; sourceTree = "<group>"; };
@@ -1282,6 +1285,8 @@
 				AB29BDEF19B5319600D893EA /* Item Files */,
 				8574734513F1B6F0004407C4 /* LiverPoolRequest.h */,
 				8574734413F1B6F0004407C4 /* LiverPoolRequest.m */,
+				AB29BE1419B8966600D893EA /* NSString+XML.h */,
+				AB29BE1519B8966600D893EA /* NSString+XML.m */,
 				85215CBF143A3C4B00B44512 /* BalanceRequest.h */,
 				85215CC0143A3C4B00B44512 /* BalanceRequest.m */,
 			);
@@ -1807,6 +1812,7 @@
 				4DA1862D1448E0590083AD78 /* Balance.m in Sources */,
 				4DA1862E1448E0590083AD78 /* Error.m in Sources */,
 				4DA1862F1448E0590083AD78 /* Store.m in Sources */,
+				AB29BE1619B8966600D893EA /* NSString+XML.m in Sources */,
 				4DA186421448E08E0083AD78 /* PaymentResponse.m in Sources */,
 				4D83BB691458BDEA00DED488 /* MonederoCardViewController.m in Sources */,
 				4DE84047147889D500F59262 /* ConfigurationAuthorization.m in Sources */,
