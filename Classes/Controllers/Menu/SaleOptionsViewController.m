@@ -11,9 +11,17 @@
 #import "CardReaderAppDelegate.h"
 #import "Session.h"
 #import "Tools.h"
+#import "LiverPoolRequest.h"
+
+@interface SaleOptionsViewController()
+@property (strong,nonatomic) GenericDialogViewController *somsDialog;
+@end
+
 @implementation SaleOptionsViewController
 
 @synthesize btnNormal,btnMesaRegalo,btnSOMS,btnRestaurant,btnDulceria,isRefound;
+@synthesize somsDialog = _somsDialog;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -21,6 +29,12 @@
         // Custom initialization
     }
     return self;
+}
+
+-(GenericDialogViewController *)somsDialog
+{
+    if(!_somsDialog) _somsDialog = [[GenericDialogViewController alloc]initWithNibName:@"GenericDialogViewController" bundle:nil];
+    return _somsDialog;
 }
 
 - (void)viewDidLoad
@@ -134,14 +148,14 @@
 }
 -(IBAction) saleSOMS
 {
-    GenericDialogViewController *dialog=[[GenericDialogViewController alloc]initWithNibName:@"GenericDialogViewController" bundle:nil];
+    self.somsDialog = [[GenericDialogViewController alloc]initWithNibName:@"GenericDialogViewController" bundle:nil];
     //[self presentModalViewController:dialog animated:YES];
-    [self presentViewController:dialog animated:YES completion:nil];
+    [self presentViewController:self.somsDialog animated:YES completion:nil];
 
-    [dialog release];
-    [dialog initView:@"Favor de introducir el numero de orden SOMS" :somsSaleType :NO];
-    dialog.title=@"SOMS";
-    dialog.delegate=self;
+    [self.somsDialog release];
+    [self.somsDialog initView:@"Favor de introducir el numero de orden SOMS" :somsSaleType :NO];
+    self.somsDialog.title=@"SOMS";
+    self.somsDialog.delegate=self;
     
     if (isRefound) {
         if ([Session getIsEmployeeSale])
@@ -169,19 +183,36 @@
     [Session setSaleType:FOOD_CLIENT_TYPE];
     
 }
+
+-(void)didReceiveSomsListNotification:(NSNotification *)notification
+{
+    [Tools stopActivityIndicator];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:GETSOMSLIST_NOTIFICATION object:nil];
+    NSDictionary *dicInfo = [notification userInfo];
+    NSLog(@"Dic info %@",dicInfo);
+    BOOL success = [[dicInfo objectForKey:@"success"] boolValue];
+    
+    if (success ==YES) {
+        //Send to the soms screen
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) somsScreen:[dicInfo objectForKey:@"soms_list"]];
+    } else {
+        [Tools displayAlert:@"Error" message:[dicInfo objectForKey:@"message"] withDelegate:self];
+    }
+}
+
 -(void) performAction:(NSString*) txtData : (ActionType) actionType
 {
     //verify the input data for SOMS
     if (actionType==somsSaleType) {
-        if ([txtData isEqualToString:@""]||[txtData length]<9||[txtData length]>9) {
+        if ([txtData isEqualToString:@""]||[txtData length]<=9) {
             [Tools displayAlert:@"Error" message:@"Debe introducir un numero de orden de SOMS Valido"];
         }
         else {
+            [Tools startActivityIndicator:self.somsDialog.view];
             [Session setSomsOrder:txtData];
-           // [self dismissModalViewControllerAnimated:YES];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) mainScreen];
-
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveSomsListNotification:) name:GETSOMSLIST_NOTIFICATION object:nil];
+            [[LiverPoolRequest sharedInstance] requestDataType:SOMSListRequest withParameters:nil];
         }
     }
     if (actionType==foodSaleType) {

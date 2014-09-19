@@ -51,31 +51,17 @@
     [Session resetValues];
 
 }
--(void) mainScreen{
-    
-    
-//	//[aNavigationControllerLogin.view removeFromSuperview];
-//    self.window.rootViewController=aTabBarController;
-//
-//	[[[[aTabBarController tabBar] items] objectAtIndex:0]
-//	 setTitle:NSLocalizedString(@"Escaner",@"Tabbar item 1")];
-//	[[[[aTabBarController tabBar] items] objectAtIndex:1] 
-//	 setTitle:NSLocalizedString(@"Configuración",@"Tabbar item 2")];
-//	[[[[aTabBarController tabBar] items] objectAtIndex:2] 
-//	 setTitle:NSLocalizedString(@"Salir",@"Tabbar item 3")];
-//		
-//	[aTabBarController.view removeFromSuperview];
-//	[self.window addSubview:aTabBarController.view];
-//
-//    //[scanViewController viewDidLoad];
-//
 
+-(void) mainScreen{
     [aNavigationControllerLogin pushViewController:aTabBarController animated:YES];
     [scanViewController startRequestForTransaction];
-    //[scanViewController setLayoutForTransaction];
     [aTabBarController setSelectedIndex:0];
-    //[aTabBarController release]; // <<< breakpoint
+}
 
+-(void)somsScreen:(NSMutableArray *)productList {
+    [aNavigationControllerLogin pushViewController:aTabBarController animated:YES];
+    [scanViewController reloadTableViewWithData:productList];
+    [aTabBarController setSelectedIndex:0];
 }
 
 -(void) ticketGiftScreen{
@@ -85,7 +71,6 @@
 
     // [aNavigationControllerLogin pushViewController:ticket animated:YES];
     [ticket release];
-
 
 }
 -(void) removeMainScreen{

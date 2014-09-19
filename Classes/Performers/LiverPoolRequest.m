@@ -20,9 +20,22 @@
 #import "WithdrawDataList.h"
 #import "CardDataList.h"
 #import "NSString+XML.h"
+#import "SomsListParser.h"
 
 @implementation LiverPoolRequest
 @synthesize receivedData,requestType,delegate;
+
++(LiverPoolRequest *)sharedInstance
+{
+    static LiverPoolRequest *sharedInstance=nil;
+    static dispatch_once_t oncePredicate;
+    dispatch_once(&oncePredicate, ^{
+        sharedInstance = [[self alloc] init];
+        NSLog(@"Alloc");
+        
+    });
+    return sharedInstance;
+}
 
 - (void)startRequest{
 	
@@ -94,7 +107,7 @@
 	//NSURL *url=[NSURL URLWithString:@"http://172.22.209.161:8080/MyLiverpool/LiverpoolWebService?wsdl"];//Tomcat Liverpool instalado
 	NSString *stringURL=[NSString stringWithFormat:@"http://%@:8080/MyLiverpool/LiverpoolWebService?wsdl",[Session getServerAddress]];
     NSURL *url=[NSURL URLWithString:stringURL];
-    
+        
    DLog(@"stringURL %@",stringURL);
 	NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength=[NSString stringWithFormat:@"%d", [soapmessage length]];
@@ -444,7 +457,15 @@
 	NSString* dataAsString = [[[NSString alloc] initWithData: receivedData encoding: NSASCIIStringEncoding] autorelease];
 	DLog(@"RESPUESTA SERVIDOR: %@",dataAsString);
 	//call the delegate method for each class to respond and parse the received data
-	[delegate performResults:receivedData :requestType];
+    switch (requestType) {
+        case SOMSListRequest:
+            [self somsItemsRequestParsing:receivedData];
+            break;
+            
+        default:
+            [delegate performResults:receivedData :requestType];
+            break;
+    }
 }
 
 -(void) timerRequestValidation
@@ -455,6 +476,78 @@
     
     [delegate performResults:nil :requestType]; //patch 1.4.5
 
+}
+
+-(void)requestDataType:(RequestType)reqType withParameters:(NSDictionary *)params
+{
+    switch (reqType) {
+        case SOMSListRequest:
+            [self startSOMSRequest];
+            break;
+            
+        default:
+            break;
+    }
+}
+-(void)startSOMSRequest
+{
+    if ([[Session getSomsOrder] isEqualToString:@""])
+        return;
+	//*** SOMS request code ***/
+    NSString  *somsOrder=[Session getSomsOrder];
+    
+    //SELLER
+    Seller *seller=[[Seller alloc] init];
+    seller.password=[Session getPassword];
+    seller.userName=[Session getUserName];
+    
+    //Account employee
+	NSString *accountEmployee=[Session getEmployeeAccount];
+    
+    
+	NSArray *params=[NSArray arrayWithObjects:somsOrder,seller,accountEmployee,nil];
+	[self sendRequest:@"listaSOMS" forParameters:params forRequestType:SOMSListRequest];
+    [seller release];
+}
+
+-(void)somsItemsRequestParsing:(NSData*) data
+{
+    NSNumber *success;
+    SomsListParser *somsParser=[[SomsListParser alloc] init];
+	[somsParser startParser:data];
+	//if the transaction was succesful.
+	if ([somsParser getStateOfMessage]) {
+		DLog (@"sucess sale payparser */*/*/*");
+        success =[NSNumber numberWithBool:YES];
+	}
+	else
+	{
+        //[scanDevice removeDelegate:self];
+        success = [NSNumber numberWithBool:NO];
+		//[Tools displayAlert:@"Error" message:[somsParser getMessageResponse] withDelegate:self];
+        NSLog(@"Dismiss tab bar c");
+        
+	}
+    NSDictionary *dicInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                           [NSNumber numberWithInteger:SOMSListRequest],@"request_type" ,
+                                                         [somsParser returnSaleProductList],@"soms_list",
+                                                              [somsParser getMessageResponse],@"message",
+                                                                                     success, @"success",
+                                                                                                    nil];
+    [self finishedDataTypeRequest:dicInfo];
+}
+
+-(void)finishedDataTypeRequest:(NSDictionary *)params
+{
+    RequestType reqType = (RequestType)[[params objectForKey:@"request_type"] integerValue];
+    switch (reqType) {
+        case SOMSListRequest:
+            [[NSNotificationCenter defaultCenter] postNotificationName:GETSOMSLIST_NOTIFICATION object:self userInfo:params];
+            break;
+            
+        default:
+            break;
+    }
 }
 
 -(void)invalidateTimer

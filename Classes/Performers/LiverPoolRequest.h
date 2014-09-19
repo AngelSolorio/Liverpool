@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#define GETSOMSLIST_NOTIFICATION @"getSomsList"
 
 typedef enum {
 	buyRequest,
@@ -66,4 +67,7 @@ typedef enum {
 -(NSString*) buildParameterBody:(NSArray*)parameters;
 -(void) timerRequestValidation;
 -(void) invalidateTimer;
++(LiverPoolRequest *)sharedInstance;
+-(void)startSOMSRequest;
+-(void)requestDataType:(RequestType)reqType withParameters:(NSDictionary *)params;
 @end

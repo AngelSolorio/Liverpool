@@ -1567,7 +1567,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 		else { //si el saldo fue insuficiente espera el segundo pago
 			[Tools displayAlert:@"Aviso" message:@"favor de deslizar la siguiente tarjeta para terminar el pago"];
 			[txtAmount setUserInteractionEnabled:NO];
-			[txtAmount setHidden:YES];
+			//[txtAmount setHidden:YES];
 			firstPaymentDone=YES;
 			[btnPay setHidden:YES];
 			[btnPromo setHidden:YES];

@@ -68,19 +68,14 @@ typedef enum {
 	
 	selectedItemIndex=-1;
 	
-#if (TARGET_IPHONE_SIMULATOR || WITHOUT_CARDREAD)
-	
-	[btnScan setTitle:NSLocalizedString(@"Registro", @"Connect accessory to iPhone/iPod") 
+#if (TARGET_IPHONE_SIMULATOR)
+	[btnScan setTitle:NSLocalizedString(@"Registro", @"Connect accessory to iPhone/iPod")
 			 forState:UIControlStateNormal];
 	[btnPay setHidden:YES];
-
 #else
-	
-	[btnScan setTitle:NSLocalizedString(@"Conectar el Dispositivo", @"Connect accessory to iPhone/iPod") 
+	[btnScan setTitle:NSLocalizedString(@"Conectar el Dispositivo", @"Connect accessory to iPhone/iPod")
 			 forState:UIControlStateNormal];
-	[btnScan setUserInteractionEnabled:NO];
-	[btnPay setHidden:YES];
-	
+	[btnPay setHidden:NO];
 #endif
 		
 	[self setBarbuttonImage:barButtonDisconnected];
@@ -351,8 +346,7 @@ typedef enum {
     self.navigationItem.hidesBackButton = YES;
     
 
-	if([productList count]==0)
-		[btnPay setHidden:YES];
+	if([productList count]==0) [btnPay setHidden:YES];
 	[aTableView reloadData];
     
     [self setLayoutForTransaction];
@@ -1190,6 +1184,16 @@ titleForFooterInSection:(NSInteger)section
 		[btnPay setHidden:NO];
 		
 	}
+}
+
+-(void)reloadTableViewWithData:(NSMutableArray *)pList
+{
+    productList = pList;
+    [aTableView reloadData];
+	if ([productList count] >= 1) {
+		[btnPay setHidden:NO];
+	}
+    NSLog(@"Hdden %i",btnPay.hidden);
 }
 
 

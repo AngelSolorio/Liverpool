@@ -44,6 +44,7 @@
 
 -(void) loginScreen;
 -(void) mainScreen;
+-(void)somsScreen:(NSMutableArray *)productList;
 -(void) transactionMenuScreen;
 -(void) saleOptionScreen;
 -(void) removeSaleOptionScreen;

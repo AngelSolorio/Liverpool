@@ -75,5 +75,5 @@
 -(void) startRequestWithPrice:(NSString*) barCode :(NSString*) price;
 -(IBAction)addSKURefund:(id)sender;
 -(BOOL) isValidRefundChange:(FindItemModel*) item;
-
+-(void)reloadTableViewWithData:(NSMutableArray *)pList;
 @end
