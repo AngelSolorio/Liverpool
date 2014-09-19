@@ -148,11 +148,8 @@
 }
 -(IBAction) saleSOMS
 {
-    self.somsDialog = [[GenericDialogViewController alloc]initWithNibName:@"GenericDialogViewController" bundle:nil];
-    //[self presentModalViewController:dialog animated:YES];
     [self presentViewController:self.somsDialog animated:YES completion:nil];
 
-    [self.somsDialog release];
     [self.somsDialog initView:@"Favor de introducir el numero de orden SOMS" :somsSaleType :NO];
     self.somsDialog.title=@"SOMS";
     self.somsDialog.delegate=self;
