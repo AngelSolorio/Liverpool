@@ -146,7 +146,6 @@
 		4D82BCB31448B99200930863 /* PromotionInstallmentDescription.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D82BCB21448B99200930863 /* PromotionInstallmentDescription.xib */; };
 		4D83BB691458BDEA00DED488 /* MonederoCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D83BB671458BDEA00DED488 /* MonederoCardViewController.m */; };
 		4D861719143A199E00E44118 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D861718143A199E00E44118 /* Settings.m */; };
-		4D86171D143A19C600E44118 /* TicketGeneratorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D86171C143A19C600E44118 /* TicketGeneratorViewController.m */; };
 		4D861720143A19CD00E44118 /* CardDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D86171F143A19CD00E44118 /* CardDataViewController.m */; };
 		4D861722143A19F900E44118 /* Settings.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D861721143A19F900E44118 /* Settings.xib */; };
 		4D861725143A1A0C00E44118 /* CardDataViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D861723143A1A0C00E44118 /* CardDataViewController.xib */; };
@@ -206,25 +205,26 @@
 		AB031B6A18BE6EB7009E3C85 /* CancelParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AB031B6918BE6EB7009E3C85 /* CancelParser.m */; };
 		AB16AA05186A0D35004467AE /* GenericCardReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB16AA03186A0D35004467AE /* GenericCardReaderViewController.m */; };
 		AB16AA06186A0D35004467AE /* GenericCardReaderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB16AA04186A0D35004467AE /* GenericCardReaderViewController.xib */; };
-		AB29BDF119B532C400D893EA /* itemBodyFindRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDF019B532C400D893EA /* itemBodyFindRequest.xml */; };
-		AB29BDF319B537DC00D893EA /* itemPromotionsRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDF219B537DC00D893EA /* itemPromotionsRequest.xml */; };
-		AB29BDF519B5F0A500D893EA /* xmlConstructor.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDF419B5F0A500D893EA /* xmlConstructor.xml */; };
-		AB29BDF719B6044700D893EA /* itemConstructorFindRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDF619B6044700D893EA /* itemConstructorFindRequest.xml */; };
-		AB29BDFA19B673DF00D893EA /* cardDataRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDF919B673DF00D893EA /* cardDataRequest.xml */; };
-		AB29BDFD19B6776E00D893EA /* sellerRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDFC19B6776E00D893EA /* sellerRequest.xml */; };
-		AB29BE0019B678B200D893EA /* giftTableRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BDFF19B678B200D893EA /* giftTableRequest.xml */; };
-		AB29BE0319B67A1D00D893EA /* refundDataRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0219B67A1D00D893EA /* refundDataRequest.xml */; };
-		AB29BE0619B6827400D893EA /* userRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0519B6827400D893EA /* userRequest.xml */; };
-		AB29BE0919B73EE900D893EA /* promotionGroupRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0819B73EE900D893EA /* promotionGroupRequest.xml */; };
-		AB29BE0B19B73FC100D893EA /* promotionBodyRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0A19B73FC100D893EA /* promotionBodyRequest.xml */; };
-		AB29BE0D19B742B500D893EA /* promotionsConstructorGroupRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0C19B742B500D893EA /* promotionsConstructorGroupRequest.xml */; };
-		AB29BE1019B7469800D893EA /* withdrawDataListRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE0F19B7469700D893EA /* withdrawDataListRequest.xml */; };
-		AB29BE1319B7486800D893EA /* cardDataListRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = AB29BE1219B7486800D893EA /* cardDataListRequest.xml */; };
 		AB29BE1619B8966600D893EA /* NSString+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = AB29BE1519B8966600D893EA /* NSString+XML.m */; };
 		AB92566D1873498D00E1B2E5 /* CardDataList.m in Sources */ = {isa = PBXBuildFile; fileRef = AB92566C1873498D00E1B2E5 /* CardDataList.m */; };
 		AB97C13E184000E500B3FD04 /* ScreenShot-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AB97C13D184000E500B3FD04 /* ScreenShot-568h@2x.png */; };
 		ABB90B3F1860D09F001A91EE /* StarIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB90B3E1860D09F001A91EE /* StarIO.framework */; };
 		ABD7A3B5189318BD0092EEB9 /* AffiliationCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = ABD7A3B4189318BD0092EEB9 /* AffiliationCodes.m */; };
+		ABEB614119D2F51E0081C39A /* cardDataListRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB614019D2F51E0081C39A /* cardDataListRequest.xml */; };
+		ABEB614319D2F6670081C39A /* withdrawDataListRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB614219D2F6670081C39A /* withdrawDataListRequest.xml */; };
+		ABEB614719D2F67F0081C39A /* promotionBodyRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB614419D2F67F0081C39A /* promotionBodyRequest.xml */; };
+		ABEB614819D2F67F0081C39A /* promotionGroupRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB614519D2F67F0081C39A /* promotionGroupRequest.xml */; };
+		ABEB614919D2F67F0081C39A /* promotionsConstructorGroupRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB614619D2F67F0081C39A /* promotionsConstructorGroupRequest.xml */; };
+		ABEB614B19D2F68A0081C39A /* userRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB614A19D2F68A0081C39A /* userRequest.xml */; };
+		ABEB614D19D2F6970081C39A /* giftTableRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB614C19D2F6970081C39A /* giftTableRequest.xml */; };
+		ABEB614F19D2F6A10081C39A /* refundDataRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB614E19D2F6A10081C39A /* refundDataRequest.xml */; };
+		ABEB615119D2F6AD0081C39A /* sellerRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB615019D2F6AD0081C39A /* sellerRequest.xml */; };
+		ABEB615619D2F7570081C39A /* itemBodyFindRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB615219D2F7570081C39A /* itemBodyFindRequest.xml */; };
+		ABEB615719D2F7570081C39A /* itemConstructorFindRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB615319D2F7570081C39A /* itemConstructorFindRequest.xml */; };
+		ABEB615819D2F7570081C39A /* itemPromotionsRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB615419D2F7570081C39A /* itemPromotionsRequest.xml */; };
+		ABEB615919D2F7570081C39A /* xmlConstructor.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB615519D2F7570081C39A /* xmlConstructor.xml */; };
+		ABEB615B19D2F8220081C39A /* cardDataRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = ABEB615A19D2F8220081C39A /* cardDataRequest.xml */; };
+		ABEB615E19D2F9BC0081C39A /* TicketGeneratorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEB615D19D2F9BC0081C39A /* TicketGeneratorViewController.m */; };
 		C07E09B813D4EC2D0022B68C /* Tools.m in Sources */ = {isa = PBXBuildFile; fileRef = C07E09B713D4EC2D0022B68C /* Tools.m */; };
 		C58E82C018F5E2D0004DA427 /* StarIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C58E82BF18F5E2D0004DA427 /* StarIO.framework */; };
 		C5C7E9A5190AF3D000792588 /* StarBitmap.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C7E9A4190AF3D000792588 /* StarBitmap.m */; };
@@ -453,8 +453,6 @@
 		4D83BB671458BDEA00DED488 /* MonederoCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonederoCardViewController.m; sourceTree = "<group>"; };
 		4D861717143A199E00E44118 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		4D861718143A199E00E44118 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
-		4D86171B143A19C600E44118 /* TicketGeneratorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TicketGeneratorViewController.h; sourceTree = "<group>"; };
-		4D86171C143A19C600E44118 /* TicketGeneratorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TicketGeneratorViewController.m; sourceTree = "<group>"; };
 		4D86171E143A19CD00E44118 /* CardDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardDataViewController.h; sourceTree = "<group>"; };
 		4D86171F143A19CD00E44118 /* CardDataViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardDataViewController.m; sourceTree = "<group>"; };
 		4D861721143A19F900E44118 /* Settings.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Settings.xib; sourceTree = "<group>"; };
@@ -544,20 +542,6 @@
 		AB16AA02186A0D35004467AE /* GenericCardReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericCardReaderViewController.h; sourceTree = "<group>"; };
 		AB16AA03186A0D35004467AE /* GenericCardReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericCardReaderViewController.m; sourceTree = "<group>"; };
 		AB16AA04186A0D35004467AE /* GenericCardReaderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GenericCardReaderViewController.xib; sourceTree = "<group>"; };
-		AB29BDF019B532C400D893EA /* itemBodyFindRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = itemBodyFindRequest.xml; sourceTree = "<group>"; };
-		AB29BDF219B537DC00D893EA /* itemPromotionsRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = itemPromotionsRequest.xml; sourceTree = "<group>"; };
-		AB29BDF419B5F0A500D893EA /* xmlConstructor.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = xmlConstructor.xml; sourceTree = "<group>"; };
-		AB29BDF619B6044700D893EA /* itemConstructorFindRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = itemConstructorFindRequest.xml; sourceTree = "<group>"; };
-		AB29BDF919B673DF00D893EA /* cardDataRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cardDataRequest.xml; sourceTree = "<group>"; };
-		AB29BDFC19B6776E00D893EA /* sellerRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sellerRequest.xml; sourceTree = "<group>"; };
-		AB29BDFF19B678B200D893EA /* giftTableRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = giftTableRequest.xml; sourceTree = "<group>"; };
-		AB29BE0219B67A1D00D893EA /* refundDataRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = refundDataRequest.xml; sourceTree = "<group>"; };
-		AB29BE0519B6827400D893EA /* userRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = userRequest.xml; sourceTree = "<group>"; };
-		AB29BE0819B73EE900D893EA /* promotionGroupRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = promotionGroupRequest.xml; sourceTree = "<group>"; };
-		AB29BE0A19B73FC100D893EA /* promotionBodyRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = promotionBodyRequest.xml; sourceTree = "<group>"; };
-		AB29BE0C19B742B500D893EA /* promotionsConstructorGroupRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = promotionsConstructorGroupRequest.xml; sourceTree = "<group>"; };
-		AB29BE0F19B7469700D893EA /* withdrawDataListRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = withdrawDataListRequest.xml; sourceTree = "<group>"; };
-		AB29BE1219B7486800D893EA /* cardDataListRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cardDataListRequest.xml; sourceTree = "<group>"; };
 		AB29BE1419B8966600D893EA /* NSString+XML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+XML.h"; sourceTree = "<group>"; };
 		AB29BE1519B8966600D893EA /* NSString+XML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+XML.m"; sourceTree = "<group>"; };
 		AB92566B1873498D00E1B2E5 /* CardDataList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CardDataList.h; path = Parsers/ParserData/CardDataList.h; sourceTree = "<group>"; };
@@ -566,6 +550,22 @@
 		ABB90B3E1860D09F001A91EE /* StarIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StarIO.framework; path = Classes/StarIO.framework; sourceTree = "<group>"; };
 		ABD7A3B3189318BD0092EEB9 /* AffiliationCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AffiliationCodes.h; path = Parsers/ParserData/AffiliationCodes.h; sourceTree = "<group>"; };
 		ABD7A3B4189318BD0092EEB9 /* AffiliationCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AffiliationCodes.m; path = Parsers/ParserData/AffiliationCodes.m; sourceTree = "<group>"; };
+		ABEB614019D2F51E0081C39A /* cardDataListRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = cardDataListRequest.xml; path = "CardDataList Files/cardDataListRequest.xml"; sourceTree = "<group>"; };
+		ABEB614219D2F6670081C39A /* withdrawDataListRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = withdrawDataListRequest.xml; path = "WithdrawData Files/withdrawDataListRequest.xml"; sourceTree = "<group>"; };
+		ABEB614419D2F67F0081C39A /* promotionBodyRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = promotionBodyRequest.xml; path = "Promotion Group Files/promotionBodyRequest.xml"; sourceTree = "<group>"; };
+		ABEB614519D2F67F0081C39A /* promotionGroupRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = promotionGroupRequest.xml; path = "Promotion Group Files/promotionGroupRequest.xml"; sourceTree = "<group>"; };
+		ABEB614619D2F67F0081C39A /* promotionsConstructorGroupRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = promotionsConstructorGroupRequest.xml; path = "Promotion Group Files/promotionsConstructorGroupRequest.xml"; sourceTree = "<group>"; };
+		ABEB614A19D2F68A0081C39A /* userRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = userRequest.xml; path = "User Files/userRequest.xml"; sourceTree = "<group>"; };
+		ABEB614C19D2F6970081C39A /* giftTableRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = giftTableRequest.xml; path = "Gift Table Files/giftTableRequest.xml"; sourceTree = "<group>"; };
+		ABEB614E19D2F6A10081C39A /* refundDataRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = refundDataRequest.xml; path = "Refund Data Files/refundDataRequest.xml"; sourceTree = "<group>"; };
+		ABEB615019D2F6AD0081C39A /* sellerRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = sellerRequest.xml; path = "Seller Files/sellerRequest.xml"; sourceTree = "<group>"; };
+		ABEB615219D2F7570081C39A /* itemBodyFindRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = itemBodyFindRequest.xml; path = "Item Files/itemBodyFindRequest.xml"; sourceTree = "<group>"; };
+		ABEB615319D2F7570081C39A /* itemConstructorFindRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = itemConstructorFindRequest.xml; path = "Item Files/itemConstructorFindRequest.xml"; sourceTree = "<group>"; };
+		ABEB615419D2F7570081C39A /* itemPromotionsRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = itemPromotionsRequest.xml; path = "Item Files/itemPromotionsRequest.xml"; sourceTree = "<group>"; };
+		ABEB615519D2F7570081C39A /* xmlConstructor.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = xmlConstructor.xml; path = "Item Files/xmlConstructor.xml"; sourceTree = "<group>"; };
+		ABEB615A19D2F8220081C39A /* cardDataRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = cardDataRequest.xml; path = "Card Files/cardDataRequest.xml"; sourceTree = "<group>"; };
+		ABEB615C19D2F9BC0081C39A /* TicketGeneratorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TicketGeneratorViewController.h; path = Ticket/TicketGeneratorViewController.h; sourceTree = "<group>"; };
+		ABEB615D19D2F9BC0081C39A /* TicketGeneratorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TicketGeneratorViewController.m; path = Ticket/TicketGeneratorViewController.m; sourceTree = "<group>"; };
 		C07E09B613D4EC2D0022B68C /* Tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tools.h; path = Utiles/Tools.h; sourceTree = "<group>"; };
 		C07E09B713D4EC2D0022B68C /* Tools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Tools.m; path = Utiles/Tools.m; sourceTree = "<group>"; };
 		C58E82BF18F5E2D0004DA427 /* StarIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = StarIO.framework; sourceTree = "<group>"; };
@@ -874,10 +874,9 @@
 		4D86171A143A19C600E44118 /* Printer */ = {
 			isa = PBXGroup;
 			children = (
+				ABEB615F19D2F9C80081C39A /* Ticket */,
 				C5C7E9A3190AF3D000792588 /* StarBitmap.h */,
 				C5C7E9A4190AF3D000792588 /* StarBitmap.m */,
-				4D86171B143A19C600E44118 /* TicketGeneratorViewController.h */,
-				4D86171C143A19C600E44118 /* TicketGeneratorViewController.m */,
 				048EB72015517B4B00275487 /* PrinterQueue.h */,
 				048EB72115517B4B00275487 /* PrinterQueue.m */,
 			);
@@ -1074,10 +1073,10 @@
 		AB29BDEF19B5319600D893EA /* Item Files */ = {
 			isa = PBXGroup;
 			children = (
-				AB29BDF019B532C400D893EA /* itemBodyFindRequest.xml */,
-				AB29BDF219B537DC00D893EA /* itemPromotionsRequest.xml */,
-				AB29BDF419B5F0A500D893EA /* xmlConstructor.xml */,
-				AB29BDF619B6044700D893EA /* itemConstructorFindRequest.xml */,
+				ABEB615219D2F7570081C39A /* itemBodyFindRequest.xml */,
+				ABEB615319D2F7570081C39A /* itemConstructorFindRequest.xml */,
+				ABEB615419D2F7570081C39A /* itemPromotionsRequest.xml */,
+				ABEB615519D2F7570081C39A /* xmlConstructor.xml */,
 			);
 			name = "Item Files";
 			sourceTree = "<group>";
@@ -1085,7 +1084,7 @@
 		AB29BDF819B673C100D893EA /* Card Files */ = {
 			isa = PBXGroup;
 			children = (
-				AB29BDF919B673DF00D893EA /* cardDataRequest.xml */,
+				ABEB615A19D2F8220081C39A /* cardDataRequest.xml */,
 			);
 			name = "Card Files";
 			sourceTree = "<group>";
@@ -1093,7 +1092,7 @@
 		AB29BDFB19B6775500D893EA /* Seller Files */ = {
 			isa = PBXGroup;
 			children = (
-				AB29BDFC19B6776E00D893EA /* sellerRequest.xml */,
+				ABEB615019D2F6AD0081C39A /* sellerRequest.xml */,
 			);
 			name = "Seller Files";
 			sourceTree = "<group>";
@@ -1101,7 +1100,7 @@
 		AB29BDFE19B6789700D893EA /* Gift Table Files */ = {
 			isa = PBXGroup;
 			children = (
-				AB29BDFF19B678B200D893EA /* giftTableRequest.xml */,
+				ABEB614C19D2F6970081C39A /* giftTableRequest.xml */,
 			);
 			name = "Gift Table Files";
 			sourceTree = "<group>";
@@ -1109,7 +1108,7 @@
 		AB29BE0119B67A0700D893EA /* Refund Data Files */ = {
 			isa = PBXGroup;
 			children = (
-				AB29BE0219B67A1D00D893EA /* refundDataRequest.xml */,
+				ABEB614E19D2F6A10081C39A /* refundDataRequest.xml */,
 			);
 			name = "Refund Data Files";
 			sourceTree = "<group>";
@@ -1117,7 +1116,7 @@
 		AB29BE0419B6826500D893EA /* User Files */ = {
 			isa = PBXGroup;
 			children = (
-				AB29BE0519B6827400D893EA /* userRequest.xml */,
+				ABEB614A19D2F68A0081C39A /* userRequest.xml */,
 			);
 			name = "User Files";
 			sourceTree = "<group>";
@@ -1125,9 +1124,9 @@
 		AB29BE0719B73ECA00D893EA /* Promotion Group Files */ = {
 			isa = PBXGroup;
 			children = (
-				AB29BE0A19B73FC100D893EA /* promotionBodyRequest.xml */,
-				AB29BE0819B73EE900D893EA /* promotionGroupRequest.xml */,
-				AB29BE0C19B742B500D893EA /* promotionsConstructorGroupRequest.xml */,
+				ABEB614419D2F67F0081C39A /* promotionBodyRequest.xml */,
+				ABEB614519D2F67F0081C39A /* promotionGroupRequest.xml */,
+				ABEB614619D2F67F0081C39A /* promotionsConstructorGroupRequest.xml */,
 			);
 			name = "Promotion Group Files";
 			sourceTree = "<group>";
@@ -1135,7 +1134,7 @@
 		AB29BE0E19B7466A00D893EA /* WithdrawData Files */ = {
 			isa = PBXGroup;
 			children = (
-				AB29BE0F19B7469700D893EA /* withdrawDataListRequest.xml */,
+				ABEB614219D2F6670081C39A /* withdrawDataListRequest.xml */,
 			);
 			name = "WithdrawData Files";
 			sourceTree = "<group>";
@@ -1143,9 +1142,18 @@
 		AB29BE1119B7484E00D893EA /* CardDataList Files */ = {
 			isa = PBXGroup;
 			children = (
-				AB29BE1219B7486800D893EA /* cardDataListRequest.xml */,
+				ABEB614019D2F51E0081C39A /* cardDataListRequest.xml */,
 			);
 			name = "CardDataList Files";
+			sourceTree = "<group>";
+		};
+		ABEB615F19D2F9C80081C39A /* Ticket */ = {
+			isa = PBXGroup;
+			children = (
+				ABEB615C19D2F9BC0081C39A /* TicketGeneratorViewController.h */,
+				ABEB615D19D2F9BC0081C39A /* TicketGeneratorViewController.m */,
+			);
+			name = Ticket;
 			sourceTree = "<group>";
 		};
 		C07E09B213D4EB280022B68C /* Utiles */ = {
@@ -1588,10 +1596,9 @@
 				DF15DC0A13D37B69009E7438 /* Connected.png in Resources */,
 				DF15DC0B13D37B69009E7438 /* Connected@2x.png in Resources */,
 				DF15DC0C13D37B69009E7438 /* Disconnected.png in Resources */,
-				AB29BDF719B6044700D893EA /* itemConstructorFindRequest.xml in Resources */,
-				AB29BE0319B67A1D00D893EA /* refundDataRequest.xml in Resources */,
 				DF15DC0D13D37B69009E7438 /* Disconnected@2x.png in Resources */,
 				DF15DC0E13D37B69009E7438 /* Scaning.png in Resources */,
+				ABEB614819D2F67F0081C39A /* promotionGroupRequest.xml in Resources */,
 				DF15DC0F13D37B69009E7438 /* Scaning@2x.png in Resources */,
 				DF15DC1713D37D43009E7438 /* Configuration.png in Resources */,
 				DF15DC1813D37D43009E7438 /* Configuration@2x.png in Resources */,
@@ -1600,8 +1607,8 @@
 				DF15DC1B13D37D43009E7438 /* Records.png in Resources */,
 				DF15DC1C13D37D43009E7438 /* Records@2x.png in Resources */,
 				DF15DC6B13D3CD0F009E7438 /* PaymentView.xib in Resources */,
-				AB29BE1019B7469800D893EA /* withdrawDataListRequest.xml in Resources */,
 				DF15DC6C13D3CD0F009E7438 /* ScanView.xib in Resources */,
+				ABEB615B19D2F8220081C39A /* cardDataRequest.xml in Resources */,
 				DFE52ABA13D46FEC00876543 /* 01-refresh.png in Resources */,
 				DFE52ABB13D46FEC00876543 /* 02-redo.png in Resources */,
 				DFE52ABC13D46FEC00876543 /* 03-loopback.png in Resources */,
@@ -1613,22 +1620,23 @@
 				DFE52AC213D46FEC00876543 /* 09-chat-2.png in Resources */,
 				DFE52AC313D46FEC00876543 /* 10-medical.png in Resources */,
 				DFE52AC413D46FEC00876543 /* 11-clock.png in Resources */,
-				AB29BDF319B537DC00D893EA /* itemPromotionsRequest.xml in Resources */,
 				DFE52AC813D4701300876543 /* Images.plist in Resources */,
 				DFE52AC913D4701300876543 /* Products.plist in Resources */,
 				859E21C613FC3D7400D0A0F9 /* logo_liverpool.png in Resources */,
 				859E21C713FC3D7400D0A0F9 /* LogoEncabezado.png in Resources */,
 				859E221F13FC4B9300D0A0F9 /* sign-in.png in Resources */,
-				AB29BE1319B7486800D893EA /* cardDataListRequest.xml in Resources */,
 				859E222013FC4B9300D0A0F9 /* sign-out.png in Resources */,
+				ABEB614D19D2F6970081C39A /* giftTableRequest.xml in Resources */,
 				859E22A513FC679F00D0A0F9 /* IntroViewController.xib in Resources */,
+				ABEB615719D2F7570081C39A /* itemConstructorFindRequest.xml in Resources */,
 				859E22A613FC679F00D0A0F9 /* LoginViewController.xib in Resources */,
 				4D8BEA9713FD74D800A949FD /* clearButton.png in Resources */,
-				AB29BDFD19B6776E00D893EA /* sellerRequest.xml in Resources */,
 				4DF5DF9C13FD78E200C525B4 /* TerminalsView.xib in Resources */,
 				4D346CD2140C4E9C00EFE830 /* PrinterConfigViewController.xib in Resources */,
 				4D66750A1415754E0022D312 /* TransactionsMenuViewController.xib in Resources */,
 				4D13AB1014193B7D00F04794 /* ConsultSKUViewController.xib in Resources */,
+				ABEB615819D2F7570081C39A /* itemPromotionsRequest.xml in Resources */,
+				ABEB615919D2F7570081C39A /* xmlConstructor.xml in Resources */,
 				4DDC2DAF141FFBCB00E53FF4 /* AirtimeViewController.xib in Resources */,
 				4DDC2DC81420116300E53FF4 /* amounts.plist in Resources */,
 				4D4CF74814225613006A11D8 /* ItemDiscountsViewController.xib in Resources */,
@@ -1644,6 +1652,7 @@
 				4D861722143A19F900E44118 /* Settings.xib in Resources */,
 				4D861725143A1A0C00E44118 /* CardDataViewController.xib in Resources */,
 				4D05460B143A1A8500C2EBD7 /* TicketGeneratorViewController.xib in Resources */,
+				ABEB614719D2F67F0081C39A /* promotionBodyRequest.xml in Resources */,
 				85215C7A143A277000B44512 /* BalanceViewController.xib in Resources */,
 				85215CA8143A2F1E00B44512 /* stores.plist in Resources */,
 				85215CCF143A606200B44512 /* TransactionsF5MenuViewController.xib in Resources */,
@@ -1661,7 +1670,7 @@
 				4DD374B414CDFAFB00E97EC2 /* PaymentPlanViewController.xib in Resources */,
 				4D47CE5614D1B5300071E5D6 /* SilverCell.png in Resources */,
 				4D47CE5714D1B5300071E5D6 /* SilverCellSelected.png in Resources */,
-				AB29BE0D19B742B500D893EA /* promotionsConstructorGroupRequest.xml in Resources */,
+				ABEB614119D2F51E0081C39A /* cardDataListRequest.xml in Resources */,
 				4D7555D914DC3F9A00C63371 /* AloneCell.png in Resources */,
 				4D7555DA14DC3F9A00C63371 /* AloneCellSelected.png in Resources */,
 				4D7555DB14DC3F9A00C63371 /* BottomCell.png in Resources */,
@@ -1673,6 +1682,7 @@
 				AB97C13E184000E500B3FD04 /* ScreenShot-568h@2x.png in Resources */,
 				4D7555E114DC3F9A00C63371 /* TopCell.png in Resources */,
 				4D7555E214DC3F9A00C63371 /* TopCellSelected.png in Resources */,
+				ABEB614919D2F67F0081C39A /* promotionsConstructorGroupRequest.xml in Resources */,
 				040B01B3156157FF007FD537 /* boxgift_gray.png in Resources */,
 				040B01B4156157FF007FD537 /* boxgift.png in Resources */,
 				042344B715D41A460064B3AA /* TicketGiftViewController.xib in Resources */,
@@ -1693,15 +1703,13 @@
 				046EF63E174FD0F300504877 /* SilverBtnSelected.png in Resources */,
 				046EF641174FD8B600504877 /* PurpleBtn.png in Resources */,
 				046EF642174FD8B600504877 /* PurpleBtnSelected.png in Resources */,
-				AB29BDF519B5F0A500D893EA /* xmlConstructor.xml in Resources */,
 				04CCF5ED176BCCC000FEDF8C /* ItemDetailViewController.xib in Resources */,
-				AB29BDFA19B673DF00D893EA /* cardDataRequest.xml in Resources */,
 				04BEF3701790705600738E9E /* BtnMenuPurple.png in Resources */,
 				04BEF37A1790A2D900738E9E /* locked.png in Resources */,
 				04BEF37B1790A2D900738E9E /* refresh.png in Resources */,
 				04BEF37C1790A2D900738E9E /* repeat-2.png in Resources */,
+				ABEB615619D2F7570081C39A /* itemBodyFindRequest.xml in Resources */,
 				04BEF37D1790A2D900738E9E /* store.png in Resources */,
-				AB29BE0019B678B200D893EA /* giftTableRequest.xml in Resources */,
 				04BEF37E1790A2D900738E9E /* user-4.png in Resources */,
 				04BEF37F1790A2D900738E9E /* user-card.png in Resources */,
 				04BEF3811790A35000738E9E /* compose-3.png in Resources */,
@@ -1713,6 +1721,7 @@
 				04BEF38E1790B3C600738E9E /* support.png in Resources */,
 				04BEF38F1790B3C600738E9E /* tag-3.png in Resources */,
 				04D5BD2117A32A5900B51E5B /* Bluetooth.png in Resources */,
+				ABEB614B19D2F68A0081C39A /* userRequest.xml in Resources */,
 				04D5BD2217A32A5900B51E5B /* wireless.png in Resources */,
 				042F2A0517ECF5840045A290 /* WithdrawScreenViewController.xib in Resources */,
 				04D1D79417FF6DE300FEFD02 /* CustomCell.xib in Resources */,
@@ -1720,20 +1729,19 @@
 				040AA249181F20100008DC71 /* LineaSDK.pdf in Resources */,
 				040AA24A181F20100008DC71 /* PrinterSDK.pdf in Resources */,
 				049D5ADB1822BA3700BA2FDB /* Battery0.png in Resources */,
+				ABEB614F19D2F6A10081C39A /* refundDataRequest.xml in Resources */,
 				049D5ADC1822BA3700BA2FDB /* Battery10.png in Resources */,
 				049D5ADD1822BA3700BA2FDB /* Battery20.png in Resources */,
 				049D5ADE1822BA3700BA2FDB /* Battery40.png in Resources */,
-				AB29BE0B19B73FC100D893EA /* promotionBodyRequest.xml in Resources */,
 				049D5ADF1822BA3700BA2FDB /* Battery80.png in Resources */,
 				049D5AE01822BA3700BA2FDB /* Battery100.png in Resources */,
-				AB29BE0919B73EE900D893EA /* promotionGroupRequest.xml in Resources */,
 				0415D90B182401AC00A18658 /* Battery60.png in Resources */,
 				04D48DC3182C15A5006C2887 /* BatteryH0.png in Resources */,
 				04D48DC4182C15A5006C2887 /* BatteryH10.png in Resources */,
 				04D48DC5182C15A5006C2887 /* BatteryH100.png in Resources */,
 				04D48DC6182C15A5006C2887 /* BatteryH20.png in Resources */,
 				04D48DC7182C15A5006C2887 /* BatteryH40.png in Resources */,
-				AB29BDF119B532C400D893EA /* itemBodyFindRequest.xml in Resources */,
+				ABEB615119D2F6AD0081C39A /* sellerRequest.xml in Resources */,
 				04D48DC8182C15A5006C2887 /* BatteryH80.png in Resources */,
 				04D48DC9182C15A5006C2887 /* batteryTab.png in Resources */,
 				04D48DCD182C199B006C2887 /* BatteryTabView.xib in Resources */,
@@ -1750,10 +1758,10 @@
 				049A86B1183D385200BAA54C /* middleTable2.png in Resources */,
 				049A86B2183D385200BAA54C /* middleTable3.png in Resources */,
 				049A86B3183D385200BAA54C /* oneCell.png in Resources */,
-				AB29BE0619B6827400D893EA /* userRequest.xml in Resources */,
 				049A86B4183D385200BAA54C /* topTable.png in Resources */,
 				049A86B8183D717500BAA54C /* middleTable1.png in Resources */,
 				0442888D183EA24A00EC2B9A /* ScreenShot.png in Resources */,
+				ABEB614319D2F6670081C39A /* withdrawDataListRequest.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1799,9 +1807,9 @@
 				4D9FD70F142A4F9500E4BF62 /* Seller.m in Sources */,
 				4D9FD717142A4FA600E4BF62 /* Styles.m in Sources */,
 				4D861719143A199E00E44118 /* Settings.m in Sources */,
-				4D86171D143A19C600E44118 /* TicketGeneratorViewController.m in Sources */,
 				4D861720143A19CD00E44118 /* CardDataViewController.m in Sources */,
 				4D561A2D143A1E83003F4CC4 /* AirtimeParser.m in Sources */,
+				ABEB615E19D2F9BC0081C39A /* TicketGeneratorViewController.m in Sources */,
 				85215C77143A274B00B44512 /* BalanceViewController.m in Sources */,
 				85215CC1143A3C4B00B44512 /* BalanceRequest.m in Sources */,
 				AB92566D1873498D00E1B2E5 /* CardDataList.m in Sources */,

@@ -344,6 +344,7 @@
 	
 	//LOGO
     //Center aligment
+    
 	[header appendString:@"\x1b\x61\x01"];
 
 	//HEX	1B 66 00 0C
@@ -366,6 +367,12 @@
 	//Left aligment
 	[header appendString:@"\x1b\x61\x00"];
 	
+    
+    //NSString *filePath = [[NSBundle mainBundle] pathForResource:@"header" ofType:@"xml"];
+    //NSString *fileContent = [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    //[header appendString:fileContent];
+
+    
 	NSMutableString *subHeader=[[[NSMutableString alloc] init] autorelease];
 	//Center aligment
 	[subHeader appendString:@"\x1b\x61\x01"];
@@ -826,10 +833,11 @@
         [PrinterQueue addPrintToQueue:ticketStringComprobant];
         }
     }
-    //when the ticket string is complete and on queue start the printing
-    [self printComprobant];
+
     //check if is a SOMS sale
     [self printSOMSVoucher];
+    //when the ticket string is complete and on queue start the printing
+    [self printComprobant];
     
 
 }
@@ -960,6 +968,7 @@
 
     //fix for manual setting the item for gift
     [self printTicketGift];
+    NSLog(@"Start printing");
     [PrinterQueue startPrinting];
 }
 -(void) printSOMSVoucher
@@ -1455,7 +1464,7 @@
     
     NSString *balanceLine=@"";
     if (pType==monederoType) {
-        int bal=[balance intValue];
+        int bal=[[balance stringByReplacingOccurrencesOfString:@"$" withString:@""] intValue];
         if (bal<0) {
             return @"FAVOR DE PASAR A CREDITO\n\n";
         }
@@ -2611,7 +2620,7 @@
 	//productList =nil;
     [RFCCode release];
     [somsOrderDeliveryDate release];
-    [somsDeliveryNumber release];
+    //[somsDeliveryNumber release];
 	[txtAProducts release];
     [super dealloc];
 }
