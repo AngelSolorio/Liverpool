@@ -65,9 +65,9 @@
 				<key>Blue</key>
 				<real>1</real>
 				<key>Green</key>
-				<real>0.0</real>
+				<real>0</real>
 				<key>Red</key>
-				<real>0.0</real>
+				<real>0</real>
 			</dict>
 			<key>Translucent</key>
 			<false/>
@@ -78,6 +78,18 @@
 		<string>jp.star-m.starpro</string>
 		<string>com.datecs.linea.pro.msr</string>
 		<string>com.datecs.linea.pro.bar</string>
+		<string>com.verifone.PWMRDA
+com.verifone.PWMRDA
+</string>
+		<string>com.verifone.pmr2.barcode</string>
+		<string>com.verifone.pmr2.xpi</string>
+		<string>com.verifone.pmr2.control</string>
+		<string>com.verifone.pmr2.zontalk</string>
+		<string>com.verifone.pmr.xpi</string>
+		<string>com.verifone.pmr.barcode</string>
+		<string>com.verifone.pmr.zontalk</string>
+		<string>com.verifone.pmr.control</string>
+		<string>com.verifone.pmr.debug</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

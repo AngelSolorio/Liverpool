@@ -101,6 +101,10 @@
 		04E331801836CDAE00D53976 /* btnPaymentMonederoY.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E3317A1836CDAE00D53976 /* btnPaymentMonederoY.png */; };
 		04E3318D1836D21100D53976 /* bg6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 04E331871836D21100D53976 /* bg6.jpg */; };
 		04EC15E217F62213001D86AC /* WithdrawDataList.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EC15E117F62213001D86AC /* WithdrawDataList.m */; };
+		269FCE5119E5B1CD00A232BC /* VFDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 269FCE5019E5B1CD00A232BC /* VFDevice.m */; };
+		269FCE5319E5B24500A232BC /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 269FCE5219E5B24500A232BC /* libz.1.2.5.dylib */; };
+		269FCE5519E5B25500A232BC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269FCE5419E5B25500A232BC /* CFNetwork.framework */; };
+		269FCE5719E5B27800A232BC /* VMF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269FCE5619E5B27800A232BC /* VMF.framework */; };
 		4D05460B143A1A8500C2EBD7 /* TicketGeneratorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D05460A143A1A8500C2EBD7 /* TicketGeneratorViewController.xib */; };
 		4D13AB0D14193B7500F04794 /* ConsultSKUViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D13AB0C14193B7500F04794 /* ConsultSKUViewController.m */; };
 		4D13AB1014193B7D00F04794 /* ConsultSKUViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D13AB0F14193B7D00F04794 /* ConsultSKUViewController.xib */; };
@@ -388,6 +392,11 @@
 		04E331871836D21100D53976 /* bg6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg6.jpg; sourceTree = "<group>"; };
 		04EC15E017F62213001D86AC /* WithdrawDataList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WithdrawDataList.h; path = Parsers/ParserData/WithdrawDataList.h; sourceTree = "<group>"; };
 		04EC15E117F62213001D86AC /* WithdrawDataList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WithdrawDataList.m; path = Parsers/ParserData/WithdrawDataList.m; sourceTree = "<group>"; };
+		269FCE4F19E5B1CD00A232BC /* VFDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VFDevice.h; sourceTree = "<group>"; };
+		269FCE5019E5B1CD00A232BC /* VFDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VFDevice.m; sourceTree = "<group>"; };
+		269FCE5219E5B24500A232BC /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
+		269FCE5419E5B25500A232BC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		269FCE5619E5B27800A232BC /* VMF.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VMF.framework; sourceTree = "<group>"; };
 		4D05460A143A1A8500C2EBD7 /* TicketGeneratorViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketGeneratorViewController.xib; sourceTree = "<group>"; };
 		4D13AB0B14193B7500F04794 /* ConsultSKUViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsultSKUViewController.h; sourceTree = "<group>"; };
 		4D13AB0C14193B7500F04794 /* ConsultSKUViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsultSKUViewController.m; sourceTree = "<group>"; };
@@ -627,6 +636,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				269FCE5519E5B25500A232BC /* CFNetwork.framework in Frameworks */,
+				DF18F97A13CE11F700001371 /* ExternalAccessory.framework in Frameworks */,
+				269FCE5319E5B24500A232BC /* libz.1.2.5.dylib in Frameworks */,
 				ABB90B3F1860D09F001A91EE /* StarIO.framework in Frameworks */,
 				043E9F51180353E30053C5EC /* CoreBluetooth.framework in Frameworks */,
 				C58E82C018F5E2D0004DA427 /* StarIO.framework in Frameworks */,
@@ -634,9 +646,9 @@
 				DF18F92613CDFD0A00001371 /* UIKit.framework in Frameworks */,
 				DF18F92813CDFD0A00001371 /* Foundation.framework in Frameworks */,
 				DF18F92A13CDFD0A00001371 /* CoreGraphics.framework in Frameworks */,
+				269FCE5719E5B27800A232BC /* VMF.framework in Frameworks */,
 				DF18F92C13CDFD0A00001371 /* CoreData.framework in Frameworks */,
 				DF18F95B13CDFEF900001371 /* QuartzCore.framework in Frameworks */,
-				DF18F97A13CE11F700001371 /* ExternalAccessory.framework in Frameworks */,
 				040AA248181F200F0008DC71 /* libdtdev.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -780,6 +792,15 @@
 				04E331871836D21100D53976 /* bg6.jpg */,
 			);
 			path = Backgrounds;
+			sourceTree = "<group>";
+		};
+		269FCE4E19E5B1B400A232BC /* Verifone */ = {
+			isa = PBXGroup;
+			children = (
+				269FCE4F19E5B1CD00A232BC /* VFDevice.h */,
+				269FCE5019E5B1CD00A232BC /* VFDevice.m */,
+			);
+			path = Verifone;
 			sourceTree = "<group>";
 		};
 		4D054609143A1A8500C2EBD7 /* Printer */ = {
@@ -1221,6 +1242,9 @@
 		DF18F92413CDFD0A00001371 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				269FCE5619E5B27800A232BC /* VMF.framework */,
+				269FCE5419E5B25500A232BC /* CFNetwork.framework */,
+				269FCE5219E5B24500A232BC /* libz.1.2.5.dylib */,
 				ABB90B3E1860D09F001A91EE /* StarIO.framework */,
 				043E9F50180353E30053C5EC /* CoreBluetooth.framework */,
 				DF18F92513CDFD0A00001371 /* UIKit.framework */,
@@ -1237,6 +1261,7 @@
 		DF18F94113CDFE7900001371 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				269FCE4E19E5B1B400A232BC /* Verifone */,
 				044E11DC167274D4001D5DDB /* Subclasses */,
 				859E233113FC743700D0A0F9 /* Style */,
 				C07E09B213D4EB280022B68C /* Utiles */,
@@ -1791,6 +1816,7 @@
 				4D346CB6140C4E3E00EFE830 /* PrinterListParser.m in Sources */,
 				4D525B27140D689700AFE27B /* PrinterResponseParser.m in Sources */,
 				4D32C3E1140E9F4C008B5925 /* Base64.m in Sources */,
+				269FCE5119E5B1CD00A232BC /* VFDevice.m in Sources */,
 				4D32C3E4140E9F72008B5925 /* Session.m in Sources */,
 				4D32C5F0140EEBA4008B5925 /* ItemDetailViewController.m in Sources */,
 				4D66743A14156DC30022D312 /* TransactionsMenuViewController.m in Sources */,
@@ -1911,6 +1937,7 @@
 					/Users/Jonathan/Documents/Liverpool,
 					VillaHermosa/Classes,
 					"$(PROJECT_DIR)/Classes",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
@@ -1923,6 +1950,7 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/Classes/CardReaderSDK/Library\"",
 				);
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
@@ -2008,6 +2036,7 @@
 					/Users/Jonathan/Documents/Liverpool,
 					VillaHermosa/Classes,
 					"$(PROJECT_DIR)/Classes",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
@@ -2021,6 +2050,7 @@
 					"\"$(SRCROOT)/Classes/CardReaderSDK/Library\"",
 				);
 				OTHER_CFLAGS = "-DDEBUG";
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=*]" = "";
@@ -2043,6 +2073,7 @@
 					/Users/Jonathan/Documents/Liverpool,
 					VillaHermosa/Classes,
 					"$(PROJECT_DIR)/Classes",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
@@ -2055,6 +2086,7 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/Classes/CardReaderSDK/Library\"",
 				);
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
