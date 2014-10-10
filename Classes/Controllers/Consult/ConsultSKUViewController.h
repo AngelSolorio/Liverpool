@@ -6,20 +6,22 @@
 
 #import <UIKit/UIKit.h>
 #import "LineaSDK.h"
+#import <VMF/VMFramework.h>
+#import  <ExternalAccessory/ExternalAccessory.h>
 #import "LiverPoolRequest.h"
 
 @class FindItemModel;
 @class ItemDetailViewController;
 @class ItemDiscountsViewController;
-@interface ConsultSKUViewController : UIViewController <LineaDelegate,WsCompleteDelegate> {
+@interface ConsultSKUViewController : UIViewController <LineaDelegate,WsCompleteDelegate,VFIBarcodeDelegate,VFIControlDelegate, VFIPinpadDelegate> {
 
 	FindItemModel *itemModel;
 	ItemDetailViewController *itemDetailView;
 	ItemDiscountsViewController *itemDiscountView;
-	Linea                       *scanDevice;
 	UIView						*productSearch;
 	UITextField					*txtBarcode;
 	UIButton					*btnRegister;
+    NSTimer                     *myTimer;
 }
 @property (nonatomic,retain) FindItemModel *itemModel;
 @property (nonatomic,retain) IBOutlet ItemDetailViewController *itemDetailView;

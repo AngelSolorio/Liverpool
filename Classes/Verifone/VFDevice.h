@@ -14,4 +14,6 @@
 +(VFIPinpad *)pinPad;
 +(VFIControl *)control;
 +(VFIBarcode *)barcode;
++(void)initVFDevices;
++(void)setBarcodeInitialization;
 @end

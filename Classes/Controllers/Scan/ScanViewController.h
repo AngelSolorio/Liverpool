@@ -11,8 +11,8 @@
 
 @class FindItemModel;
 @interface ScanViewController : UIViewController 
-								<UITableViewDataSource, UITableViewDelegate,
-								 LineaDelegate,WsCompleteDelegate,UITextFieldDelegate,CancelActionDelegate,UIAlertViewDelegate>
+								<UITableViewDataSource, UITableViewDelegate,LineaDelegate
+                                ,WsCompleteDelegate,UITextFieldDelegate,CancelActionDelegate,UIAlertViewDelegate>
 {
 	IBOutlet UITableView        *aTableView;
 	IBOutlet UITextView         *textDescription;

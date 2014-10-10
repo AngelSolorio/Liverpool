@@ -22,6 +22,7 @@
 #import "CancelTicketViewController.h"
 #import "GenericOptionsViewController.h"
 #import "WithdrawScreenViewController.h"
+#import "VFDevice.h"
 @implementation CardReaderAppDelegate
 
 @synthesize window;
@@ -378,6 +379,21 @@
 }
 -(void)applicationWillResignActive:(UIApplication *)application
 {
+    /*
+     Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+     Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+     */
+    
+    // abort scanning so button won't be in dumb flashlight mode after ipod is sleeping...
+    
+    // cause framework to cancel pending commands to XPI
+    [[VFDevice pinPad] enableBlocking];
+    [[VFDevice pinPad] cancelPendingCommand];
+    [[VFDevice pinPad] clearAllData];
+    
+    
+    //    [[VStore vInstance] bcScanOffWhileSleeping];
+    [[VFDevice barcode] abortScan];
 }
 
 -(void)applicationDidEnterBackground:(UIApplication *)application
@@ -393,9 +409,7 @@
 }
 
 -(void)applicationDidBecomeActive:(UIApplication *)application
-{
-    DLog(@"DidBecomeActive");
-
+{    
     // Your processing to be performed on this thread.
     //first we get the reference to the actual view controller
     Linea *scanDevice = [Linea sharedDevice];
@@ -405,16 +419,22 @@
     DLog(@"REFERENCE VIEW %@",topView);
     [scanDevice removeDelegate:topView];
     [scanDevice setDelegate:self];
-    
-
-
- 
 }
 
 -(void)applicationWillTerminate:(UIApplication *)application
 {
 	// load the last printer used
 	//[Tools savePrinter];
+    
+    // cause framework to cancel pending commands to XPI
+    [[VFDevice pinPad] enableBlocking];
+    [[VFDevice pinPad] cancelPendingCommand];
+    //     [[[VStore vInstance] pinPad] displayMessages:@"....." Line2:@"..." Line3:@"Terminated" Line4:@" "];
+    [[VFDevice pinPad] clearAllData];
+    
+    
+    //    [[VStore vInstance] bcScanOffWhileSleeping];
+    [[VFDevice barcode] abortScan];
 	
 }
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController

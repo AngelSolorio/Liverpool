@@ -35,4 +35,21 @@
     }
     return _control;
 }
+
++(void)initVFDevices
+{   NSLog(@"Init the devices");
+    [[self pinPad] initDevice];
+    [[self barcode] initDevice];
+    [[self control] initDevice];
+}
+
++(void)setBarcodeInitialization
+{
+    [[VFDevice barcode] mStartScan];
+    [[self barcode] setLevel];
+    [[self barcode] setBeepOn];
+    [[self barcode] includeAllBarcodeTypes];
+    [[self barcode] barcodeTypeEnabled:YES];
+    [[self barcode] mTriggerMode:1];
+}
 @end

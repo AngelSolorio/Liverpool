@@ -12,7 +12,7 @@
 #import "Seller.h"
 #import "LogoutParser.h"
 #import "QuartzCore/QuartzCore.h"
-
+#import "VFDevice.h"
 
 
 @implementation LoginViewController
@@ -41,6 +41,9 @@
 - (void)viewDidLoad {
 
     [super viewDidLoad];
+    
+    [VFDevice initVFDevices];
+
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	terminalViewController.delegate=self;
 	[self styleApply];

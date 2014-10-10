@@ -25,11 +25,11 @@
 
 #define barcodeEngineSetInitString barcodeOpticonSetInitString
 
-#define msStartScan msEnable
+//#define msStartScan msEnable
 #define msStopScan msDisable
 #define setMSCardDataMode msSetCardDataMode
 #define getMSCardDataMode msGetCardDataMode
-#define startScan barcodeStartScan
+//#define startScan barcodeStartScan
 #define stopScan barcodeStopScan
 #define getScanTimeout barcodeGetScanTimeout
 #define setScanTimeout barcodeSetScanTimeout
@@ -994,7 +994,7 @@ extern NSString * const InfoFirmwareRevisionNumber;
  @param error pointer to NSError object, where error information is stored in case function fails. You can pass nil if you don't want that information
  @return TRUE if function succeeded, FALSE otherwise
  */
--(BOOL)barcodeStartScan:(NSError **)error;
+//-(BOOL)barcodeStartScan:(NSError **)error;
 	
 /**
  Stops ongoing scan started with barcodeStartScan
@@ -2462,7 +2462,7 @@ typedef struct firmwareInfo
  in the timeout interval (set via call to barcodeSetScanTimeout) or if barcodeStopScan is called.
  @throw NSPortTimeoutException if there is no connection to Linea
  */
--(void)barcodeStartScan;
+//-(void)barcodeStartScan;
 
 /**
  Stops ongoing scan started with barcodeStartScan

@@ -12,6 +12,9 @@
 #import "Tools.h"
 #import "Styles.h"
 #import "Session.h"
+#import "VFDevice.h"
+
+
 @implementation ConsultSKUViewController
 @synthesize itemModel,itemDetailView,itemDiscountView,productSearch,txtBarcode,btnRegister;
 
@@ -29,29 +32,45 @@
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-	
-	scanDevice = [Linea sharedDevice];
-    [scanDevice setDelegate:self];
-	[scanDevice connect];
+
+    [[VFDevice barcode] setDelegate:self];
 	if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	[Styles scanReaderViewStyle:productSearch];
 	txtBarcode.inputAccessoryView=[Tools inputAccessoryView:txtBarcode];
 	[super viewDidLoad];
-	
 	[Styles bgGradientColorPurple:self.view];
 	[Styles silverButtonStyle:btnRegister];
+    NSLog(@"View did load");
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-	[self connectionState:scanDevice.connstate];
+    myTimer = [NSTimer scheduledTimerWithTimeInterval:0.001
+                                               target:self
+                                             selector:@selector(targetMethod:)
+                                             userInfo:nil
+                                              repeats:NO];
+    NSLog(@"View did appear");
+    
+}
+
+-(void) targetMethod:(NSTimer *) theTimer {
+    
+    [[VFDevice barcode] setDelegate:self];
+    
+    
+    BOOL vmfGen3Flag = [VFDevice barcode].isGen3;
+    
+    
+    if (vmfGen3Flag == true) {
+        [VFDevice setBarcodeInitialization];
+    }
 }
 
 -(void) viewWillDisappear:(BOOL)animated
 {
-	[scanDevice removeDelegate:self];
-	[scanDevice disconnect];
-	scanDevice = nil;
+    [super viewWillDisappear:animated];
+    [[VFDevice barcode] abortScan];
 }
 //-(void)viewDidUnload
 //{
@@ -89,75 +108,11 @@
 	//[txtBarcode becomeFirstResponder];
 	
 }
-//----------------------------------------
-//            SCAN DEVICE HANDLER
-//----------------------------------------
-#pragma mark -
-#pragma mark SCAN DEVICE HANDLER
-
--(void)buttonPressed:(int)whichButton
-{
-	//[self setBarbuttonImage:barButtonScanning];
-}
-
--(void)buttonReleased:(int)which
-{
-	//[self setBarbuttonImage:barButtonConnected];
-}
-
--(void)connectionState:(int)state
-{
-	switch (state) {
-			
-		case CONN_DISCONNECTED:
-			
-		case CONN_CONNECTING:
-			
-		//	[self setBarbuttonImage:barButtonDisconnected];
-			break;
-			
-		case CONN_CONNECTED:
-			
-			//[self setBarbuttonImage:barButtonConnected];
-			
-			NS_DURING {
-				
-				[scanDevice msEnable:nil];
-				//[scanDevice setBarcodeTypeMode:BARCODE_TYPE_EXTENDED];
-				//[self enableCharging];
-				
-			/*	[btnScan setTitle:NSLocalizedString(@"Escanear Código", @"Scan with accessory to iPhone/iPod") 
-						 forState:UIControlStateNormal];
-				[btnScan setUserInteractionEnabled:YES];*/
-				
-			} NS_HANDLER {
-				
-				DLog(@"%@", [localException name]);
-				DLog(@"%@", [localException reason]);
-				
-			} NS_ENDHANDLER
-			
-			//[self updateBattery];
-			break;
-	}
-}
--(void)enableCharging
-{
-	NS_DURING {
-		
-		//[scanDevice setCharging:YES];
-        [scanDevice setCharging:YES error:nil];
-		
-	} NS_HANDLER {
-		
-	} NS_ENDHANDLER
-}
 
 //----------------------------------------
 //            REQUEST HANDLERS
 //----------------------------------------
-#pragma mark -
-#pragma mark REQUEST HANDLERS
+#pragma mark - Request Handlers
 -(void) startRequest:(NSString*) barCode
 {
 	// find item request code 
@@ -169,10 +124,12 @@
 	[liverPoolRequest release];
 	//[Tools startActivityIndicator:self.view];
 }
+
 -(void) performResults:(NSData *)receivedData :(RequestType)requestType
 {
 	[self findItemRequestParsing:receivedData];
 }
+
 -(void) findItemRequestParsing:(NSData*) data
 {
 	FindItemParser *findParser=[[FindItemParser alloc] init];
@@ -189,15 +146,15 @@
 	[findParser release];
 	//[Tools stopActivityIndicator];
 }
+
 -(void) validateResponse
 {
 	if(itemModel.barCode ==nil)
 		[Tools displayAlert:@"Error" message:@"Articulo no encontrado"];
 	else
 		[itemDiscountView startPromoRequest];
+}
 
-	
-}	
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -214,30 +171,27 @@
 #pragma mark BARCODE ANALYSIS
 
 -(void)barcodeData:(NSString *)barcode 
-			  type:(int)type 
-{	
-	//	self.lastBarcode=barcode;
-	//	self.lastBarcodeType=[linea barcodeType2Text:type];
-	
-	/*[status setString:@""];
-	[status appendFormat:@"Type: %d\n",type];
-	[status appendFormat:@"Type text: %@\n",[scanDevice barcodeType2Text:type]];
-	[status appendFormat:@"Barcode: %@",barcode];
-	DLog(@"%@", status);
-	/*/
+			  type:(int)type
+{
 	[self startRequest:barcode];
-	//[self setDataIntoArray:barcode];
-	
-	NS_DURING {
-		
-		//[self updateBattery];
-		
-	} NS_HANDLER {
-		
-		DLog(@"%@", [localException name]);
-		DLog(@"%@", [localException reason]);
-		
-	} NS_ENDHANDLER
+}
+
+#pragma mark VFIBarcodeDelegate
+-(void)barcodeScanData:(NSData *)data barcodeType:(int)thetype
+{
+    NSString* barcode = [[NSString alloc] initWithData:data
+                                              encoding:NSUTF8StringEncoding];
+    [self startRequest:barcode];
+    [[VFDevice barcode] beepOnParsedScan:YES];
+}
+
+-(void)barcodeInitialized:(BOOL)isInitialized
+{
+    if (isInitialized) {
+        [VFDevice setBarcodeInitialization];
+    } else{
+        NSLog(@"Is not initialized");
+    }
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

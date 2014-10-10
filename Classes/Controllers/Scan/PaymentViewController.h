@@ -27,8 +27,7 @@
 //}CARD_BIN;
 
 @interface PaymentViewController : UIViewController
-<MFMailComposeViewControllerDelegate,
-LineaDelegate,UIPrintInteractionControllerDelegate,WsCompleteDelegate,UITextFieldDelegate>
+<LineaDelegate,MFMailComposeViewControllerDelegate,UIPrintInteractionControllerDelegate,WsCompleteDelegate,UITextFieldDelegate>
 {
 	CGFloat animatedDistance;
 	IBOutlet UILabel                   *lblTitle;

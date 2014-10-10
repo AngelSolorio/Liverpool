@@ -278,7 +278,6 @@
 
 /* Begin PBXFileReference section */
 		040AA243181F200F0008DC71 /* libdtdev.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libdtdev.a; sourceTree = "<group>"; };
-		040AA244181F200F0008DC71 /* LineaSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineaSDK.h; sourceTree = "<group>"; };
 		040AA245181F200F0008DC71 /* LineaSDK.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = LineaSDK.pdf; sourceTree = "<group>"; };
 		040AA246181F200F0008DC71 /* PrinterSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrinterSDK.h; sourceTree = "<group>"; };
 		040AA247181F200F0008DC71 /* PrinterSDK.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = PrinterSDK.pdf; sourceTree = "<group>"; };
@@ -397,6 +396,7 @@
 		269FCE5219E5B24500A232BC /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		269FCE5419E5B25500A232BC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		269FCE5619E5B27800A232BC /* VMF.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VMF.framework; sourceTree = "<group>"; };
+		269FD59919E6CDB100A232BC /* LineaSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineaSDK.h; sourceTree = "<group>"; };
 		4D05460A143A1A8500C2EBD7 /* TicketGeneratorViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketGeneratorViewController.xib; sourceTree = "<group>"; };
 		4D13AB0B14193B7500F04794 /* ConsultSKUViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsultSKUViewController.h; sourceTree = "<group>"; };
 		4D13AB0C14193B7500F04794 /* ConsultSKUViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsultSKUViewController.m; sourceTree = "<group>"; };
@@ -659,8 +659,8 @@
 		040AA242181F200F0008DC71 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				269FD59919E6CDB100A232BC /* LineaSDK.h */,
 				040AA243181F200F0008DC71 /* libdtdev.a */,
-				040AA244181F200F0008DC71 /* LineaSDK.h */,
 				040AA245181F200F0008DC71 /* LineaSDK.pdf */,
 				040AA246181F200F0008DC71 /* PrinterSDK.h */,
 				040AA247181F200F0008DC71 /* PrinterSDK.pdf */,
@@ -1952,7 +1952,7 @@
 				);
 				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7f armv7k";
@@ -2027,8 +2027,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Anibal Gurria (7N5UD2TYRM)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Anibal Gurria (7N5UD2TYRM)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2052,7 +2052,7 @@
 				OTHER_CFLAGS = "-DDEBUG";
 				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
 				"PROVISIONING_PROFILE[sdk=*]" = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2088,7 +2088,7 @@
 				);
 				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7f armv7k";
