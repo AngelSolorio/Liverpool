@@ -3,11 +3,13 @@
 //  CardReader
 //
 #import <UIKit/UIKit.h>
+#import <VMF/VMFramework.h>
+#import  <ExternalAccessory/ExternalAccessory.h>
 #import "BalanceRequest.h"
 #import "LineaSDK.h"
 #import "TicketGeneratorViewController.h"
 
-@interface BalanceViewController : UIViewController<LineaDelegate,WsCompleteDelegate,UITextFieldDelegate> {
+@interface BalanceViewController : UIViewController<LineaDelegate,WsCompleteDelegate,UITextFieldDelegate,VFIBarcodeDelegate,VFIControlDelegate,VFIPinpadDelegate> {
 	
 	UITextField* txtAccountNumber;
 	UIButton* btnBalance;

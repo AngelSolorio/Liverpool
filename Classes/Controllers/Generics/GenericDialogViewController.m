@@ -9,6 +9,8 @@
 #import "GenericDialogViewController.h"
 #import "Tools.h"
 #import "Styles.h"
+#import "VFDevice.h"
+
 @implementation GenericDialogViewController
 @synthesize  txtLbl,txtField,okBtn,delegate,actionType,scanDevice,exitBtn;
 @synthesize numberKeyPad;
@@ -25,6 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[VFDevice barcode] setDelegate:self];
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
     // Do any additional setup after loading the view from its nib.
     txtField.inputAccessoryView=[Tools inputAccessoryView:txtField];
@@ -32,6 +35,23 @@
     [Styles silverButtonStyle:okBtn];
     [Styles silverButtonStyle:exitBtn];
 
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    myTimer = [NSTimer scheduledTimerWithTimeInterval:0.001
+                                               target:self
+                                             selector:@selector(targetMethod:)
+                                             userInfo:nil
+                                              repeats:NO];
+    NSLog(@"View did appear");
+}
+
+-(void) targetMethod:(NSTimer *) theTimer {
+    [[VFDevice barcode] setDelegate:self];
+    BOOL vmfGen3Flag = [VFDevice barcode].isGen3;
+    if (vmfGen3Flag == true) [VFDevice setBarcodeInitialization];
 }
 
 //- (void)viewDidUnload
@@ -42,9 +62,10 @@
 //}
 -(void) viewWillDisappear:(BOOL)animated
 {
-        [scanDevice removeDelegate:self];
-        [scanDevice disconnect];
-        scanDevice = nil;
+    [[VFDevice barcode] abortScan];
+        //[scanDevice removeDelegate:self];
+       // [scanDevice disconnect];
+        //scanDevice = nil;
     
     [super viewWillDisappear:animated];
 }
@@ -66,12 +87,12 @@
     txtLbl.text=[lblTxt copy];
     actionType=aType;
     
-    if (turnOnReader) {
-            scanDevice = [Linea sharedDevice];
-            [scanDevice setDelegate:self];
-            [scanDevice connect];
+   // if (turnOnReader) {
+     //       scanDevice = [Linea sharedDevice];
+       //     [scanDevice setDelegate:self];
+         //   [scanDevice connect];
         
-    }
+    //}
     
 }
 -(void) initViewWithDecimal:(NSString*) lblTxt :(ActionType) aType :(BOOL) turnOnDecimal
@@ -104,6 +125,20 @@
 		DLog(@"%@", [localException reason]);
 		
 	} NS_ENDHANDLER
+}
+
+-(void)barcodeScanData:(NSData *)data barcodeType:(int)thetype
+{
+    NSString* barcode = [[NSString alloc] initWithData:data
+                                              encoding:NSUTF8StringEncoding];
+    DLog(@"%@", barcode);
+    txtField.text=barcode;
+    [[VFDevice barcode] beepOnParsedScan:YES];
+}
+
+-(void)barcodeInitialized:(BOOL)isInitialized
+{
+    if (isInitialized) [VFDevice setBarcodeInitialization];
 }
 
 //----------------------------------------

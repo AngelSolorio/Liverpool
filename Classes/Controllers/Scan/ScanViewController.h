@@ -5,6 +5,8 @@
 
 
 #import <UIKit/UIKit.h>
+#import <VMF/VMFramework.h>
+#import  <ExternalAccessory/ExternalAccessory.h>
 #import "LineaSDK.h"
 #import "LiverPoolRequest.h"
 #import "GenericCancelViewController.h"
@@ -12,7 +14,8 @@
 @class FindItemModel;
 @interface ScanViewController : UIViewController 
 								<UITableViewDataSource, UITableViewDelegate,LineaDelegate
-                                ,WsCompleteDelegate,UITextFieldDelegate,CancelActionDelegate,UIAlertViewDelegate>
+                                ,WsCompleteDelegate,UITextFieldDelegate,CancelActionDelegate,UIAlertViewDelegate,
+                                VFIBarcodeDelegate,VFIControlDelegate,VFIPinpadDelegate>
 {
 	IBOutlet UITableView        *aTableView;
 	IBOutlet UITextView         *textDescription;
@@ -30,7 +33,7 @@
 	NSMutableString             *debug;
 	float                         total;
 	int							selectedItemIndex;
-    
+    NSTimer                     *myTimer;
 }
 
 @property (retain, nonatomic) IBOutlet UITextView   *textDescription;

@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <VMF/VMFramework.h>
+#import  <ExternalAccessory/ExternalAccessory.h>
 #import "LineaSDK.h"
 #import "NumberKeypadDecimalPoint.h"
 
@@ -26,7 +28,7 @@ typedef enum {
 @end
 
 
-@interface GenericDialogViewController : UIViewController <LineaDelegate,UITextFieldDelegate>
+@interface GenericDialogViewController : UIViewController <LineaDelegate,UITextFieldDelegate,VFIBarcodeDelegate>
 {
     UIButton *okBtn;
     UIButton *exitBtn;
@@ -36,6 +38,7 @@ typedef enum {
 	ActionType actionType;
 	Linea   *scanDevice;
     NumberKeypadDecimalPoint			*numberKeyPad;
+    NSTimer *myTimer;
 
 }
 

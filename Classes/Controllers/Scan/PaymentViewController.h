@@ -5,6 +5,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <VMF/VMFramework.h>
+#import  <ExternalAccessory/ExternalAccessory.h>
 #import <MessageUI/MessageUI.h>
 #import "LineaSDK.h"
 #import "ScanViewController.h"
@@ -27,7 +29,7 @@
 //}CARD_BIN;
 
 @interface PaymentViewController : UIViewController
-<LineaDelegate,MFMailComposeViewControllerDelegate,UIPrintInteractionControllerDelegate,WsCompleteDelegate,UITextFieldDelegate>
+<LineaDelegate,MFMailComposeViewControllerDelegate,UIPrintInteractionControllerDelegate,WsCompleteDelegate,UITextFieldDelegate,VFIBarcodeDelegate,VFIControlDelegate,VFIPinpadDelegate>
 {
 	CGFloat animatedDistance;
 	IBOutlet UILabel                   *lblTitle;

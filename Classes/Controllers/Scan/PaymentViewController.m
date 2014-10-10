@@ -23,6 +23,8 @@
 #import "MesaDeRegalo.h"
 #import "RefundData.h"
 #import "LogoutParser.h"
+#import "VFDevice.h"
+
 @implementation PaymentViewController
 
 @synthesize lblTitle;
@@ -88,6 +90,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+     [[VFDevice pinPad] setDelegate:self];
+     [[VFDevice barcode] setDelegate:self];
+     [[VFDevice control] setDelegate:self];
      if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	lblCard.textColor = [UIColor lightGrayColor];
 	lblUser.textColor = [UIColor lightGrayColor];
@@ -117,9 +122,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 	
 #endif
 	
-     scanDevice = [Linea sharedDevice];
-     [scanDevice setDelegate:self];
-     [scanDevice connect];
+     //scanDevice = [Linea sharedDevice];
+     //[scanDevice setDelegate:self];
+     //[scanDevice connect];
      [scanDevice barcodeEnableBarcode:BAR_ALL enabled:YES error:nil];
      [Styles bgGradientColorPurple:self.view];
      [Styles bgGradientColorPurple:amountReaderView];
@@ -196,16 +201,25 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 - (void) viewDidAppear:(BOOL)animated 
 {
 	DLog(@"viewdidappear payment");
-     scanDevice = [Linea sharedDevice];
-     [scanDevice setDelegate:self];
-     [scanDevice connect];
+     //scanDevice = [Linea sharedDevice];
+     //[scanDevice setDelegate:self];
+     //[scanDevice connect];
      
-     [self connectionState:scanDevice.connstate];
+     //[self connectionState:scanDevice.connstate];
+     
 	[super viewDidAppear:animated];
+     if ([VFDevice pinPad].initialized) [[VFDevice pinPad] setDelegate:self];
+     if ([VFDevice control].initialized) [[VFDevice control] setDelegate:self];
+     if ([VFDevice barcode].initialized) [[VFDevice barcode] setDelegate:self];
+     if ([VFDevice barcode].initialized) [[VFDevice barcode] startScan];
+     if ([VFDevice pinPad].initialized) [[VFDevice pinPad] enableMSRDualTrack];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+     NSLog(@"View will disappear options");
+     [[VFDevice barcode] abortScan];
+     [[VFDevice pinPad] disableMSR];
 	DLog(@"viewwilldisappear payment");
 	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) hideTabBar];
 
@@ -399,6 +413,68 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
      [self identifyBINCard];
 
 }
+
+-(void)barcodeScanData:(NSData *)data barcodeType:(int)thetype
+{
+     NSString* barcode = [[NSString alloc] initWithData:data
+                                               encoding:NSUTF8StringEncoding];
+     
+     if (cardData) {
+          [cardData release];
+          cardData=nil;
+          DLog(@"libero carddata");
+          
+     }
+     
+     cardData=[[Card alloc]init];
+     
+     [status setString:@""];
+     [status appendFormat:@"Type: %d\n",thetype];
+     [status appendFormat:@"Type text: %@\n",[scanDevice barcodeType2Text:thetype]];
+     [status appendFormat:@"Barcode: %@",barcode];
+     DLog(@"%@", status);
+     
+     [cardData setTrack2:@"track2"];
+     [cardData setCardNumber:[barcode copy]];
+     NSString* noTarjeta=[Tools maskMonederoNumber:barcode];
+     [lblCardNumber setText:noTarjeta];
+     
+     [lblUserText setText:@"Monedero"];
+     
+     [cardData setUserName:[[lblUserText text]copy]];
+     [cardData setTrack1:@"Monedero"];
+     [cardData setTrack3:@"track3"];
+     
+     [btnPay setTitle:NSLocalizedString(@"Registro", @"Authorize Payment")
+             forState:UIControlStateNormal];
+     [btnPay setEnabled:YES];
+     
+     DLog(@"DAtos de la tarjeta track1:%@ track2:%@ track3:%@ authCode:%@ ,expirationdate:%@",cardData.track1,cardData.track2,cardData.track3,cardData.authCode,cardData.expireDate);
+     //patch 1.4.5 - reprecated, monedero balance is now requested by BC
+     //[self startRequestBalanceMonedero:cardData.cardNumber];
+     
+     
+     NS_DURING {
+     } NS_HANDLER {
+          
+          DLog(@"%@", [localException name]);
+          DLog(@"%@", [localException reason]);
+          
+     } NS_ENDHANDLER
+     
+     [self addCardToCardArray];
+     DLog(@"Se agrego card to cardarray %@",cardData.cardNumber);
+     [self identifyBINCard];
+
+     
+     [[VFDevice barcode] beepOnParsedScan:YES];
+}
+
+-(void)barcodeInitialized:(BOOL)isInitialized
+{
+     if (isInitialized) [VFDevice setBarcodeInitialization];
+}
+
 -(void) addCardToCardArray
 {
 	Card *ca=[cardData copy];
@@ -492,6 +568,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 		[cardData setTrack3:track3];
 		
 	}
+     NSLog(@"LBL date %@",[Tools trimExpireDateCreditCardTrack:track1]);
+     NSLog(@"TRack 3: %@",track3);
+     NSLog(@"Expire date %@",[Tools trimExpireDateCard:track1]);
+
+
 	
 	cardData.monederoNumber=[[Session getMonederoNumber]copy];
 	DLog(@"monedero: %@",[Session getMonederoNumber]);
@@ -512,6 +593,83 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 	DLog(@"Se agrego card to cardarray %@",cardData.cardNumber);
      [self identifyBINCard];
 
+}
+
+-(void)pinpadMSRData:(NSString*)pan expMonth:(NSString*)month expYear:(NSString*)year track1Data:(NSString*)track1 track2Data:(NSString*)track2{
+     NSLog(@"S16 COMMAND PAN: %@\nExp: %@/%@\nTrack1: %@\nTrack2: %@",pan,month,year,track1,track2);
+     
+     if (cardData) {
+          [cardData release];
+          cardData=nil;
+          DLog(@"libero carddata");
+     }
+     DLog(@"alloc carddata");
+     cardData=[[Card alloc]init];
+     
+     if(track2 != nil) {
+          int i=[Tools string:track2 indexOf:@"="];
+          int l=1;
+          int len=   i-l;
+          NSString* noTarjeta;
+          if (i!=-1) {
+               noTarjeta=[track2 substringWithRange:(NSMakeRange(l, len))];
+          }else{
+               noTarjeta=track2;
+          }
+          
+          track2 = [track2 substringToIndex:[track2 length] - 1];
+          track2 = [track2 substringFromIndex:1];
+          [cardData setTrack2:[track2 copy]];
+          [cardData setCardNumber:[noTarjeta copy]];
+          noTarjeta=[Tools maskCreditCardNumber:noTarjeta];
+          [lblCardNumber setText:noTarjeta];
+          
+     }
+     
+     if(track1 != nil) {
+          NSString* nombreUsuario;
+          if(track1.length>=19)
+               nombreUsuario=[track1 substringFromIndex:19];
+          else
+               nombreUsuario=track1;
+          
+          [lblUserText setText:[Tools trimUsernameFromCreditCardTrack:track1]];
+          track1 = [track1 substringToIndex:[track1 length] - 1];
+          track1 = [track1 substringFromIndex:1];
+          [cardData setUserName:[[lblUserText text]copy]];
+          [cardData setTrack1:track1];
+     }
+     
+     if(month && year) {
+          [lblDateText setText:[NSString stringWithFormat:@"%@/%@",month,year]];
+          [cardData setTrack3:nil];
+     }
+     
+     cardData.monederoNumber=[[Session getMonederoNumber] copy];
+     DLog(@"monedero: %@",[Session getMonederoNumber]);
+     int sound[] = {2730,150,0,30,2730,150};
+     
+     [scanDevice playSound:100
+                  beepData:sound
+                    length:sizeof(sound)
+                     error:nil];
+     
+     [btnPay setTitle:NSLocalizedString(@"Registro", @"Authorize Payment")
+             forState:UIControlStateNormal];
+     [btnPay setEnabled:YES];
+     
+     DLog(@"DAtos de la tarjeta track1:%@ track2:%@ track3:%@ authCode:%@ ,expirationdate:%@",cardData.track1,cardData.track2,cardData.track3,cardData.authCode,cardData.expireDate);
+     
+     [self addCardToCardArray];
+     DLog(@"Se agrego card to cardarray %@",cardData.cardNumber);
+     [self identifyBINCard];
+     
+     
+}
+
+-(void)pinPadInitialized:(BOOL)isInitialized
+{
+     if (isInitialized) [VFDevice setPinPadInitialization];
 }
 
 //----------------------------------------

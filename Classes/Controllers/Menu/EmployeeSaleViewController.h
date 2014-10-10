@@ -4,10 +4,12 @@
 
 
 #import <UIKit/UIKit.h>
+#import <VMF/VMFramework.h>
+#import  <ExternalAccessory/ExternalAccessory.h>
 #import "LineaSDK.h"
 
 
-@interface EmployeeSaleViewController : UIViewController<LineaDelegate> {
+@interface EmployeeSaleViewController : UIViewController<LineaDelegate,VFIPinpadDelegate> {
 	Linea                       *scanDevice;
 	UITextField					*txtCardNumber;
 	UIButton					*btnOk;

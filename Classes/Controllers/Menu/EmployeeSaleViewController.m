@@ -10,7 +10,7 @@
 #import "Rules.h"
 #import "CardReaderAppDelegate.h"
 #import "Session.h"
-
+#import "VFDevice.h"
 
 @implementation EmployeeSaleViewController
 @synthesize txtCardNumber,btnOk;
@@ -28,7 +28,7 @@
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-
+    [[VFDevice pinPad] setDelegate:self];
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	txtCardNumber.inputAccessoryView=[Tools inputAccessoryView:txtCardNumber];
 	[Styles bgGradientColorPurple:self.view];
@@ -41,13 +41,21 @@
 	
     [super viewDidLoad];
 }
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if ([VFDevice pinPad].initialized) {
+       [[VFDevice pinPad] setDelegate:self];
+       [[VFDevice pinPad] enableMSRDualTrack];
+    }
+}
 -(void)viewWillDisappear:(BOOL)animated
 {
 	DLog(@"viewwilldisappear employeesale");
-	
-	[scanDevice removeDelegate:self];
-	[scanDevice disconnect];
-	scanDevice = nil;
+    [[VFDevice pinPad] disableMSR];
+	//[scanDevice removeDelegate:self];
+	//[scanDevice disconnect];
+	//scanDevice = nil;
 	[super viewWillDisappear:animated];
 }
 -(void) viewWillAppear:(BOOL)animated{
@@ -56,9 +64,9 @@
 	//cardreader SDK
 	DLog(@"viewWillAppear employeesale");
 	
-	scanDevice = [Linea sharedDevice];
-    [scanDevice setDelegate:self];
-	[scanDevice connect];
+	//scanDevice = [Linea sharedDevice];
+    //[scanDevice setDelegate:self];
+	//[scanDevice connect];
 }
 
 /*
@@ -124,6 +132,38 @@
 	}
 	
 }
+
+-(void)pinpadMSRData:(NSString*)pan expMonth:(NSString*)month expYear:(NSString*)year track1Data:(NSString*)track1 track2Data:(NSString*)track2{
+    
+    if(track2 != nil) {
+        int i=[Tools string:track2 indexOf:@"="];
+        int l=1;
+        int len=   i-l;
+        NSString* noTarjeta;
+        if (i!=-1) {
+            noTarjeta=[track2 substringWithRange:(NSMakeRange(l, len))];
+        }else{
+            noTarjeta=track2;
+        }
+        
+        track2 = [track2 substringToIndex:[track2 length] - 1];
+        track2 = [track2 substringFromIndex:1];
+        if ([Rules isEmployeeCard:noTarjeta])
+        {
+            [Session setEmployeeAccount:noTarjeta];
+            DLog(@"tarjeta adasdasd: %@",noTarjeta);
+            [self showScanItemView];
+        }
+        else 
+            [Tools displayAlert:@"Error" message:@"El numero de cuenta introducido no es de empleado"];
+    }
+    
+}
+
+-(void)pinpadConnected:(BOOL)isConnected{
+    if (isConnected) [VFDevice setPinPadInitialization];
+}
+
 -(void) showScanItemView
 {
 	//[self dismissModalViewControllerAnimated:YES];

@@ -52,4 +52,9 @@
     [[self barcode] barcodeTypeEnabled:YES];
     [[self barcode] mTriggerMode:1];
 }
+
++(void)setPinPadInitialization
+{
+    [[self pinPad] enableMSRDualTrack];
+}
 @end

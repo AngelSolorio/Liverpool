@@ -18,6 +18,7 @@
 #import "CardReaderAppDelegate.h"
 #import "SomsListParser.h"
 #import "Rules.h"
+#import "VFDevice.h"
 @implementation ScanViewController
 
 @synthesize textDescription;
@@ -59,6 +60,7 @@ typedef enum {
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    [[VFDevice barcode] setDelegate:self];
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
     DLog(@"Viewdidload scanviewcontroller");
 	[self setTitle:@"Liverpool"];
@@ -317,24 +319,42 @@ typedef enum {
 {
     [super viewWillDisappear:animated];
 	DLog(@"viewwilldisappear scan");
-
-	[scanDevice removeDelegate:self];
-	[scanDevice disconnect];
-	scanDevice = nil;
+    [[VFDevice barcode] abortScan];
+	//[scanDevice removeDelegate:self];
+	//[scanDevice disconnect];
+	//scanDevice = nil;
 }
 -(void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     DLog(@"viewDidappear scan");
- 
+    myTimer = [NSTimer scheduledTimerWithTimeInterval:0.001
+                                               target:self
+                                             selector:@selector(targetMethod:)
+                                             userInfo:nil
+                                              repeats:NO];
     //cardreader SDK
-	scanDevice = [Linea sharedDevice];
-    [scanDevice setDelegate:self];
-	[scanDevice connect];
+	//scanDevice = [Linea sharedDevice];
+    //[scanDevice setDelegate:self];
+	//[scanDevice connect];
     
 
     
 }
+
+-(void) targetMethod:(NSTimer *) theTimer {
+    
+    [[VFDevice barcode] setDelegate:self];
+    
+    
+    BOOL vmfGen3Flag = [VFDevice barcode].isGen3;
+    
+    
+    if (vmfGen3Flag == true) {
+        [VFDevice setBarcodeInitialization];
+    }
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
 	DLog(@"viewwillappear scan");
@@ -804,6 +824,23 @@ titleForFooterInSection:(NSInteger)section
 	} NS_ENDHANDLER
 }
 
+-(void)barcodeScanData:(NSData *)data barcodeType:(int)thetype{
+    NSString* barcode = [[NSString alloc] initWithData:data
+                                              encoding:NSUTF8StringEncoding];
+    [status setString:@""];
+    [status appendFormat:@"Type: %d\n",thetype];
+    [status appendFormat:@"Type text: %@\n",[scanDevice barcodeType2Text:thetype]];
+    [status appendFormat:@"Barcode: %@",barcode];
+    DLog(@"%@", status);
+    [self startRequest:barcode];
+    [[VFDevice barcode] beepOnParsedScan:YES];
+}
+
+-(void)barcodeInitialized:(BOOL)isInitialized
+{
+    if (isInitialized)  [VFDevice setBarcodeInitialization];
+}
+
 //----------------------------------------
 //            MAGNETIC CARD DATA
 //----------------------------------------
@@ -1234,7 +1271,7 @@ titleForFooterInSection:(NSInteger)section
 {
     //reconnect the device
    // [scanDevice connect];
-    [scanDevice addDelegate:self];
+    //[scanDevice addDelegate:self];
 
     if (requestType==findRequest)
         [self findItemRequestParsing:receivedData];

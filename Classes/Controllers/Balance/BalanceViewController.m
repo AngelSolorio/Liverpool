@@ -13,6 +13,8 @@
 #import "Tools.h"
 #import "Card.h"
 #import "Session.h"
+#import "VFDevice.h"
+
 NSString * const CREDIT_REQUESTKEY =@"TSCCRE03" ;
 NSString * const MONEY_REQUESTKEY =@"TSCCTE09";
 @implementation BalanceViewController
@@ -38,6 +40,9 @@ NSString * const MONEY_REQUESTKEY =@"TSCCTE09";
 	
 
     [super viewDidLoad];
+    [[VFDevice pinPad] setDelegate:self];
+    [[VFDevice barcode] setDelegate:self];
+    [[VFDevice control] setDelegate:self];
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) self.edgesForExtendedLayout = UIRectEdgeNone;
 	[Styles bgGradientColorPurple:self.view];
 	[Styles silverButtonStyle:btnBalance];
@@ -53,19 +58,25 @@ NSString * const MONEY_REQUESTKEY =@"TSCCTE09";
 -(void) viewDidAppear:(BOOL)animated{
 	DLog(@"viewDidAppear balance");
 
-	scanDevice = [Linea sharedDevice];
-    [scanDevice setDelegate:self];
-	[scanDevice connect];
+	//scanDevice = [Linea sharedDevice];
+    //[scanDevice setDelegate:self];
+	//[scanDevice connect];
 	[super viewDidAppear:animated];
+    if ([VFDevice pinPad].initialized) [[VFDevice pinPad] setDelegate:self];
+    if ([VFDevice control].initialized) [[VFDevice control] setDelegate:self];
+    if ([VFDevice barcode].initialized) [[VFDevice barcode] setDelegate:self];
+    if ([VFDevice barcode].initialized) [[VFDevice barcode] startScan];
+    if ([VFDevice pinPad].initialized) [[VFDevice pinPad] enableMSRDualTrack];
 	
 }
 
 -(void) viewWillDisappear:(BOOL)animated
 {	DLog(@"viewWillDisappear balance");
-
-	[scanDevice removeDelegate:self];
-	[scanDevice disconnect];
-	scanDevice = nil;
+    [[VFDevice barcode] abortScan];
+    [[VFDevice pinPad] disableMSR];
+	//[scanDevice removeDelegate:self];
+	//[scanDevice disconnect];
+	//scanDevice = nil;
 	[super viewWillDisappear:animated];
 	
 }
@@ -241,6 +252,19 @@ NSString * const MONEY_REQUESTKEY =@"TSCCTE09";
 	} NS_ENDHANDLER
 }
 
+-(void)barcodeScanData:(NSData *)data barcodeType:(int)thetype
+{
+    NSString* barcode = [[NSString alloc] initWithData:data
+                                              encoding:NSUTF8StringEncoding];
+    [txtAccountNumber setText:barcode];
+    [self startRequest:[txtAccountNumber text]];
+    [[VFDevice barcode] beepOnParsedScan:YES];
+}
+
+-(void)barcodeInitialized:(BOOL)isInitialized
+{
+    if (isInitialized) [VFDevice setBarcodeInitialization];
+}
 //----------------------------------------
 //            MAGNETIC CARD DATA
 //----------------------------------------
@@ -276,6 +300,39 @@ NSString * const MONEY_REQUESTKEY =@"TSCCTE09";
 	
     [self startRequest:[txtAccountNumber text]];
 
+}
+
+-(void)pinpadMSRData:(NSString*)pan expMonth:(NSString*)month expYear:(NSString*)year track1Data:(NSString*)track1 track2Data:(NSString*)track2{
+    
+    [self clearFields];
+    if(track2 != nil) {
+        int i=[Tools string:track2 indexOf:@"="];
+        int l=1;
+        int len=   i-l;
+        NSString* noTarjeta;
+        if (i!=-1) {
+            noTarjeta=[track2 substringWithRange:(NSMakeRange(l, len))];
+        }else{
+            noTarjeta=track2;
+        }
+        //cardNumber=[noTarjeta copy];
+        [txtAccountNumber setText:noTarjeta];
+        //[txtAccountNumber setText:[Tools maskCreditCardNumber:noTarjeta]];
+        
+    }
+    
+    //int sound[] = {2730,150,0,30,2730,150};
+    //[scanDevice playSound:100
+      //           beepData:sound
+        //           length:sizeof(sound)
+          //          error:nil];
+    
+    [self startRequest:[txtAccountNumber text]];
+
+}
+
+-(void)pinpadConnected:(BOOL)isConnected{
+    if (isConnected) [VFDevice setPinPadInitialization];
 }
 
 
