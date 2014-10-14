@@ -55,16 +55,9 @@
 }
 
 -(void) targetMethod:(NSTimer *) theTimer {
-    
     [[VFDevice barcode] setDelegate:self];
-    
-    
     BOOL vmfGen3Flag = [VFDevice barcode].isGen3;
-    
-    
-    if (vmfGen3Flag == true) {
-        [VFDevice setBarcodeInitialization];
-    }
+    if (vmfGen3Flag == true) [VFDevice setBarcodeInitialization];
 }
 
 -(void) viewWillDisappear:(BOOL)animated

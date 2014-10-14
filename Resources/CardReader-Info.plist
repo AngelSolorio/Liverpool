@@ -13,19 +13,9 @@
 	<key>CFBundleIconFile</key>
 	<string>Icon.png</string>
 	<key>CFBundleIcons</key>
-	<dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>Icon.png</string>
-				<string>Liverpool@1x.png</string>
-				<string>Liverpool@2x.png</string>
-				<string>Liver@1x.png</string>
-				<string>Liver@2x.png</string>
-			</array>
-		</dict>
-	</dict>
+	<dict/>
+	<key>CFBundleIcons~ipad</key>
+	<dict/>
 	<key>CFBundleIdentifier</key>
 	<string>com.liverpool.posmovil</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -35,21 +25,19 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4.5</string>
+	<string>2.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array/>
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
 	<key>NSMainNibFile~ipad</key>
 	<string>MainWindow-iPad</string>
-	<key>UILaunchImageFile</key>
-	<string>ScreenShot.png</string>
 	<key>UIStatusBarHidden</key>
 	<false/>
 	<key>UIStatusBarStyle</key>
@@ -65,9 +53,9 @@
 				<key>Blue</key>
 				<real>1</real>
 				<key>Green</key>
-				<real>0</real>
+				<real>0.0</real>
 				<key>Red</key>
-				<real>0</real>
+				<real>0.0</real>
 			</dict>
 			<key>Translucent</key>
 			<false/>

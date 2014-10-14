@@ -105,6 +105,7 @@
 		269FCE5319E5B24500A232BC /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 269FCE5219E5B24500A232BC /* libz.1.2.5.dylib */; };
 		269FCE5519E5B25500A232BC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269FCE5419E5B25500A232BC /* CFNetwork.framework */; };
 		269FCE5719E5B27800A232BC /* VMF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269FCE5619E5B27800A232BC /* VMF.framework */; };
+		269FD59B19E89E7D00A232BC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 269FD59A19E89E7D00A232BC /* Images.xcassets */; };
 		4D05460B143A1A8500C2EBD7 /* TicketGeneratorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D05460A143A1A8500C2EBD7 /* TicketGeneratorViewController.xib */; };
 		4D13AB0D14193B7500F04794 /* ConsultSKUViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D13AB0C14193B7500F04794 /* ConsultSKUViewController.m */; };
 		4D13AB1014193B7D00F04794 /* ConsultSKUViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D13AB0F14193B7D00F04794 /* ConsultSKUViewController.xib */; };
@@ -397,6 +398,7 @@
 		269FCE5419E5B25500A232BC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		269FCE5619E5B27800A232BC /* VMF.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VMF.framework; sourceTree = "<group>"; };
 		269FD59919E6CDB100A232BC /* LineaSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineaSDK.h; sourceTree = "<group>"; };
+		269FD59A19E89E7D00A232BC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Liverpool/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		4D05460A143A1A8500C2EBD7 /* TicketGeneratorViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketGeneratorViewController.xib; sourceTree = "<group>"; };
 		4D13AB0B14193B7500F04794 /* ConsultSKUViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsultSKUViewController.h; sourceTree = "<group>"; };
 		4D13AB0C14193B7500F04794 /* ConsultSKUViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsultSKUViewController.m; sourceTree = "<group>"; };
@@ -1340,6 +1342,7 @@
 		DF18F94B13CDFE7900001371 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				269FD59A19E89E7D00A232BC /* Images.xcassets */,
 				DF18F94C13CDFE7900001371 /* CardReader-Info.plist */,
 				DF18F94D13CDFE7900001371 /* Data */,
 				DF18F94E13CDFE7900001371 /* Images */,
@@ -1769,6 +1772,7 @@
 				ABEB615119D2F6AD0081C39A /* sellerRequest.xml in Resources */,
 				04D48DC8182C15A5006C2887 /* BatteryH80.png in Resources */,
 				04D48DC9182C15A5006C2887 /* batteryTab.png in Resources */,
+				269FD59B19E89E7D00A232BC /* Images.xcassets in Resources */,
 				04D48DCD182C199B006C2887 /* BatteryTabView.xib in Resources */,
 				04A68781182D45BE00B956FF /* BatteryH60.png in Resources */,
 				04A68783182D6BB700B956FF /* wallet.png in Resources */,

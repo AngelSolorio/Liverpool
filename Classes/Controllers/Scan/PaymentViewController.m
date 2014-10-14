@@ -1381,7 +1381,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
           cardData =nil;
           [cardsArray removeLastObject];
           //if the transaction was unsucessful connect the cardReader
-          [scanDevice connect];
+          //[scanDevice connect];
+          if ([VFDevice pinPad].initialized) [[VFDevice pinPad] enableMSRDualTrack];
           [self resetLabels];
           
      }
