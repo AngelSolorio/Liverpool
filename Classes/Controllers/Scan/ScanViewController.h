@@ -30,6 +30,8 @@
 	NSMutableString             *debug;
 	float                         total;
 	int							selectedItemIndex;
+    NSNumber                    *warrantiesEnabled;
+    BOOL                        hasWarranties;
     
 }
 
@@ -71,7 +73,7 @@
 -(void) editItemForTransaction:(NSIndexPath*) indexPath;
 
 -(void) startRequestForTransaction;
--(BOOL) isValidSKU:(FindItemModel*) item;
+-(BOOL) isValidSKU:(id) item;
 -(void) startRequestWithPrice:(NSString*) barCode :(NSString*) price;
 -(IBAction)addSKURefund:(id)sender;
 -(BOOL) isValidRefundChange:(FindItemModel*) item;

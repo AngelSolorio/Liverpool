@@ -1,0 +1,5 @@
+    <id>#warranty_id#</id>
+    <cost>#cost#</cost>
+    <detail>#detail#</detail>
+    <percentage>#percentage#</percentage>
+    <sku>#sku#</sku>

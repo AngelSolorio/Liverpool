@@ -359,6 +359,15 @@
     return amexAffNumber;
 }
 
++(BOOL)hasWarranties
+{
+    return hasWarranties;
+}
+
++(void)setHasWarranties:(BOOL)hasWarrty{
+    hasWarranties = hasWarrty;
+}
+
 -(void) dealloc
 {
     [storePrint release];

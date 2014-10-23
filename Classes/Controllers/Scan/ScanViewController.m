@@ -18,6 +18,8 @@
 #import "CardReaderAppDelegate.h"
 #import "SomsListParser.h"
 #import "Rules.h"
+#import "WarrantyViewController.h"
+
 @implementation ScanViewController
 
 @synthesize textDescription;
@@ -404,20 +406,8 @@ typedef enum {
 	//[cell.detailTextLabel setText:[[tableData objectAtIndex:indexPath.row] objectForKey:@"DetailText"]];
 	//[cell.imageView setImage:[[tableData objectAtIndex:indexPath.row] objectForKey:@"Image"]];
 	
-    FindItemModel *item=[productList objectAtIndex:indexPath.row];
-    
-    if ([item itemForGift]) {
-        UIImageView *aImageView=[[UIImageView alloc]initWithFrame:
-                                 CGRectMake(cell.frame.size.width - 320, 
-                                            cell.frame.size.height - 34, 
-                                            30, 30)];
-        [aImageView setImage:[UIImage imageNamed:@"boxgift.png"]];  
-        [[cell contentView] addSubview:aImageView];
-        [aImageView release];
-        
-
-    }
-    
+    //FindItemModel *item=[productList objectAtIndex:indexPath.row];
+    id item = [productList objectAtIndex:indexPath.row];
     
 	UILabel *aLabelNumberRow = [[UILabel alloc] initWithFrame:
 					   CGRectMake(cell.frame.size.width - 310, 
@@ -438,7 +428,6 @@ typedef enum {
 					   CGRectMake(cell.frame.size.width - 260, 
 								  cell.frame.size.height - 44, 
 								  220, 22)];
-	[aLabelName setText:[item description]];
 	[aLabelName setFont:[UIFont boldSystemFontOfSize:16]];
 	[aLabelName setBackgroundColor:[UIColor clearColor]];
 	[aLabelName setTextColor:[UIColor whiteColor]]; 
@@ -450,7 +439,6 @@ typedef enum {
 					   CGRectMake(cell.frame.size.width - 260, 
 								  cell.frame.size.height - 22, 
 								  110, 22)];
-	[aLabelDescription setText:[item barCode]];
 	[aLabelDescription setBackgroundColor:[UIColor clearColor]];
 	[aLabelDescription setTextColor:[UIColor whiteColor]]; 
 	[aLabelDescription setAdjustsFontSizeToFitWidth:YES];
@@ -463,7 +451,6 @@ typedef enum {
 					   CGRectMake(cell.frame.size.width - 70, 
 								  cell.frame.size.height - 50, 
 								  70, 30)];
-	[aLabel setText:[Tools amountCurrencyFormat:[item price]]];
 	[aLabel setFont:[UIFont boldSystemFontOfSize:16]];
 	[aLabel setBackgroundColor:[UIColor clearColor]];
 	[aLabel setTextColor:[UIColor whiteColor]]; 
@@ -475,7 +462,6 @@ typedef enum {
 					   CGRectMake(cell.frame.size.width - 50,
 								  cell.frame.size.height - 30, 
 								  50, 30)];
-	[aLabelDiscount setText:[self displayPromotionDiscount:indexPath.row]];
 	[aLabelDiscount setBackgroundColor:[UIColor clearColor]];
 	[aLabelDiscount setTextColor:[UIColor whiteColor]]; 
 	[aLabelDiscount setAdjustsFontSizeToFitWidth:YES];
@@ -487,18 +473,43 @@ typedef enum {
                                CGRectMake(cell.frame.size.width - 90,
                                           cell.frame.size.height - 30,
                                           30, 30)];
-	[aLabelQuantity setText:[Tools maskQuantityFormat:[item itemCount]]];
 	[aLabelQuantity setBackgroundColor:[UIColor clearColor]];
 	[aLabelQuantity setTextColor:[UIColor whiteColor]];
 	[aLabelQuantity setAdjustsFontSizeToFitWidth:YES];
 	[[cell contentView] addSubview:aLabelQuantity];
 	[aLabelQuantity release];
     
+    if ([item isKindOfClass:[FindItemModel class]]) {
+        if ([item itemForGift]) {
+            UIImageView *aImageView=[[UIImageView alloc]initWithFrame:
+                                     CGRectMake(cell.frame.size.width - 320,
+                                                cell.frame.size.height - 34,
+                                                30, 30)];
+            [aImageView setImage:[UIImage imageNamed:@"boxgift.png"]];
+            [[cell contentView] addSubview:aImageView];
+            [aImageView release];
+            
+            
+        }
+        [aLabelName setText:[item description]];
+        [aLabelDescription setText:[item barCode]];
+        [aLabel setText:[Tools amountCurrencyFormat:[item price]]];
+        NSLog(@"Disconut");
+        [aLabelDiscount setText:[self displayPromotionDiscount:indexPath.row]];
+        [aLabelQuantity setText:[Tools maskQuantityFormat:[item itemCount]]];
+    } else if ([item isKindOfClass:[Warranty class]]){
+        NSLog(@"Warranty found");
+        [aLabelName setText:[item detail]];
+        [aLabelDescription setText:[item sku]];
+        [aLabel setText:[Tools amountCurrencyFormat:[item cost]]];
+        [aLabelQuantity setText:[Tools maskQuantityFormat:@"1"]];
+    }
+
 	
 	return cell;
 }
 -(NSString*) displayPromotionDiscount:(int) index
-{
+{   NSLog(@"Display promotions");
 	NSString *discountAmount=@"";
 	FindItemModel *item=[productList objectAtIndex:index];
 	if (item.promo&&[item.discounts count]>0) {
@@ -1210,7 +1221,8 @@ titleForFooterInSection:(NSInteger)section
 	LiverPoolRequest *liverPoolRequest=[[LiverPoolRequest alloc] init];
 	liverPoolRequest.delegate=self;
     NSString  *terminal=[Session getTerminal];
-	NSArray *pars=[NSArray arrayWithObjects:barCode,@"",terminal,nil];
+    warrantiesEnabled = [NSNumber numberWithBool:YES];
+	NSArray *pars=[NSArray arrayWithObjects:barCode,@"",terminal,warrantiesEnabled,nil];
 	[liverPoolRequest sendRequest:@"buscaProducto" forParameters:pars forRequestType:findRequest]; //cambiar a localized string
 	[liverPoolRequest release];
     
@@ -1251,6 +1263,7 @@ titleForFooterInSection:(NSInteger)section
 	[findParser startParser:data];
 	DLog(@"termino");
 	FindItemModel *findItemModel=findParser.findItemModel;
+    NSLog(@"Find warranty %@",findItemModel.warranty);
     findItemModel.itemForGift=[Session getIsTicketGift];
     DLog(@"finditemparsing item state %i",[Session getIsTicketGift]);
 	if ([findItemModel.description isEqualToString:@"No encontrado"] ) {
@@ -1261,6 +1274,12 @@ titleForFooterInSection:(NSInteger)section
 		if (productList == nil) {
 			productList = [[NSMutableArray alloc] init];
 		}
+        if ([findParser.warrantiesList count]>0) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveSelectedWarranty:) name:WARRANTYSELECTED_NOTIFICATION object:nil];
+            WarrantyViewController *warrantyVC = [[WarrantyViewController alloc] initWithNibName:@"WarrantyViewController" bundle:nil];
+            [warrantyVC setWarrantiesList:findParser.warrantiesList];
+            [self presentViewController:warrantyVC animated:YES completion:nil];
+        }
         if ([self isValidSKU:findItemModel]) {
             [productList addObject:findItemModel];
             [self applyPromotionsToProducts:findItemModel];
@@ -1404,9 +1423,9 @@ titleForFooterInSection:(NSInteger)section
 }
 
 ///********************************************************************************************
--(BOOL) isValidSKU:(FindItemModel*) item
+-(BOOL) isValidSKU:(id)item
 {
-    float sku=[[item barCode]floatValue];
+    float sku=[item isKindOfClass:[FindItemModel class]] ? [[item barCode] floatValue] : [item isKindOfClass:[Warranty class]] ? [[item sku] floatValue] : 0;
     bool isValid=NO;
     if (sku==0) {
         [scanDevice removeDelegate:self];
@@ -1574,7 +1593,7 @@ titleForFooterInSection:(NSInteger)section
 	CGPoint textFieldCord=textField.center;
 	
 	CGRect viewCords=self.view.frame;
-	
+
 	viewCords.origin.y=viewCords.origin.y+textFieldCord.y-140;
 	
 	self.view.frame=viewCords;
@@ -1585,6 +1604,22 @@ titleForFooterInSection:(NSInteger)section
 {
 	[self.view endEditing:YES];
 	
+}
+
+#pragma mark - WarrantySelectionDelegate
+-(void)didReceiveSelectedWarranty:(NSNotification *)notification
+{
+    [Session setHasWarranties:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WARRANTYSELECTED_NOTIFICATION object:nil];
+    NSLog(@"Did receive notification warranty");
+    FindItemModel *findItem = [productList lastObject];
+    Warranty *warranty = (Warranty *)[notification object];
+    findItem.warranty = warranty;
+    NSLog(@"Find item war %@",findItem.warranty.cost);
+    //if ([self isValidSKU:warranty]) {
+        [productList addObject:warranty];
+        [self setDataIntoArray:nil];
+    //}
 }
 @end
 

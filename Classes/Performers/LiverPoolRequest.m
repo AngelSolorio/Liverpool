@@ -21,6 +21,7 @@
 #import "CardDataList.h"
 #import "NSString+XML.h"
 #import "SomsListParser.h"
+#import "Contact.h"
 
 @implementation LiverPoolRequest
 @synthesize receivedData,requestType,delegate;
@@ -125,9 +126,9 @@
 
 - (NSString*) createEnvelope: (NSString*) method forParameters: (NSArray*) params 
 {
-	NSMutableString* s = [NSMutableString string];
-	[s appendString: @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"];
-	[s appendString: @"<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://us.liverpool.mx/\">"];
+	//NSMutableString* s = [NSMutableString string];
+	//[s appendString: @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"];
+	//[s appendString: @"<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://us.liverpool.mx/\">"];
 	/*if(headers != nil && headers.count > 0) {
 		[s appendString: @"<soap:Header>"];
 		for(id key in [headers allKeys]) {
@@ -142,13 +143,13 @@
 	//[s appendFormat: @"<%@>%@</%@>", method,[params stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"], method];
 	//[s appendFormat:@"<idProducto>%@</idProducto>",params];
 
-	[s appendString: @"<soap:Body>"];
-	[s appendFormat:@"<tns:%@>",method];
-	[s appendString:[self buildParameterBody:params]];
-	[s appendFormat:@"</tns:%@>",method];
-	[s appendString: @"</soap:Body>"];
-	[s appendString: @"</soap:Envelope>"];
-    
+	//[s appendString: @"<soap:Body>"];
+	//[s appendFormat:@"<tns:%@>",method];
+	//[s appendString:[self buildParameterBody:params]];
+	//[s appendFormat:@"</tns:%@>",method];
+	//[s appendString: @"</soap:Body>"];
+	//[s appendString: @"</soap:Envelope>"];
+    NSLog(@"Method name %@",method);
     NSString *xmlConstructor = [[NSBundle mainBundle] pathForResource:@"xmlConstructor" ofType:@"xml"];
     NSString *xmlContent = [[NSMutableString alloc] initWithContentsOfFile:xmlConstructor encoding:NSUTF8StringEncoding error:nil];
     xmlContent = [xmlContent stringByReplacingOccurrencesOfString:@"#body#" withString:[self buildParameterBody:params]];
@@ -158,12 +159,29 @@
     NSLog(@"Xml content %@",xmlContent);
 	return xmlContent;
 }
+-(NSString *)createXMLForWarranty:(FindItemModel *)fim{
+    NSString *warrantyPath = [[NSBundle mainBundle] pathForResource:@"warrantyBodyRequest" ofType:@"xml"];
+    NSString *warrantyContent = [[NSString alloc] initWithContentsOfFile:warrantyPath encoding:NSUTF8StringEncoding error:nil];
+
+    if (fim.warranty == NULL) {
+        warrantyContent = NULL;
+        NSLog(@"Warranty is null");
+    } else{
+        warrantyContent = [warrantyContent stringByReplacingXMLOcurrencesOfString:@"#warranty_id#" withValidString:fim.warranty.warrantyId];
+        warrantyContent = [warrantyContent stringByReplacingXMLOcurrencesOfString:@"#cost#" withValidString:fim.warranty.cost];
+        warrantyContent = [warrantyContent stringByReplacingXMLOcurrencesOfString:@"#detail#" withValidString:fim.warranty.detail];
+        warrantyContent = [warrantyContent stringByReplacingXMLOcurrencesOfString:@"#percentage#" withValidString:fim.warranty.percentage];
+        warrantyContent = [warrantyContent stringByReplacingXMLOcurrencesOfString:@"#sku#" withValidString:fim.warranty.sku];
+    }
+    NSLog(@"Warranty content %@",warrantyContent);
+    return warrantyContent;
+}
 /* build the methods and parameters of the specified method*/
 -(NSString*) buildParameterBody:(NSArray*)parameters
 {
     NSMutableString *xmlFormat=[NSMutableString string];
 	NSArray *params= [self buildParameterNodes];
-    
+    NSLog(@"Params %@",parameters);
 	for (NSObject* par in parameters) {
 		if ([par isKindOfClass:[NSArray class]]){
 			if ([((NSArray*)par) count]>0 ) {
@@ -171,6 +189,7 @@
 				if ([obj isKindOfClass:[FindItemModel class]]) {
                     NSLog(@"Read item model");
                     NSMutableString *itemBody = [[[NSMutableString alloc] init] autorelease];
+
 					for (FindItemModel* fim in (NSArray*) par) {
                         NSString *itemFindPath = [[NSBundle mainBundle] pathForResource:@"itemBodyFindRequest" ofType:@"xml"];
                         NSString *itemFindContent = [[NSString alloc] initWithContentsOfFile:itemFindPath encoding:NSUTF8StringEncoding error:nil];
@@ -184,11 +203,14 @@
                         itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#quantity#" withValidString:fim.itemCount];
                         itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#extended_price#" withValidString:fim.priceExtended];
                         itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#delivery_date#" withValidString:fim.deliveryDate];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#warranty_body#" withValidString:[self createXMLForWarranty:fim]];
+                        NSLog(@"Find item content %@",itemFindContent);
                         [itemBody appendString:itemFindContent];
 
 						for (Promotions *promo in fim.discounts) {
                             NSString *promotionsPath = [[NSBundle mainBundle] pathForResource:@"itemPromotionsRequest" ofType:@"xml"];
                             NSString *promotionsContent = [[NSString alloc] initWithContentsOfFile:promotionsPath encoding:NSUTF8StringEncoding error:nil];
+                            NSLog(@"Promo type %@",promo.promoTypeBenefit);
                             promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#type#" withValidString:promo.promoTypeBenefit];
                             promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#percentage#" withValidString:promo.promoDiscountPercent];
                             promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#description#" withValidString:promo.promoDescription];
@@ -198,16 +220,22 @@
 						}
                         NSString *itemBodyPath = [[NSBundle mainBundle] pathForResource:@"itemConstructorFindRequest" ofType:@"xml"];
                         NSString *itemBodyContent = [[NSString alloc] initWithContentsOfFile:itemBodyPath encoding:NSUTF8StringEncoding error:nil];
+                        NSLog(@"Bef1");
                         itemBodyContent = [itemBodyContent stringByReplacingXMLOcurrencesOfString:@"#product_body#" withValidString:itemBody];
+                        NSLog(@"AF1");
                         [xmlFormat appendString:itemBodyContent];
 					}
 				}
 
 			}
 		}
-		if ([par isKindOfClass:[NSString class]]) {
+		if ([par isKindOfClass:[NSString class]] || [par isKindOfClass:[NSNumber class]]) {
+            NSLog(@"Read Login Data");
+            NSLog(@"Par %@",par);
 			int index=[parameters indexOfObjectIdenticalTo:par];
+            NSLog(@"Index %i parameter %@",index,[params objectAtIndex:index]);
 			[xmlFormat appendFormat:@"<%@>%@</%@>",[params objectAtIndex:index],[parameters objectAtIndex:index],[params objectAtIndex:index]];
+            NSLog(@"XML data %@",xmlFormat);
 		}
      
 		// card space
@@ -229,6 +257,15 @@
             cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#plan_description#" withValidString:cardData.planDescription];
             cardDataContent = [cardDataContent stringByReplacingXMLOcurrencesOfString:@"#ammount#" withValidString:cardData.amountToPay];
             [xmlFormat appendString:cardDataContent];
+        }
+        if ([par isKindOfClass:[Contact class]]) {
+            NSLog(@"Read Contact");
+            Contact *contact=(Contact *) par;
+            NSString *contactDataPath = [[NSBundle mainBundle] pathForResource:@"contactDataRequest" ofType:@"xml"];
+            NSString *contactDataContent = [[NSString alloc] initWithContentsOfFile:contactDataPath encoding:NSUTF8StringEncoding error:nil];
+            contactDataContent = [contactDataContent stringByReplacingXMLOcurrencesOfString:@"#phone#" withValidString:contact.telephone];
+            contactDataContent = [contactDataContent stringByReplacingXMLOcurrencesOfString:@"#birthday#" withValidString:contact.birthday];
+            [xmlFormat appendString:contactDataContent];
         }
         //---------
 		if ([par isKindOfClass:[Seller class]])
@@ -353,7 +390,8 @@
 //		
 //	}
 	if (requestType==findRequest||requestType==consultSKURequest) {
-		NSArray *parameters=[NSArray arrayWithObjects:@"idProducto",@"precio",@"terminal",nil];
+		NSArray *parameters=[NSArray arrayWithObjects:@"idProducto",@"precio",@"terminal",@"garantiasActivadas",nil];
+        NSLog(@"Consult sku");
 		return parameters;
 
 	}

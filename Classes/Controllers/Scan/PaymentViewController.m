@@ -23,6 +23,7 @@
 #import "MesaDeRegalo.h"
 #import "RefundData.h"
 #import "LogoutParser.h"
+#import "ContactViewController.h"
 @implementation PaymentViewController
 
 @synthesize lblTitle;
@@ -207,13 +208,14 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 -(void)viewWillDisappear:(BOOL)animated
 {
 	DLog(@"viewwilldisappear payment");
-	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) hideTabBar];
+	//[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) hideTabBar];
 
 	[scanDevice removeDelegate:self];
 	scanDevice = nil;
-    [self.view endEditing:YES];
+    //[self.view endEditing:YES];
     [super viewWillDisappear:animated];
 }
+
 //
 //-(void)viewDidUnload
 //{
@@ -847,17 +849,28 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 //          return;
 //     }
      [amountReaderView removeFromSuperview];
+     if ([Session hasWarranties]) {
+          [self presentContactVC];
+     } else {
+          [self continueThePaymentProcess];
+     }
+}
+
+-(void)continueThePaymentProcess
+{
      //if cash
      if (cardType==4) {
           //start the payment with Cash and monedo abono
           [self authorization:nil];
+          NSLog(@"Autorize");
      }
      else{ //dilisa, externa, monedero
           //show the cardread
           [self showCardReadview];
+          NSLog(@"Show card");
      }
-
 }
+
 -(void) showAmountView
 {
      [[self view] addSubview:amountReaderView];
@@ -983,11 +996,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 	DLog(@"accountemployee %@",accountEmployee);
     
     SaleType sType=[Session getSaleType];
-
     if (sType==NORMAL_EMPLOYEE_TYPE||sType==NORMAL_CLIENT_TYPE)
     {    //Message Content
-        pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,@"true",nil];
-        [liverpoolRequest sendRequest:saleType forParameters:pars forRequestType:buyRequest2];
+         pars=[NSArray arrayWithObjects:[Tools popWarrantiesFromArray:productList],promoGroup,ca,seller,accountEmployee,@"true",contact,nil];
+         NSLog(@"Has warranties %@",[Session hasWarranties] ? @"YES" : @"NO");
+         [liverpoolRequest sendRequest:saleType forParameters:pars forRequestType:buyRequest2];
     }
     else if (sType==DULCERIA_CLIENT_TYPE)
     {
@@ -1042,6 +1055,15 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 
     //falta agregar el pago
 }
+
+-(void)presentContactVC
+{
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveContactNotification:) name:CONTACTINFOFILLEDUP_NOTIFICATION object:nil];
+     ContactViewController *contactVC=[[ContactViewController alloc] initWithNibName:@"ContactViewController" bundle:nil];
+     [contactVC.view setUserInteractionEnabled:YES];
+     [self presentViewController:contactVC animated:NO completion:nil];
+}
+
 -(NSString*) selectTypeOfSale
 {
     SaleType sType=[Session getSaleType];
@@ -1875,7 +1897,10 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 //////////////////////////////////////////////////////
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+     CGPoint locationPoint = [[touches anyObject] locationInView:self.view];
+     NSLog(@"Touch happend at location %f, %f",locationPoint.x,locationPoint.y);
 	[self.view endEditing:YES];
+     
 }
 
 //------------------------------------------------------
@@ -2001,6 +2026,15 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 	[textField resignFirstResponder];
 	
 	return YES;
+}
+
+-(void)didReceiveContactNotification:(NSNotification *)notification
+{
+     [[NSNotificationCenter defaultCenter] removeObserver:self name:CONTACTINFOFILLEDUP_NOTIFICATION object:nil];
+     NSDictionary *contactInfo = [notification userInfo];
+     contact = (Contact *)[contactInfo objectForKey:@"contact"];
+     NSLog(@"Contact info %@",contactInfo);
+     [self continueThePaymentProcess];
 }
 
 -(void) dealloc

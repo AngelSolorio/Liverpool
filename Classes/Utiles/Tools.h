@@ -97,5 +97,6 @@ UITextField *txtField;
 +(NSMutableArray*) removePagoFijoFromList:(NSMutableArray*)testArray;
 //Arrays inserts
 +(void) applyPromotionsToTicket:(NSMutableArray*) aPromotionList :(NSMutableArray*) aProductList;
++(NSMutableArray *)popWarrantiesFromArray:(NSArray *)productList;
 
 @end

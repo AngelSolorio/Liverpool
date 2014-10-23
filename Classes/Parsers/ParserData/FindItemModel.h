@@ -5,7 +5,7 @@
 
 
 #import <Foundation/Foundation.h>
-
+#import "Warranty.h"
 
 @interface FindItemModel : NSObject {
 
@@ -40,9 +40,10 @@
 @property (nonatomic, retain)	NSMutableArray	 *discounts;
 @property (nonatomic)			BOOL	  promo;
 @property (nonatomic)			BOOL	  itemForGift;
+@property (nonatomic, retain)   Warranty *warranty;
 
 -(NSString*) getXMLdescription;
-
+-(void)initWarranty;
 
 
 

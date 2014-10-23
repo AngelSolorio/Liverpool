@@ -5,20 +5,23 @@
 
 #import "FindItemModel.h"
 
-
 @implementation FindItemModel
 @synthesize barCode,brand,department,generic,itemCount,itemType,priceExtended;
-@synthesize lineType,price,description,discounts,promo,itemForGift,deliveryDate;
+@synthesize lineType,price,description,discounts,promo,itemForGift,deliveryDate,warranty;
 -(id)init
 {
 	if ((self = [super init])) {
+        NSLog(@"init find item model");
 		discounts=[[NSMutableArray alloc] init];
         itemCount=@"1";
         deliveryDate=@"";
         description=@"";
 	}
-	
 	return self;
+}
+
+-(void)initWarranty{
+    warranty = [[Warranty alloc] init];
 }
 -(NSString*) getXMLdescription
 {
@@ -41,6 +44,7 @@
 	[price release];
 	[description release];
 	[discounts release];
+    [warranty release];
 	[super dealloc];
 }
 @end

@@ -20,6 +20,7 @@
 	UIView						*productSearch;
 	UITextField					*txtBarcode;
 	UIButton					*btnRegister;
+    NSNumber                    *warrantiesEnabled;
 }
 @property (nonatomic,retain) FindItemModel *itemModel;
 @property (nonatomic,retain) IBOutlet ItemDetailViewController *itemDetailView;

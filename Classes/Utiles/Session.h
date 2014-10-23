@@ -54,7 +54,7 @@ BOOL isEmployeeSale;
 BOOL isTicketGift;
 BOOL addTip;
 BOOL hasDeliveryDate;
-
+BOOL hasWarranties;
 
 int		 indexPromoGroup;
 NSString *planId;
@@ -111,6 +111,8 @@ NSString *amexAffNumber;
 +(void) setBancomerAffNumber:(NSString*) aff;
 +(void) setAmexAffNumber:(NSString*) aff;
 
++(void)setHasWarranties:(BOOL)hasWarrty;
+
 +(NSString*)getPrinterName;
 +(NSString*)getUserName;
 +(NSString*)getPassword;
@@ -139,6 +141,7 @@ NSString *amexAffNumber;
 +(NSString*)getBancomerAffNumber;
 +(NSString*)getAmexAffNumber;
 
++(BOOL)hasWarranties;
 
 +(Status) getStatus;
 +(SaleType) getSaleType;
@@ -146,7 +149,6 @@ NSString *amexAffNumber;
 +(BOOL) getIsTicketGift;
 +(BOOL) getAddTip;
 +(BOOL) getHasDeliveryDate;
-
 +(void) resetValues;
 
 

@@ -9,6 +9,7 @@
 #import "Session.h"
 #import "Promotions.h"
 #import "Store.h"
+#import "Warranty.h"
 @implementation Tools
 
 #define NUMBERS @"0123456789."
@@ -789,26 +790,30 @@
 {
 	float total=0;
 	float totalDiscounts=0;
+    float totalWarranties=0;
 	
-	for (FindItemModel *item in productList) {
-		
-		for (Promotions *promo in item.discounts) {
-			
-			if (promo.promoType==3) //print promotion by key with %
-			{
-				totalDiscounts+=[promo.promoValue floatValue];
-			}
-			else if(promo.promoType==4) //print promotion by key with fixed amount
-			{
-				totalDiscounts+=[promo.promoDiscountPercent floatValue];
-			}
-			
-		}
-		
-		total+=[item.priceExtended floatValue];
-	}
+
+    for (id item in productList){
+        if ([item isKindOfClass:[FindItemModel class]]) {
+            FindItemModel *itemF =item;
+                for (Promotions *promo in itemF.discounts) {
+                    if (promo.promoType==3) //print promotion by key with %
+                    {
+                        totalDiscounts+=[promo.promoValue floatValue];
+                    }
+                    else if(promo.promoType==4) //print promotion by key with fixed amount
+                    {
+                        totalDiscounts+=[promo.promoDiscountPercent floatValue];
+                    }
+                }
+            total+=[itemF.priceExtended floatValue];
+        } else if ([item isKindOfClass:[Warranty class]]){
+            Warranty *itemW = item;
+            totalWarranties += [itemW.cost floatValue];
+        }
+    }
 	//calculate the total amount for ticket with discounts
-	total=total-totalDiscounts;
+	total=total-totalDiscounts+totalWarranties;
 	DLog(@"<<<<total>>>>>:%f, products:%@",total,productList);
 	NSString *totalS=[NSString stringWithFormat:@"%.02f",total];
 	return totalS;
@@ -1359,51 +1364,59 @@
 //return description;
 //}
 
-+(NSString*) calculateAmountToPayWithPromo:(NSArray*) productList :(NSMutableArray*) promos
++(NSString*) calculateAmountToPayWithPromo:(NSArray*)productList :(NSMutableArray*) promos
 {
 	float total=0;
 	float totalDiscounts=0;
-    
+    float totalWarranties=0;
     NSString *disc=@"";
 	
-	for (FindItemModel *item in productList) {
+	for (id item in productList) {
 		
-		for (Promotions *promoManual in item.discounts) {
-            
-			if (promoManual.promoType==3) //print promotion by key with %
-			{
-				totalDiscounts+=[promoManual.promoValue floatValue];
-                //totalDiscounts*=[[item itemCount] floatValue]; //fix 1.4.3.2 apply discounts to all the item quantity
+        if ([item isKindOfClass:[FindItemModel class]]) {
+            FindItemModel *itemF = item;
+            for (Promotions *promoManual in itemF.discounts) {
                 
-			}
-			else if(promoManual.promoType==4) //print promotion by key with fixed amount
-			{
-				totalDiscounts+=[promoManual.promoDiscountPercent floatValue];
-			}
-		}
-		//total+=[item.price floatValue];
-        total+=[item.priceExtended floatValue]; //calculate includes quantity of items
-     
-        DLog(@"item dept:%@",[item department]);
-        if (promos!=nil)
-            for (Promotions *promo in promos) {
-                if ([promo.promoTypeBenefit isEqualToString:@"percentageDiscount"]&&![[item department]isEqualToString:@"391"]) {
-                    disc=promo.promoDiscountPercent;
-                    DLog(@"DISC >>>>> %@",disc);
-                    
-                    DLog(@"<<<<porcentaje>>>>>:%f, products:%@",total,disc);
-                    NSString*porcentaje= [Tools calculateDiscountValuePercentage:[item priceExtended] :disc];
-                    totalDiscounts+=[porcentaje floatValue];
-                    //totalS=[Tools calculateRestValueAmount:totalS :porcentaje];
+                if (promoManual.promoType==3) //print promotion by key with %
+                {
+                    totalDiscounts+=[promoManual.promoValue floatValue];
+                    //totalDiscounts*=[[item itemCount] floatValue]; //fix 1.4.3.2 apply discounts to all the item quantity
                     
                 }
+                else if(promoManual.promoType==4) //print promotion by key with fixed amount
+                {
+                    totalDiscounts+=[promoManual.promoDiscountPercent floatValue];
+                }
             }
-        
-        total=total-totalDiscounts;
+            //total+=[item.price floatValue];
+            total+=[itemF.priceExtended floatValue]; //calculate includes quantity of items
+            
+            DLog(@"item dept:%@",[item department]);
+            if (promos!=nil)
+                for (Promotions *promo in promos) {
+                    if ([promo.promoTypeBenefit isEqualToString:@"percentageDiscount"]&&![[item department]isEqualToString:@"391"]) {
+                        disc=promo.promoDiscountPercent;
+                        DLog(@"DISC >>>>> %@",disc);
+                        
+                        DLog(@"<<<<porcentaje>>>>>:%f, products:%@",total,disc);
+                        NSString*porcentaje= [Tools calculateDiscountValuePercentage:[item priceExtended] :disc];
+                        totalDiscounts+=[porcentaje floatValue];
+                        //totalS=[Tools calculateRestValueAmount:totalS :porcentaje];
+                        
+                    }
+                }
+        } else if ([item isKindOfClass:[Warranty class]]){
+            Warranty *itemW = item;
+            totalWarranties += [itemW.cost floatValue];
+        }
+
+    }
+    
+        total=total-totalDiscounts+totalWarranties;
         totalDiscounts=0;
         DLog(@"<<<<total>>>>>:%f, products:%@",total,productList);
         
-	}
+	
     NSString *totalS=[NSString stringWithFormat:@"%.02f",total];
 
     //depto 391
@@ -1667,6 +1680,17 @@
     NSArray *subString=[value componentsSeparatedByString:@":"];
     
     return [subString objectAtIndex:1];
+}
+
++(NSMutableArray *)popWarrantiesFromArray:(NSArray *)productList
+{
+    NSMutableArray *pList = [[[NSMutableArray alloc] init] autorelease];
+    for(id item in productList){
+        if (![item isKindOfClass:[Warranty class]]) {
+            [pList addObject:item];
+        }
+    }
+    return pList;
 }
 
 @end
