@@ -437,7 +437,7 @@
         [products appendFormat:@"%@                 SECC %@\n ",item.description,item.department];
 		[products appendFormat:@"%@       %@          %@\n ",[self generateItemBarcodeWithZeros:item.barCode],[self getQuantityTicket:item],[self getExtendedPrice:item]];
         NSLog(@"Warranty for item %@",item.warranty);
-        if (item.warranty != NULL) {
+        if (item.warranty.warrantyId != NULL) {
             [products appendFormat:@"%@                 SECC %@\n ",item.warranty.detail,item.warranty.department];
             [products appendFormat:@"%@       %@          %@\n ",[item.warranty.sku substringFromIndex:8],[NSNumber numberWithInt:1],item.warranty.cost];
         }
@@ -2684,8 +2684,11 @@
         [products appendFormat:@"%@                 SECC %@\n ",item.description,item.department];
         [products appendFormat:@"%@       %@          %@\n ",[self generateItemBarcodeWithZeros:item.barCode],[self getQuantityTicket:item],[self getExtendedPrice:item]];
         
+        if (item.warranty.warrantyId != NULL) {
+
             [products appendFormat:@"%@                 SECC %@\n ",item.warranty.detail,item.warranty.department];
             [products appendFormat:@"%@       %@          %@\n ",[item.warranty.sku substringFromIndex:8],[NSNumber numberWithInt:1],item.warranty.cost];
+        }
         
         float baseAmount=0;
         for (Promotions *promo in item.discounts) {

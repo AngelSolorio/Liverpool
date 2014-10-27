@@ -8,4 +8,4 @@
     <cantidad>#quantity#</cantidad>
     <precioExtendido>#extended_price#</precioExtendido>
     <fechaEntrega>#delivery_date#</fechaEntrega>
-    <garantia>#warranty_body#</garantia>
+    <garantia>#warranty_flag#</garantia>

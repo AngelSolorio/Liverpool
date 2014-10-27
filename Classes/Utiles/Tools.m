@@ -1369,6 +1369,7 @@
 	float total=0;
 	float totalDiscounts=0;
     float totalWarranties=0;
+    float totalDiscountsW=0;
     NSString *disc=@"";
 	
 	for (id item in productList) {
@@ -1408,11 +1409,24 @@
         } else if ([item isKindOfClass:[Warranty class]]){
             Warranty *itemW = item;
             totalWarranties += [itemW.cost floatValue];
+            if (promos!=nil)
+                for (Promotions *promo in promos) {
+                    if ([promo.promoTypeBenefit isEqualToString:@"percentageDiscount"]&&![[item department]isEqualToString:@"391"]) {
+                        disc=promo.promoDiscountPercent;
+                        DLog(@"DISC >>>>> %@",disc);
+                        
+                        DLog(@"<<<<porcentaje>>>>>:%f, products:%@",total,disc);
+                        NSString*porcentaje= [Tools calculateDiscountValuePercentage:[itemW cost] :disc];
+                        totalDiscountsW+=[porcentaje floatValue];
+                        //totalS=[Tools calculateRestValueAmount:totalS :porcentaje];
+                        
+                    }
+                }
         }
 
     }
     
-        total=total-totalDiscounts+totalWarranties;
+        total=total-totalDiscounts-totalDiscountsW+totalWarranties;
         totalDiscounts=0;
         DLog(@"<<<<total>>>>>:%f, products:%@",total,productList);
         

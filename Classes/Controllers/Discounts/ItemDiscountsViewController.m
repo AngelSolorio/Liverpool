@@ -590,7 +590,7 @@ numberOfRowsInSection:(NSInteger)section {
         }
     }
     NSLog(@"Product list %@",pList);
-	NSArray *pars=[NSArray arrayWithObjects:pList,seller,accountEmployee,nil];
+	NSArray *pars=[NSArray arrayWithObjects:productList,seller,accountEmployee,nil];
 	[liverPoolRequest sendRequest:@"ticketTotalize" forParameters:pars forRequestType:totalizeRequest]; //cambiar a localized string
 	[liverPoolRequest release];
 	[seller release];

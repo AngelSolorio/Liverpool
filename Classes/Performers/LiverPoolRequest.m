@@ -186,45 +186,69 @@
 		if ([par isKindOfClass:[NSArray class]]){
 			if ([((NSArray*)par) count]>0 ) {
 				NSObject* obj=[((NSArray*)par) objectAtIndex:0];
-				if ([obj isKindOfClass:[FindItemModel class]]) {
-                    NSLog(@"Read item model");
-
-					for (FindItemModel* fim in (NSArray*) par) {
+                
+                
+                for(id item in (NSArray *)par){
+                    if ([item isKindOfClass:[FindItemModel class]]) {
+                        FindItemModel *itemF = item;
+                        NSLog(@"Read item model");
+                            NSMutableString *itemBody = [[[NSMutableString alloc] init] autorelease];
+                            NSString *itemFindPath = [[NSBundle mainBundle] pathForResource:@"itemBodyFindRequest" ofType:@"xml"];
+                            NSString *itemFindContent = [[NSString alloc] initWithContentsOfFile:itemFindPath encoding:NSUTF8StringEncoding error:nil];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#product_id#" withValidString:itemF.barCode];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#category#" withValidString:itemF.department];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#price#" withValidString:itemF.price];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#description#" withValidString:[itemF getXMLdescription]];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#line_type#" withValidString:itemF.lineType];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#promotion#" withValidString:itemF.promo?@"true":@"false"];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#gift#" withValidString:itemF.itemForGift?@"true":@"false"];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#quantity#" withValidString:itemF.itemCount];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#extended_price#" withValidString:itemF.priceExtended];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#delivery_date#" withValidString:itemF.deliveryDate];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#warranty_flag#" withValidString:@""];
+                            NSLog(@"Find item content %@",itemFindContent);
+                            [itemBody appendString:itemFindContent];
+                            
+                            for (Promotions *promo in itemF.discounts) {
+                                NSString *promotionsPath = [[NSBundle mainBundle] pathForResource:@"itemPromotionsRequest" ofType:@"xml"];
+                                NSString *promotionsContent = [[NSString alloc] initWithContentsOfFile:promotionsPath encoding:NSUTF8StringEncoding error:nil];
+                                NSLog(@"Promo type %@",promo.promoTypeBenefit);
+                                promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#type#" withValidString:promo.promoTypeBenefit];
+                                promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#percentage#" withValidString:promo.promoDiscountPercent];
+                                promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#description#" withValidString:promo.promoDescription];
+                                promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#term#" withValidString:promo.promoInstallmentSelected];
+                                promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#id_plan#" withValidString:promo.planId];
+                                [itemBody appendString:promotionsContent];
+                            }
+                            NSString *itemBodyPath = [[NSBundle mainBundle] pathForResource:@"itemConstructorFindRequest" ofType:@"xml"];
+                            NSString *itemBodyContent = [[NSString alloc] initWithContentsOfFile:itemBodyPath encoding:NSUTF8StringEncoding error:nil];
+                            itemBodyContent = [itemBodyContent stringByReplacingXMLOcurrencesOfString:@"#product_body#" withValidString:itemBody];
+                            [xmlFormat appendString:itemBodyContent];
+                    } else if ([item isKindOfClass:[Warranty class]]){
+                        NSLog(@"Read warranty");
+                        Warranty *itemW = item;
                         NSMutableString *itemBody = [[[NSMutableString alloc] init] autorelease];
                         NSString *itemFindPath = [[NSBundle mainBundle] pathForResource:@"itemBodyFindRequest" ofType:@"xml"];
                         NSString *itemFindContent = [[NSString alloc] initWithContentsOfFile:itemFindPath encoding:NSUTF8StringEncoding error:nil];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#product_id#" withValidString:fim.barCode];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#category#" withValidString:fim.department];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#price#" withValidString:fim.price];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#description#" withValidString:[fim getXMLdescription]];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#line_type#" withValidString:fim.lineType];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#promotion#" withValidString:fim.promo?@"true":@"false"];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#gift#" withValidString:fim.itemForGift?@"true":@"false"];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#quantity#" withValidString:fim.itemCount];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#extended_price#" withValidString:fim.priceExtended];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#delivery_date#" withValidString:fim.deliveryDate];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#warranty_body#" withValidString:[self createXMLForWarranty:fim]];
-                        NSLog(@"Find item content %@",itemFindContent);
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#product_id#" withValidString:itemW.sku];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#category#" withValidString:itemW.department];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#price#" withValidString:itemW.cost];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#description#" withValidString:itemW.detail];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#line_type#" withValidString:@""];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#promotion#" withValidString:@"false"];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#gift#" withValidString:@"false"];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#quantity#" withValidString:@"1"];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#extended_price#" withValidString:itemW.cost];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#delivery_date#" withValidString:@""];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#warranty_flag#" withValidString:@"true"];
+                        NSLog(@"Find warranty content %@",itemFindContent);
                         [itemBody appendString:itemFindContent];
-
-						for (Promotions *promo in fim.discounts) {
-                            NSString *promotionsPath = [[NSBundle mainBundle] pathForResource:@"itemPromotionsRequest" ofType:@"xml"];
-                            NSString *promotionsContent = [[NSString alloc] initWithContentsOfFile:promotionsPath encoding:NSUTF8StringEncoding error:nil];
-                            NSLog(@"Promo type %@",promo.promoTypeBenefit);
-                            promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#type#" withValidString:promo.promoTypeBenefit];
-                            promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#percentage#" withValidString:promo.promoDiscountPercent];
-                            promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#description#" withValidString:promo.promoDescription];
-                            promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#term#" withValidString:promo.promoInstallmentSelected];
-                            promotionsContent = [promotionsContent stringByReplacingXMLOcurrencesOfString:@"#id_plan#" withValidString:promo.planId];
-                            [itemBody appendString:promotionsContent];
-						}
                         NSString *itemBodyPath = [[NSBundle mainBundle] pathForResource:@"itemConstructorFindRequest" ofType:@"xml"];
                         NSString *itemBodyContent = [[NSString alloc] initWithContentsOfFile:itemBodyPath encoding:NSUTF8StringEncoding error:nil];
                         itemBodyContent = [itemBodyContent stringByReplacingXMLOcurrencesOfString:@"#product_body#" withValidString:itemBody];
                         [xmlFormat appendString:itemBodyContent];
-					}
-				}
-
+                    }
+                }
 			}
 		}
 		if ([par isKindOfClass:[NSString class]] || [par isKindOfClass:[NSNumber class]]) {

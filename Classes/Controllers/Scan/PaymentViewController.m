@@ -208,11 +208,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 -(void)viewWillDisappear:(BOOL)animated
 {
 	DLog(@"viewwilldisappear payment");
-	//[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) hideTabBar];
+	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) hideTabBar];
 
 	[scanDevice removeDelegate:self];
 	scanDevice = nil;
-    //[self.view endEditing:YES];
+    [self.view endEditing:YES];
     [super viewWillDisappear:animated];
 }
 
@@ -997,7 +997,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
     SaleType sType=[Session getSaleType];
     if (sType==NORMAL_EMPLOYEE_TYPE||sType==NORMAL_CLIENT_TYPE)
     {    //Message Content
-         pars=[NSArray arrayWithObjects:[Tools popWarrantiesFromArray:productList],promoGroup,ca,seller,accountEmployee,@"true",contact,nil];
+         pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,@"true",contact,nil];
          NSLog(@"Has warranties %@",[Session hasWarranties] ? @"YES" : @"NO");
          [liverpoolRequest sendRequest:saleType forParameters:pars forRequestType:buyRequest2];
     }

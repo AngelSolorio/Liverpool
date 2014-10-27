@@ -644,12 +644,13 @@ titleForFooterInSection:(NSInteger)section
     if ([Session getSaleType]!=FOOD_CLIENT_TYPE) 
         if (selectedItemIndex==indexPath.row) {
             //detail item
-            FindItemModel *item=[productList objectAtIndex:indexPath.row];
-            [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) detailItemScreen:item];
-            
-            NSIndexPath *indexP=[NSIndexPath indexPathWithIndex:selectedItemIndex];
-            [tableView deselectRowAtIndexPath:indexP animated:YES];
-            selectedItemIndex=-1;
+            id item=[productList objectAtIndex:indexPath.row];
+            if ([item isKindOfClass:[FindItemModel class]]) {
+                [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) detailItemScreen:item];
+                NSIndexPath *indexP=[NSIndexPath indexPathWithIndex:selectedItemIndex];
+                [tableView deselectRowAtIndexPath:indexP animated:YES];
+                selectedItemIndex=-1;
+            }
         }
 	selectedItemIndex=indexPath.row;
 }

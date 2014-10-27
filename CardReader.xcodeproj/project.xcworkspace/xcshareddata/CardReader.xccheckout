@@ -5,36 +5,63 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>59A3531D-4635-455B-BFD2-058883655928</string>
+	<string>62B75AE9-2772-416E-99F1-B358FC18544E</string>
 	<key>IDESourceControlProjectName</key>
 	<string>CardReader</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>11842587-2CE8-448F-B1A4-805D37B3FEF6</key>
-		<string>https://github.com/AngelSolorio/Liverpool.git</string>
+		<key>194E7A740B6B3143367263C10EAB8894AE6347F1</key>
+		<string>https://glpos.plan.io/svn/glpos</string>
+		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
+		<string>https://glpos.plan.io/svn/glpos/CardReaderLiverpool</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>CardReader.xcodeproj/project.xcworkspace</string>
+	<string>CardReader.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>11842587-2CE8-448F-B1A4-805D37B3FEF6</key>
+		<key>194E7A740B6B3143367263C10EAB8894AE6347F1</key>
 		<string>../..</string>
+		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
+		<string>../.. VillaHermosa</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>194E7A740B6B3143367263C10EAB8894AE6347F1</key>
+		<string>https://glpos.plan.io/svn/glpos</string>
+		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
+		<string>https://glpos.plan.io/svn/glpos</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/AngelSolorio/Liverpool.git</string>
+	<string>https://glpos.plan.io/svn/glpos/CardReaderLiverpool/CardReader.xcodeproj</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>11842587-2CE8-448F-B1A4-805D37B3FEF6</string>
+	<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
+			<string>public.vcs.subversion</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>11842587-2CE8-448F-B1A4-805D37B3FEF6</string>
+			<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Liverpool</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Liverpool</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>66989A6C-2247-4E75-A4FB-D9484830B6FA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Liverpool VillaHermosa</string>
 		</dict>
 	</array>
 </dict>
