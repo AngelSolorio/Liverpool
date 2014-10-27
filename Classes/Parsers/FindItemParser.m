@@ -74,7 +74,6 @@
 	currentElement=elementName;
     NSLog(@"Current Element %@",currentElement);
     if([currentElement isEqualToString:WARRANTIES]) {
-        [self.findItemModel initWarranty];
         warrantyFound = YES;
         warranty = [[Warranty alloc] init];
         [self.warrantiesList addObject:warranty];
@@ -139,6 +138,8 @@
             warranty.sku = [[string copy] autorelease];
         } else if ([currentElement isEqualToString:PERCENTAGE]){
             warranty.percentage = [[string copy] autorelease];
+        } else if ([currentElement isEqualToString:DEPARTMENT]){
+            warranty.department = [[string copy] autorelease];
         }
     }	
 }

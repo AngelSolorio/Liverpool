@@ -6,7 +6,7 @@
 
 
 @implementation PaymentResponse
-@synthesize 	hasDeliveryDate,isError,message,docto,monthlyInterest,bank,balanceToPay,authorizationCode;
+@synthesize 	hasDeliveryDate,isError,message,docto,monthlyInterest,bank,balanceToPay,authorizationCode, referenceWarranty;
 @synthesize     deliveryType,deliveryNumber,orderDeliveryDate,monederoBalance,RFCCode,cashReturned,totalToPay,amountPayed;
 @synthesize     totalAmountWithdrawn,hasEglobalCards;
 
@@ -27,6 +27,7 @@
 	[docto release],docto=nil;
 	[balanceToPay release], balanceToPay=nil;
 	[authorizationCode release], authorizationCode=nil;
+    [authorizationCode release], authorizationCode=nil;
 	[super dealloc];
 }
 

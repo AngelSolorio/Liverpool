@@ -1507,7 +1507,7 @@ titleForFooterInSection:(NSInteger)section
         case NORMAL_EMPLOYEE_TYPE:
         case DULCERIA_CLIENT_TYPE:
             [productList removeObjectAtIndex:indexPath.row];
-            
+            [Session verifyWarrantyPresence:productList];
             [aTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
                               withRowAnimation:UITableViewRowAnimationFade];
             //[self turnOffEditing];
@@ -1609,17 +1609,15 @@ titleForFooterInSection:(NSInteger)section
 #pragma mark - WarrantySelectionDelegate
 -(void)didReceiveSelectedWarranty:(NSNotification *)notification
 {
-    [Session setHasWarranties:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WARRANTYSELECTED_NOTIFICATION object:nil];
     NSLog(@"Did receive notification warranty");
     FindItemModel *findItem = [productList lastObject];
     Warranty *warranty = (Warranty *)[notification object];
     findItem.warranty = warranty;
     NSLog(@"Find item war %@",findItem.warranty.cost);
-    //if ([self isValidSKU:warranty]) {
-        [productList addObject:warranty];
-        [self setDataIntoArray:nil];
-    //}
+    [productList addObject:warranty];
+    [Session verifyWarrantyPresence:productList];
+    [self setDataIntoArray:nil];
 }
 @end
 

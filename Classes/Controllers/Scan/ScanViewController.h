@@ -31,7 +31,6 @@
 	float                         total;
 	int							selectedItemIndex;
     NSNumber                    *warrantiesEnabled;
-    BOOL                        hasWarranties;
     
 }
 

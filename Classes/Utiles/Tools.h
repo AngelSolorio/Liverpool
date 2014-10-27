@@ -79,7 +79,7 @@ UITextField *txtField;
 +(NSString*) calculateDiscountValueAmount:(NSString*) aPrice :(NSString*)amountDiscount;
 +(void)		 calculateSuccesiveDiscounts:(FindItemModel *) item;
 +(NSString*) calculateQuantityExtendedPrice:(FindItemModel *) item;
-
++(NSString *)getCurrentDate;
 //+(NSString*) calculateDiscountValueForTicket:(NSMutableArray*) promos;
 
 //Arrays searchs

@@ -162,7 +162,7 @@
 -(NSString *)createXMLForWarranty:(FindItemModel *)fim{
     NSString *warrantyPath = [[NSBundle mainBundle] pathForResource:@"warrantyBodyRequest" ofType:@"xml"];
     NSString *warrantyContent = [[NSString alloc] initWithContentsOfFile:warrantyPath encoding:NSUTF8StringEncoding error:nil];
-
+    NSLog(@"Fim warranty %@",fim.warranty);
     if (fim.warranty == NULL) {
         warrantyContent = NULL;
         NSLog(@"Warranty is null");
@@ -188,9 +188,9 @@
 				NSObject* obj=[((NSArray*)par) objectAtIndex:0];
 				if ([obj isKindOfClass:[FindItemModel class]]) {
                     NSLog(@"Read item model");
-                    NSMutableString *itemBody = [[[NSMutableString alloc] init] autorelease];
 
 					for (FindItemModel* fim in (NSArray*) par) {
+                        NSMutableString *itemBody = [[[NSMutableString alloc] init] autorelease];
                         NSString *itemFindPath = [[NSBundle mainBundle] pathForResource:@"itemBodyFindRequest" ofType:@"xml"];
                         NSString *itemFindContent = [[NSString alloc] initWithContentsOfFile:itemFindPath encoding:NSUTF8StringEncoding error:nil];
                         itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#product_id#" withValidString:fim.barCode];
@@ -220,9 +220,7 @@
 						}
                         NSString *itemBodyPath = [[NSBundle mainBundle] pathForResource:@"itemConstructorFindRequest" ofType:@"xml"];
                         NSString *itemBodyContent = [[NSString alloc] initWithContentsOfFile:itemBodyPath encoding:NSUTF8StringEncoding error:nil];
-                        NSLog(@"Bef1");
                         itemBodyContent = [itemBodyContent stringByReplacingXMLOcurrencesOfString:@"#product_body#" withValidString:itemBody];
-                        NSLog(@"AF1");
                         [xmlFormat appendString:itemBodyContent];
 					}
 				}

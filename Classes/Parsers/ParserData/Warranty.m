@@ -14,6 +14,7 @@
 @synthesize percentage = _percentage;
 @synthesize sku = _sku;
 @synthesize warrantyId = _warrantyId;
+@synthesize department = _department;
 
 - (void)dealloc {
     [self.cost release];
@@ -21,6 +22,7 @@
     [self.percentage release];
     [self.sku release];
     [self.warrantyId release];
+    [self.department release];
     [super dealloc];
 }
 @end

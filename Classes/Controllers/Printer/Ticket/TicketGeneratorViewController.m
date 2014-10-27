@@ -408,6 +408,12 @@
 	//Center aligment
     [saleData appendString:@"\x1b\x61\x01"];
     [saleData appendFormat:@"ATENDIO: %@\n \n",[Session getUName]];
+    if([Session hasWarranties]) {
+        [saleData appendString:@"\x1b\x61\x00"]; //Left aligment
+        [saleData appendString:@"\x1b\x45\x01"]; //Bold Text ON
+        [saleData appendFormat:@"REFERENCIA: %@\n\n\n",[Session getReferenceWarranty]];
+        [saleData appendString:@"\x1b\x45\x00"]; //Bold Text Off
+    }
     [saleData appendFormat:@"%@",[self getOrderNumber]];
 	//Left aligment
     [saleData appendString:@"\x1b\x61\x00"];
@@ -419,9 +425,9 @@
 	NSString *monthlyPaymentMessage=@"";
 	NSString *installmentSelected=@"";
 	NSMutableString *products=[[[NSMutableString alloc] init] autorelease];
-	
+    float totalWarranties = 0;
 	for (FindItemModel *item in productList) {
-        
+        if(item.warranty != NULL) totalWarranties += [item.warranty.cost floatValue];
         [Tools calculateSuccesiveDiscounts:item];
 
         //backup lines no muestran cantidad
@@ -430,6 +436,11 @@
 		
         [products appendFormat:@"%@                 SECC %@\n ",item.description,item.department];
 		[products appendFormat:@"%@       %@          %@\n ",[self generateItemBarcodeWithZeros:item.barCode],[self getQuantityTicket:item],[self getExtendedPrice:item]];
+        NSLog(@"Warranty for item %@",item.warranty);
+        if (item.warranty != NULL) {
+            [products appendFormat:@"%@                 SECC %@\n ",item.warranty.detail,item.warranty.department];
+            [products appendFormat:@"%@       %@          %@\n ",[item.warranty.sku substringFromIndex:8],[NSNumber numberWithInt:1],item.warranty.cost];
+        }
         
         float baseAmount=0;
 		for (Promotions *promo in item.discounts) {
@@ -501,11 +512,11 @@
         
 		[products appendString:@"\n"];
 		
-		total+=[item.priceExtended floatValue];
+        total+=[item.priceExtended floatValue];
 	}
 	//calculate the total amount for ticket with discounts
-	total=total-totalDiscounts;
-	
+    total = [Session hasWarranties] ? total-totalDiscounts+totalWarranties : total-totalDiscounts;
+    
 	NSMutableString *footer=[[[NSMutableString alloc] init] autorelease];
 	
     //Refund Data - print the refund data
@@ -838,6 +849,8 @@
     [self printSOMSVoucher];
     //when the ticket string is complete and on queue start the printing
     [self printComprobant];
+    //Print the extended warranty ticket if it has some warranties
+    if([Session hasWarranties]) [self printExtendedWarrantyTicket];
     
 
 }
@@ -1043,6 +1056,7 @@
     }
     
 }
+
 /*
 -(void) printTicketAirtime:(NSString*) phoneNumber
 {
@@ -2616,6 +2630,153 @@
 //    // e.g. self.myOutlet = nil;
 //}
 
+#pragma mark - Extended Warranty Ticket
+
+-(void)printExtendedWarrantyTicket
+{
+    NSMutableString *header=[[[NSMutableString alloc] init] autorelease];
+    
+    //tab settings
+    //[header appendString:@"\x1b\x44\x06\x16\x26\x36\x46\x56\x66\x76\x00"];
+    
+    //LOGO
+    //Center aligment
+    
+    [header appendString:@"\x1b\x61\x01"];
+    
+    //HEX	1B 66 00 0C
+    [header appendString:@"\t\x1b\x66\x00\x0c\n\n"];
+
+    NSMutableString *subHeader=[[[NSMutableString alloc] init] autorelease];
+    //Center aligment
+    [subHeader appendString:@"\x1b\x61\x01"];
+    [subHeader appendString:[Session getStoreAddress]];
+    [subHeader appendString:@"\n\n\n"];
+    [subHeader appendString:@"PROGRAMA DE GARANTIA EXTENDIDA"];
+    [subHeader appendString:@"\n\n\n"];
+    NSMutableString *saleData = [[[NSMutableString alloc] init] autorelease];
+
+    [saleData appendString:@"    TERM        DOCTO       TDA       VEND\n"];
+    [saleData appendFormat:@"    %@         %@        %@       %@\n\n",[Session getTerminal],[Session getDocTo],[Session getIdStore],[Session getUserName]];
+    //Left aligment
+    [saleData appendString:@"\x1b\x61\x00"];
+    [saleData appendFormat:@"ATENDIO: %@\n \n",[Session getUName]];
+    
+    [saleData appendString:@"\x1b\x45\x01"]; //Bold Text ON
+    [saleData appendFormat:@"REFERENCIA: %@\n\n\n",[Session getReferenceWarranty]];
+    [saleData appendString:@"\x1b\x45\x00"]; //Bold Text Off
+    
+    float total=0;
+    float totalDiscounts=0;
+    float totalAbonoMonedero=0;
+    NSString *monthlyPaymentMessage=@"";
+    NSString *installmentSelected=@"";
+    NSMutableString *products=[[[NSMutableString alloc] init] autorelease];
+
+    for (FindItemModel *item in productList) {
+        
+        [Tools calculateSuccesiveDiscounts:item];
+        
+        //backup lines no muestran cantidad
+        //[products appendFormat:@"%@\t         SECC %@\n ",item.description,item.department];
+        //[products appendFormat:@"%@         %@\n ",[self generateItemBarcodeWithZeros:item.barCode],[self getExtendedPrice:item]];
+        
+        [products appendFormat:@"%@                 SECC %@\n ",item.description,item.department];
+        [products appendFormat:@"%@       %@          %@\n ",[self generateItemBarcodeWithZeros:item.barCode],[self getQuantityTicket:item],[self getExtendedPrice:item]];
+        
+            [products appendFormat:@"%@                 SECC %@\n ",item.warranty.detail,item.warranty.department];
+            [products appendFormat:@"%@       %@          %@\n ",[item.warranty.sku substringFromIndex:8],[NSNumber numberWithInt:1],item.warranty.cost];
+        
+        float baseAmount=0;
+        for (Promotions *promo in item.discounts) {
+            
+            //if the promotion is payment plan print the format . else print the format of percentage discount
+            if ([promo.promoInstallment length]>0||promo.promoType==1)  //print promotion installmetn
+            {
+                DLog(@"promoValue----%@ %@",[promo promoValue],[promo promoDiscountPercent]);
+                DLog(@"promoBaseAmount ---%@",[promo promoBaseAmount]);
+                //                [products appendFormat:@"     %@ %@ \n",[Tools calculateDiscountValuePercentage:[promo promoBaseAmount] :promo.promoDiscountPercent] ,[promo promoDescription]];
+                //                    totalAbonoMonedero+=[[Tools calculateDiscountValuePercentage:[promo promoBaseAmount] :promo.promoDiscountPercent] floatValue];
+                
+                baseAmount=[[item priceExtended]floatValue]-baseAmount;
+                DLog(@"BASE AMOUNT Rest %f",baseAmount);
+                
+                NSString *baseAmountS=[NSString stringWithFormat:@"%.02f",baseAmount];
+                //[products appendFormat:@"     %@ %@ \n",[Tools calculateDiscountValuePercentage:baseAmountS :promo.promoDiscountPercent] ,[promo promoDescription]];
+                [products appendFormat:@"     %@ MONEDERO %%%@ \n",[Tools calculateDiscountValuePercentage:baseAmountS :promo.promoDiscountPercent] ,[promo promoDiscountPercent]];
+                
+                totalAbonoMonedero+=[[Tools calculateDiscountValuePercentage:baseAmountS :promo.promoDiscountPercent] floatValue];
+                
+            }
+            else
+            {	if (promo.promoType==3) //print promotion by key with %
+            {
+                //promo.promoValue=[Tools calculateDiscountValuePercentage:[item price]:[promo promoDiscountPercent]];
+                
+                [products appendFormat:@"     %@ %@%%      %@- \n",[promo promoDescription],[promo promoDiscountPercent],[Tools amountCurrencyFormat:[promo promoValue]]];
+                totalDiscounts+=[promo.promoValue floatValue];
+                baseAmount+=[[promo promoValue]floatValue];
+                DLog(@"BASE AMOUNT %f",baseAmount);
+                
+                
+            }
+            else if(promo.promoType==4) //print promotion by key with fixed amount
+            {
+                [products appendFormat:@"     %@ $%@      %@- \n",[promo promoDescription],[promo promoDiscountPercent],[Tools amountCurrencyFormat:[promo promoDiscountPercent]]];
+                totalDiscounts+=[promo.promoDiscountPercent floatValue];
+                baseAmount+=[[promo promoDiscountPercent]floatValue];
+                DLog(@"BASE AMOUNT %f",baseAmount);
+                
+                
+            }else //if([promo.promoTypeBenefit isEqualToString:@"PaymentPlanBenefit"])
+            {
+                //installmentSelected=[promo.promoInstallmentSelected copy];
+                //DLog(@"promoinstallment selected ticket:%@",promo.promoInstallmentSelected);
+                //[products appendFormat:@"\t%@ %@ \n",installmentSelected,[promo promoDescription]];
+                //[products appendFormat:@"\t %@ \n",[promo promoDescription]];
+                for (Card* cards in cardArray) {
+                    DLog(@"TICKETPRING planid @@@@ %@",[cards planId]);
+                    if( [[cards planId]length]>=1) //patch 1.4.5 rev1
+                    {
+                        installmentSelected=[cards.planInstallment copy];
+                        //DLog(@"promoinstallment selected ticket:%@",promo.promoInstallmentSelected);
+                        //[products appendFormat:@"     %@ %@ \n",installmentSelected,[cards planDescription]];
+                        [products appendString:[self getInstallmentsText:cards]];
+                        //[products appendFormat:@"\t %@ \n",[promo promoDescription]];
+                        [installmentSelected release];
+                    }
+                }
+                
+                
+            }
+            }
+        }
+        //soms deliveryDate
+        [products appendString:[self getItemDeliveryDate:[item deliveryDate]]];
+        
+        
+        [products appendString:@"\n"];
+        
+        total+=[item.priceExtended floatValue];
+    }
+    NSMutableString *footer = [[[NSMutableString alloc] init] autorelease];
+    //Left aligment
+    [footer appendString:@"\x1b\x61\x00"];
+    [footer appendString:@"\n \n \n"];
+    [footer appendString:[NSString stringWithFormat:@"VENTA DE COMPRA GTIA.  %@",[self generateDate]]];
+    [footer appendString:@"\n\n\n"];
+    
+    //////////////////////put the ticke in the printer QUEUE/////////////////////////////////////
+    NSString *ticketString=[[NSString alloc] init];
+    ticketString = [ticketString stringByAppendingString:header];
+    ticketString=[ticketString stringByAppendingString:subHeader];
+    ticketString=[ticketString stringByAppendingString:saleData];
+    ticketString=[ticketString stringByAppendingString:products];
+    ticketString=[ticketString stringByAppendingString:footer];
+    [PrinterQueue addPrintToQueue:ticketString];
+}
+
+
 - (void)dealloc {
 	//productList =nil;
     [RFCCode release];
@@ -2624,6 +2785,5 @@
 	[txtAProducts release];
     [super dealloc];
 }
-
 
 @end

@@ -836,20 +836,19 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 
 - (IBAction)okCardReadAction:(id)sender {
      
-     if ([self validatePaymentData])
-     {
-          [self authorization:nil];
-          [self removeAllSubviews:nil];
+     if ([self validatePaymentData]) {
+          if ([Session hasWarranties] && contact == NULL) {
+               [self presentContactVC];
+          } else {
+               [self authorization:nil];
+               [self removeAllSubviews:nil];
+          }
      }
 
 }
 - (IBAction)okAmountBtn:(id)sender {
-//     if (![self isValidAmountValue]&&cardType!=50) {
-//          [Tools displayAlert:@"Error" message:@"Monto invalido"];
-//          return;
-//     }
      [amountReaderView removeFromSuperview];
-     if ([Session hasWarranties]) {
+     if ([Session hasWarranties] && contact == NULL) {
           [self presentContactVC];
      } else {
           [self continueThePaymentProcess];
@@ -1131,6 +1130,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
                
 
                [Session setDocTo:payParser.payment.docto];
+               if([Session hasWarranties]) [Session setReferenceWarranty:payParser.payment.referenceWarranty];
                [lblBalance setText:[Tools amountCurrencyFormatFloat:balance]];
                
                [productListWithPromos release];
@@ -1184,6 +1184,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
                [self resetLabels];
                
                [Session setDocTo:payParser.payment.docto];
+               if([Session hasWarranties]) [Session setReferenceWarranty:payParser.payment.referenceWarranty];
               // [Session setMonthyInterest:payParser.payment.monthlyInterest];
                //[Session setBank:payParser.payment.bank];
                [lblTitle setText:[[payParser payment] totalToPay]];
@@ -1553,6 +1554,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 			[barBtnSMS setEnabled:YES];
 			
 			[Session setDocTo:payParser.payment.docto];
+             if([Session hasWarranties]) [Session setReferenceWarranty:payParser.payment.referenceWarranty];
 			//[Session setMonthyInterest:payParser.payment.monthlyInterest];
 			//[Session setBank:payParser.payment.bank];
 			[btnPromo setHidden:YES];
@@ -1744,6 +1746,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
      TicketGeneratorViewController *tk=[[TicketGeneratorViewController alloc]init];
      tk.printGiftTicket=[Session getIsTicketGift];
      [tk setProductList:productListWithPromos];
+     NSLog(@"PRoduct list with promos %@",productListWithPromos);
      [tk setPaymentType:cardType];
      [tk setSOMSDeliveryType:somsDeliveryType];
      [tk setSomsOrderDeliveryDate:somsDeliveryDate];

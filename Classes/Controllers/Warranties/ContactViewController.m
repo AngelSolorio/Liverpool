@@ -17,10 +17,7 @@
     [super viewDidLoad];
     UITapGestureRecognizer *dismissKeyboardTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
     [self.view addGestureRecognizer:dismissKeyboardTap];
-    for(UIView *view in self.view.subviews){
-        NSLog(@"View of kind %@",[view class]);
-    }
-    NSLog(@"X %f Y %f W %f H %f",self.view.frame.origin.x,self.view.frame.origin.y, self.view.frame.size.width,self.view.frame.size.height);
+    [self registerForKeyboardNotifications];
     // Do any additional setup after loading the view.
 }
 -(void)dismissKeyboard {
@@ -60,6 +57,41 @@
         error = [[UIAlertView alloc] initWithTitle:@"Error" message:[contact completeErrors] delegate:self cancelButtonTitle:nil otherButtonTitles:@"Aceptar", nil];
         [error show];
     }
+}
+
+#pragma mark - Keyboard Notifications Methods
+
+- (void)registerForKeyboardNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+}
+
+- (void)keyboardWasShown:(NSNotification*)aNotification {
+    // the keyboard is showing so resize the table's height
+    NSTimeInterval animationDuration = [[[aNotification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGRect frame = self.view.frame;
+    frame.origin.y = -100;
+    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    self.view.frame = frame;
+    [UIView commitAnimations];
+}
+
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
+    // the keyboard is hiding reset the table's height
+    NSTimeInterval animationDuration = [[[aNotification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGRect frame = self.view.frame;
+    frame.origin.y = 20;
+    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    self.view.frame = frame;
+    [UIView commitAnimations];
 }
 
 - (void)dealloc {
