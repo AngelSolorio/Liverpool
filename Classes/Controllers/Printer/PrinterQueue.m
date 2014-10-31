@@ -122,6 +122,8 @@
         [Session setMonederoAmount:@""];
 		[Session setMonederoPercent:@""];
 		[Session setMonederoNumber:@""];
+        NSLog(@"Before going to login");
+        [Session verifyWarrantyPresence:nil];
         [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) loginScreen];
         timerIsOn=NO;
         DLog(@"PERFORM RESULT OK");

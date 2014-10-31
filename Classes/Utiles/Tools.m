@@ -806,10 +806,10 @@
                         totalDiscounts+=[promo.promoDiscountPercent floatValue];
                     }
                 }
-            total+=[itemF.priceExtended floatValue];
+            total+=([itemF.price floatValue]*[[itemF itemCount] floatValue]);
         } else if ([item isKindOfClass:[Warranty class]]){
             Warranty *itemW = item;
-            totalWarranties += [itemW.cost floatValue];
+            totalWarranties += ([itemW.cost floatValue] *[itemW.quantity floatValue]);
         }
     }
 	//calculate the total amount for ticket with discounts
@@ -1367,32 +1367,33 @@
 +(NSString*) calculateAmountToPayWithPromo:(NSArray*)productList :(NSMutableArray*) promos
 {
 	float total=0;
-	float totalDiscounts=0;
+    float totalItems = 0;
+	float itemPromoDiscounts=0;
+    float itemKeyDiscounts = 0;
     float totalWarranties=0;
-    float totalDiscountsW=0;
+    float warrantyPromoDiscountsW=0;
     NSString *disc=@"";
 	
 	for (id item in productList) {
 		
         if ([item isKindOfClass:[FindItemModel class]]) {
             FindItemModel *itemF = item;
+            totalItems = [itemF.priceExtended floatValue]; //calculate includes quantity of items
+
             for (Promotions *promoManual in itemF.discounts) {
-                
                 if (promoManual.promoType==3) //print promotion by key with %
                 {
-                    totalDiscounts+=[promoManual.promoValue floatValue];
+                    itemKeyDiscounts+=[promoManual.promoValue floatValue];
                     //totalDiscounts*=[[item itemCount] floatValue]; //fix 1.4.3.2 apply discounts to all the item quantity
-                    
                 }
                 else if(promoManual.promoType==4) //print promotion by key with fixed amount
                 {
-                    totalDiscounts+=[promoManual.promoDiscountPercent floatValue];
+                    itemKeyDiscounts+=[promoManual.promoDiscountPercent floatValue];
                 }
             }
             //total+=[item.price floatValue];
-            total+=[itemF.priceExtended floatValue]; //calculate includes quantity of items
+            totalItems = totalItems - itemKeyDiscounts;
             
-            DLog(@"item dept:%@",[item department]);
             if (promos!=nil)
                 for (Promotions *promo in promos) {
                     if ([promo.promoTypeBenefit isEqualToString:@"percentageDiscount"]&&![[item department]isEqualToString:@"391"]) {
@@ -1400,36 +1401,45 @@
                         DLog(@"DISC >>>>> %@",disc);
                         
                         DLog(@"<<<<porcentaje>>>>>:%f, products:%@",total,disc);
-                        NSString*porcentaje= [Tools calculateDiscountValuePercentage:[item priceExtended] :disc];
-                        totalDiscounts+=[porcentaje floatValue];
-                        //totalS=[Tools calculateRestValueAmount:totalS :porcentaje];
-                        
+                        NSString *pricef = [NSString stringWithFormat:@"%f",totalItems];
+                        NSString*porcentaje= [Tools calculateDiscountValuePercentage:pricef :disc];
+                        itemPromoDiscounts+=[porcentaje floatValue];
                     }
                 }
+            totalItems = totalItems - itemPromoDiscounts;
         } else if ([item isKindOfClass:[Warranty class]]){
             Warranty *itemW = item;
-            totalWarranties += [itemW.cost floatValue];
+            totalWarranties = [itemW.quantity floatValue]*[itemW.cost floatValue];
+            
             if (promos!=nil)
                 for (Promotions *promo in promos) {
                     if ([promo.promoTypeBenefit isEqualToString:@"percentageDiscount"]&&![[item department]isEqualToString:@"391"]) {
-                        disc=promo.promoDiscountPercent;
-                        DLog(@"DISC >>>>> %@",disc);
-                        
-                        DLog(@"<<<<porcentaje>>>>>:%f, products:%@",total,disc);
-                        NSString*porcentaje= [Tools calculateDiscountValuePercentage:[itemW cost] :disc];
-                        totalDiscountsW+=[porcentaje floatValue];
-                        //totalS=[Tools calculateRestValueAmount:totalS :porcentaje];
-                        
+                        NSLog(@"Is employee sale? %i",[Session getIsEmployeeSale]);
+
+                        if (![promo.promoDescription isEqualToString:@"descuento casa"]) {
+                            disc=promo.promoDiscountPercent;
+                            DLog(@"DISC >>>>> %@",disc);
+                            
+                            DLog(@"<<<<porcentaje>>>>>:%f, products:%@",total,disc);
+                            NSLog(@"Type benefit %@ %@ %i",promo.promoTypeBenefit,promo.promoDescription, promo.promoType);
+                            NSString *priceP = [NSString stringWithFormat:@"%f",totalWarranties];
+                            NSString*porcentaje= [Tools calculateDiscountValuePercentage:priceP :disc];
+                            warrantyPromoDiscountsW += [porcentaje floatValue];
+                            //totalS=[Tools calculateRestValueAmount:totalS :porcentaje];
+                        }
                     }
                 }
         }
-
+        total += totalItems+totalWarranties-warrantyPromoDiscountsW;
+        itemPromoDiscounts = 0;
+        itemKeyDiscounts = 0;
+        totalItems = 0;
+        totalWarranties =0;
+        warrantyPromoDiscountsW = 0;
     }
     
-        total=total-totalDiscounts-totalDiscountsW+totalWarranties;
-        totalDiscounts=0;
+
         DLog(@"<<<<total>>>>>:%f, products:%@",total,productList);
-        
 	
     NSString *totalS=[NSString stringWithFormat:@"%.02f",total];
 

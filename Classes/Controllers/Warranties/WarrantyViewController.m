@@ -12,6 +12,8 @@
 @interface WarrantyViewController ()
 @property (retain, nonatomic) IBOutlet UIButton *denyButton;
 @property (retain, nonatomic) Warranty *selectedWarranty;
+@property (retain, nonatomic) IBOutlet UILabel *productLabel;
+
 @end
 
 @implementation WarrantyViewController
@@ -20,10 +22,13 @@
 @synthesize registerButton = _registerButton;
 @synthesize denyButton = _denyButton;
 @synthesize selectedWarranty = _selectedWarranty;
+@synthesize productLabel = _productLabel;
+@synthesize productName = _productName;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.registerButton.userInteractionEnabled = NO;
+    self.productLabel.text = self.productName;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -130,6 +135,7 @@
     [_registerButton release];
     [_denyButton release];
     [_registerButton release];
+    [_productLabel release];
     [super dealloc];
 }
 @end

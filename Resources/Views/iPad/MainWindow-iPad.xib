@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UIApplication">
@@ -14,7 +14,7 @@
         <customObject id="26" customClass="CardReaderAppDelegate">
             <connections>
                 <outlet property="aNavigationControllerConfig" destination="20" id="61"/>
-                <outlet property="aNavigationControllerLogin" destination="93" id="97"/>
+                <outlet property="aNavigationControllerLogin" destination="93" id="2Ki-yq-qWx"/>
                 <outlet property="aNavigationControllerRecord" destination="15" id="60"/>
                 <outlet property="aTabBar" destination="6" id="101"/>
                 <outlet property="aTabBarController" destination="5" id="28"/>
@@ -31,10 +31,7 @@
         <tabBarController id="5" customClass="CustomUITabBarController">
             <extendedEdge key="edgesForExtendedLayout"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
-            <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
-            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-            <nil key="simulatedDestinationMetrics"/>
             <tabBar key="tabBar" contentMode="scaleToFill" id="6" customClass="CustomUITabBar">
                 <rect key="frame" x="0.0" y="975" width="768" height="49"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -44,11 +41,6 @@
                 <navigationController id="4">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" title="Scan" image="POS.png" id="14"/>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-                    <nil key="simulatedDestinationMetrics"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="11">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.60392156860000001" green="0.01176470588" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -60,11 +52,6 @@
                             <navigationItem key="navigationItem" title="Root View Controller" id="13">
                                 <barButtonItem key="rightBarButtonItem" image="Disconnected.png" width="50" id="51" userLabel="Bar Button Item"/>
                             </navigationItem>
-                            <nil key="simulatedStatusBarMetrics"/>
-                            <nil key="simulatedTopBarMetrics"/>
-                            <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-                            <nil key="simulatedDestinationMetrics"/>
                             <connections>
                                 <outlet property="barButtonRight" destination="51" id="56"/>
                             </connections>
@@ -74,11 +61,6 @@
                 <navigationController id="20">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" title="Conf" image="Configuration.png" id="21"/>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-                    <nil key="simulatedDestinationMetrics"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="22">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.60392156860000001" green="0.01176470588" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -87,22 +69,12 @@
                         <viewController id="98" customClass="ConfigurationAuthorization">
                             <extendedEdge key="edgesForExtendedLayout"/>
                             <navigationItem key="navigationItem" title="Item" id="99"/>
-                            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
-                            <nil key="simulatedTopBarMetrics"/>
-                            <nil key="simulatedBottomBarMetrics"/>
-                            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-                            <nil key="simulatedDestinationMetrics"/>
                         </viewController>
                     </viewControllers>
                 </navigationController>
                 <navigationController id="15">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <tabBarItem key="tabBarItem" title="Salir" image="logout.png" id="16"/>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-                    <nil key="simulatedDestinationMetrics"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="17">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.60392156860000001" green="0.01176470588" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -111,11 +83,6 @@
                         <viewController id="18">
                             <extendedEdge key="edgesForExtendedLayout"/>
                             <navigationItem key="navigationItem" title="Root View Controller" id="19"/>
-                            <nil key="simulatedStatusBarMetrics"/>
-                            <nil key="simulatedTopBarMetrics"/>
-                            <nil key="simulatedBottomBarMetrics"/>
-                            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-                            <nil key="simulatedDestinationMetrics"/>
                         </viewController>
                     </viewControllers>
                 </navigationController>
@@ -124,13 +91,9 @@
                 <outlet property="delegate" destination="26" id="48"/>
             </connections>
         </tabBarController>
-        <navigationController title="Login" navigationBarHidden="YES" id="93" customClass="CustomUINavigationController">
+        <navigationController title="Login" navigationBarHidden="YES" id="93" customClass="PbNavigationController">
             <extendedEdge key="edgesForExtendedLayout"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
-            <nil key="simulatedTopBarMetrics"/>
-            <nil key="simulatedBottomBarMetrics"/>
-            <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-            <nil key="simulatedDestinationMetrics"/>
             <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="95">
                 <autoresizingMask key="autoresizingMask"/>
                 <color key="tintColor" red="0.60392156860000001" green="0.01176470588" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -139,11 +102,6 @@
                 <viewController id="94" customClass="LoginViewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Root View Controller" id="96"/>
-                    <nil key="simulatedStatusBarMetrics"/>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
-                    <nil key="simulatedDestinationMetrics"/>
                 </viewController>
             </viewControllers>
         </navigationController>
@@ -154,4 +112,9 @@
         <image name="POS.png" width="32" height="32"/>
         <image name="logout.png" width="32" height="32"/>
     </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
 </document>

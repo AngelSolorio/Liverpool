@@ -10,10 +10,11 @@
 #import "PaymentViewController.h"
 #import "LineaSDK.h"
 #import "BatteryTabView.h"
+#import "PbNavigationController.h"
 @class LoginViewController;
 @interface CardReaderAppDelegate : UIResponder
 								   <UIApplicationDelegate, 
-								   UITabBarDelegate/*,CBCentralManagerDelegate*/>
+								   UITabBarDelegate,UINavigationControllerDelegate>
 {
 	UIWindow               *window;
 	UITabBarController     *aTabBarController;
@@ -21,7 +22,7 @@
 	//UINavigationController *aNavigationControllerScan;
 	UINavigationController *aNavigationControllerRecord;
 	UINavigationController *aNavigationControllerConfig;
-	UINavigationController *aNavigationControllerLogin;
+	PbNavigationController *aNavigationControllerLogin;
 	LoginViewController	   *loginViewController;
 	UIViewController	   *transactionMenu;
 	ScanViewController		*scanViewController;
@@ -35,7 +36,7 @@
 //@property (retain, nonatomic) IBOutlet UINavigationController *aNavigationControllerScan;
 @property (retain, nonatomic) IBOutlet UINavigationController *aNavigationControllerRecord;
 @property (retain, nonatomic) IBOutlet UINavigationController *aNavigationControllerConfig;
-@property (retain, nonatomic) IBOutlet UINavigationController *aNavigationControllerLogin;
+@property (retain, nonatomic) IBOutlet PbNavigationController *aNavigationControllerLogin;
 @property (assign, nonatomic)			LoginViewController		*loginViewController;
 @property (assign, nonatomic)			UIViewController		*transactionMenu;
 @property (assign, nonatomic) IBOutlet 	ScanViewController		*scanViewController;
@@ -44,7 +45,7 @@
 
 -(void) loginScreen;
 -(void) mainScreen;
--(void)somsScreen:(NSMutableArray *)productList;
+-(void)somsScreen:(NSMutableArray *)productList andSomsGroup:(id)somsGroup;
 -(void) transactionMenuScreen;
 -(void) saleOptionScreen;
 -(void) removeSaleOptionScreen;
@@ -59,7 +60,7 @@
 -(void) removeInstallmentsScreen;
 -(void) promoScreen:(Promotions*) promo;
 -(void) removePromoScreen;
--(void) detailItemScreen:(FindItemModel*) itemModel;
+-(void) detailItemScreen:(id) itemModel;
 -(void) itemDiscountScreen:(FindItemModel*) itemModel;
 -(void) itemPromotionScreen:(NSMutableArray*) aProductList;
 -(void) removeDiscountScreen;

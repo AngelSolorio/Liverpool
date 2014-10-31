@@ -102,6 +102,9 @@
 		04E3318D1836D21100D53976 /* bg6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 04E331871836D21100D53976 /* bg6.jpg */; };
 		04EC15E217F62213001D86AC /* WithdrawDataList.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EC15E117F62213001D86AC /* WithdrawDataList.m */; };
 		263D7A9C19F8578700A1D49A /* contactDataRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = 263D7A9B19F8578700A1D49A /* contactDataRequest.xml */; };
+		2687391A1A012E0600A7029E /* PbNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 268739191A012E0600A7029E /* PbNavigationController.m */; };
+		2687391D1A01A94A00A7029E /* SomsGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 2687391C1A01A94A00A7029E /* SomsGroup.m */; };
+		268739261A029A6100A7029E /* WarrantyGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 268739251A029A6100A7029E /* WarrantyGroup.m */; };
 		26A79EDC19F56423008E9284 /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A79EDB19F56423008E9284 /* ContactViewController.m */; };
 		26A79EE019F5746E008E9284 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A79EDF19F5746E008E9284 /* Contact.m */; };
 		26BAF98319F16B64004C5E60 /* warrantyBodyRequest.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26BAF98119F16B64004C5E60 /* warrantyBodyRequest.xml */; };
@@ -397,6 +400,12 @@
 		04EC15E017F62213001D86AC /* WithdrawDataList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WithdrawDataList.h; path = Parsers/ParserData/WithdrawDataList.h; sourceTree = "<group>"; };
 		04EC15E117F62213001D86AC /* WithdrawDataList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WithdrawDataList.m; path = Parsers/ParserData/WithdrawDataList.m; sourceTree = "<group>"; };
 		263D7A9B19F8578700A1D49A /* contactDataRequest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = contactDataRequest.xml; sourceTree = "<group>"; };
+		268739181A012E0600A7029E /* PbNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PbNavigationController.h; sourceTree = "<group>"; };
+		268739191A012E0600A7029E /* PbNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PbNavigationController.m; sourceTree = "<group>"; };
+		2687391B1A01A94A00A7029E /* SomsGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SomsGroup.h; path = Parsers/ParserData/SomsGroup.h; sourceTree = "<group>"; };
+		2687391C1A01A94A00A7029E /* SomsGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SomsGroup.m; path = Parsers/ParserData/SomsGroup.m; sourceTree = "<group>"; };
+		268739241A029A6100A7029E /* WarrantyGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WarrantyGroup.h; path = Parsers/ParserData/WarrantyGroup.h; sourceTree = "<group>"; };
+		268739251A029A6100A7029E /* WarrantyGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WarrantyGroup.m; path = Parsers/ParserData/WarrantyGroup.m; sourceTree = "<group>"; };
 		26A79EDA19F56423008E9284 /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactViewController.h; path = Classes/Controllers/Warranties/ContactViewController.h; sourceTree = SOURCE_ROOT; };
 		26A79EDB19F56423008E9284 /* ContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactViewController.m; path = Classes/Controllers/Warranties/ContactViewController.m; sourceTree = SOURCE_ROOT; };
 		26A79EDE19F5746E008E9284 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Contact.h; path = Classes/Controllers/Warranties/Contact.h; sourceTree = SOURCE_ROOT; };
@@ -1052,6 +1061,10 @@
 				ABD7A3B4189318BD0092EEB9 /* AffiliationCodes.m */,
 				26C7EC9A19EEC3FC003D6248 /* Warranty.h */,
 				26C7EC9B19EEC3FC003D6248 /* Warranty.m */,
+				2687391B1A01A94A00A7029E /* SomsGroup.h */,
+				2687391C1A01A94A00A7029E /* SomsGroup.m */,
+				268739241A029A6100A7029E /* WarrantyGroup.h */,
+				268739251A029A6100A7029E /* WarrantyGroup.m */,
 			);
 			name = ParserData;
 			sourceTree = "<group>";
@@ -1328,6 +1341,8 @@
 			children = (
 				DF18F94413CDFE7900001371 /* CardReaderAppDelegate.h */,
 				DF18F94513CDFE7900001371 /* CardReaderAppDelegate.m */,
+				268739181A012E0600A7029E /* PbNavigationController.h */,
+				268739191A012E0600A7029E /* PbNavigationController.m */,
 				DF18F97113CE08C100001371 /* Records */,
 			);
 			path = Delegates;
@@ -1839,6 +1854,7 @@
 				DF18F97613CE098A00001371 /* ScanViewController.m in Sources */,
 				DF15DC6713D3CCDA009E7438 /* PaymentViewController.m in Sources */,
 				C07E09B813D4EC2D0022B68C /* Tools.m in Sources */,
+				268739261A029A6100A7029E /* WarrantyGroup.m in Sources */,
 				8574734613F1B6F0004407C4 /* LiverPoolRequest.m in Sources */,
 				4D4AB8E613F321A100F00CD7 /* FindItemParser.m in Sources */,
 				859E21C013FC3D1D00D0A0F9 /* LoginViewController.m in Sources */,
@@ -1860,6 +1876,7 @@
 				4DDC2DAB141FFB0C00E53FF4 /* AirtimeViewController.m in Sources */,
 				4DDC2DC41420100E00E53FF4 /* AmountsViewController.m in Sources */,
 				4D4CF737142255C2006A11D8 /* ItemDiscountsViewController.m in Sources */,
+				2687391A1A012E0600A7029E /* PbNavigationController.m in Sources */,
 				4D4CF73A142255D0006A11D8 /* LoginParser.m in Sources */,
 				4D4CF74F14225653006A11D8 /* PromotionInstallmentViewController.m in Sources */,
 				4D9FD70E142A4F9500E4BF62 /* Card.m in Sources */,
@@ -1902,6 +1919,7 @@
 				C5C7E9A5190AF3D000792588 /* StarBitmap.m in Sources */,
 				04519C4515A34CD8009841F7 /* SaleOptionsViewController.m in Sources */,
 				045CE90115C050FB0082FD96 /* MesaDeRegalo.m in Sources */,
+				2687391D1A01A94A00A7029E /* SomsGroup.m in Sources */,
 				04994D3115CAC89A008CE2FE /* CloseTerminalParser.m in Sources */,
 				04994D3515CAC99C008CE2FE /* CloseTerminalData.m in Sources */,
 				04994D3915CAD69B008CE2FE /* CloseTerminalViewController.m in Sources */,
@@ -2063,7 +2081,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Angel Solorio (JP2JTXGBEE)";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (

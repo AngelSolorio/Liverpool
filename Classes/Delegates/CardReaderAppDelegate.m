@@ -58,10 +58,17 @@
     [aTabBarController setSelectedIndex:0];
 }
 
--(void)somsScreen:(NSMutableArray *)productList {
-    [aNavigationControllerLogin pushViewController:aTabBarController animated:YES];
-    [scanViewController reloadTableViewWithData:productList];
-    [aTabBarController setSelectedIndex:0];
+-(void)somsScreen:(NSMutableArray *)productList andSomsGroup:(id)somsGroup {
+    
+    SomsGroup *sGroup= (SomsGroup *)somsGroup;
+    [aNavigationControllerLogin pushViewController:aTabBarController animated:YES completion:^{
+        NSLog(@"Completed");
+        [scanViewController setProdList:productList];
+        [scanViewController setSomsGroup:sGroup];
+        //[scanViewController reloadTableViewWithData:productList andWarranties:warranties];
+        [aTabBarController setSelectedIndex:0];
+    }];
+
 }
 
 -(void) ticketGiftScreen{
@@ -182,7 +189,7 @@
 	[transactionMenu release];
 
 }
--(void) detailItemScreen:(FindItemModel*) itemModel
+-(void) detailItemScreen:(id) itemModel
 {
 	//[aNavigationControllerLogin popViewControllerAnimated:YES];
 	ItemDetailViewController *itemDetailViewController=[[ItemDetailViewController alloc] initWithNibName:@"ItemDetailViewController" bundle:nil];

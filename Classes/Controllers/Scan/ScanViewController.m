@@ -30,6 +30,7 @@
 @synthesize aTableView;
 @synthesize txtSKUManual;
 @synthesize lblSKU;
+@synthesize somsGroup;
 
 typedef enum {
 	
@@ -333,8 +334,7 @@ typedef enum {
 	scanDevice = [Linea sharedDevice];
     [scanDevice setDelegate:self];
 	[scanDevice connect];
-    
-
+    if(self.somsGroup.warrantyList.count>0 && (saleType == SOMS_CLIENT_TYPE || saleType ==SOMS_EMPLOYEE_TYPE)) [self reloadTableViewWithData:self.prodList andSomsGroup:somsGroup];
     
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -480,36 +480,40 @@ typedef enum {
 	[aLabelQuantity release];
     
     if ([item isKindOfClass:[FindItemModel class]]) {
-        if ([item itemForGift]) {
-            UIImageView *aImageView=[[UIImageView alloc]initWithFrame:
-                                     CGRectMake(cell.frame.size.width - 320,
-                                                cell.frame.size.height - 34,
-                                                30, 30)];
-            [aImageView setImage:[UIImage imageNamed:@"boxgift.png"]];
-            [[cell contentView] addSubview:aImageView];
-            [aImageView release];
-            
-            
-        }
-        [aLabelName setText:[item description]];
-        [aLabelDescription setText:[item barCode]];
-        [aLabel setText:[Tools amountCurrencyFormat:[item price]]];
+        FindItemModel *itemF = (FindItemModel *)item;
+        if ([itemF itemForGift]) [self addGiftinCell:cell];
+        [aLabelName setText:[itemF description]];
+        [aLabelDescription setText:[itemF barCode]];
+        
+        [aLabel setText:[Tools amountCurrencyFormat:[NSString stringWithFormat:@"%f",[[item price] floatValue]*[[item itemCount] floatValue]]]];
         NSLog(@"Disconut");
         [aLabelDiscount setText:[self displayPromotionDiscount:indexPath.row]];
-        [aLabelQuantity setText:[Tools maskQuantityFormat:[item itemCount]]];
+        [aLabelQuantity setText:[Tools maskQuantityFormat:[itemF itemCount]]];
     } else if ([item isKindOfClass:[Warranty class]]){
-        NSLog(@"Warranty found");
+        Warranty *itemW = (Warranty *)item;
+        NSLog(@"Warranty found %@ and gift %@",itemW,[itemW warrantyForGift] ? @"YES" : @"NO");
+        if([itemW warrantyForGift]) [self addGiftinCell:cell];
         [aLabelName setText:[item detail]];
         [aLabelDescription setText:[item sku]];
-        [aLabel setText:[Tools amountCurrencyFormat:[item cost]]];
-        [aLabelQuantity setText:[Tools maskQuantityFormat:@"1"]];
+        [aLabel setText:[Tools amountCurrencyFormat:[NSString stringWithFormat:@"%f",[itemW.quantity floatValue]*[itemW.cost floatValue]]]];
+        [aLabelQuantity setText:[Tools maskQuantityFormat:itemW.quantity]];
     }
 
 	
 	return cell;
 }
+
+-(void)addGiftinCell:(UITableViewCell *)cell
+{
+    UIImageView *aImageView=[[UIImageView alloc]initWithFrame: CGRectMake(cell.frame.size.width - 320, cell.frame.size.height - 34, 30, 30)];
+    [aImageView setImage:[UIImage imageNamed:@"boxgift.png"]];
+    [[cell contentView] addSubview:aImageView];
+    [aImageView release];
+        
+}
+
 -(NSString*) displayPromotionDiscount:(int) index
-{   NSLog(@"Display promotions");
+{
 	NSString *discountAmount=@"";
 	FindItemModel *item=[productList objectAtIndex:index];
 	if (item.promo&&[item.discounts count]>0) {
@@ -603,6 +607,7 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 		total += [[item price] floatValue];
 		
 	}*/
+    NSLog(@"product list pay :%@",productList);
 	total=[[Tools calculateAmountToPay:productList] floatValue];
     
 	UILabel *lblTotal=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 22)];
@@ -645,12 +650,10 @@ titleForFooterInSection:(NSInteger)section
         if (selectedItemIndex==indexPath.row) {
             //detail item
             id item=[productList objectAtIndex:indexPath.row];
-            if ([item isKindOfClass:[FindItemModel class]]) {
                 [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) detailItemScreen:item];
                 NSIndexPath *indexP=[NSIndexPath indexPathWithIndex:selectedItemIndex];
                 [tableView deselectRowAtIndexPath:indexP animated:YES];
                 selectedItemIndex=-1;
-            }
         }
 	selectedItemIndex=indexPath.row;
 }
@@ -921,6 +924,7 @@ titleForFooterInSection:(NSInteger)section
 	[pay setProductList:productList];
 	[pay changeTotalValue:total];*/
 	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) itemPromotionScreen:productList];
+    NSLog(@"Product listll %@",productList);
 
 }
 
@@ -1198,14 +1202,30 @@ titleForFooterInSection:(NSInteger)section
 	}
 }
 
--(void)reloadTableViewWithData:(NSMutableArray *)pList
+-(void)reloadTableViewWithData:(NSMutableArray *)pList andSomsGroup:(SomsGroup *)sGroup
 {
     productList = pList;
     [aTableView reloadData];
 	if ([productList count] >= 1) {
 		[btnPay setHidden:NO];
 	}
-    NSLog(@"Hdden %i",btnPay.hidden);
+    
+    NSLog(@"Warranties are: %@",sGroup.warrantyList);
+    if ([sGroup.warrantyList count]>0) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveSelectedWarranty:) name:WARRANTYSELECTED_NOTIFICATION object:nil];
+        for(WarrantyGroup *warranties in sGroup.warrantyList){
+            somsItemModel = warranties.findItemModel;
+            WarrantyViewController *warrantyVC = [[WarrantyViewController alloc] initWithNibName:@"WarrantyViewController" bundle:nil];
+            [warrantyVC setWarrantiesList:warranties.warranties];
+            [warrantyVC setProductName:somsItemModel.description];
+            [self presentViewController:warrantyVC animated:NO completion:^{
+                [sGroup.warrantyList removeObject:warranties];
+            }];
+            break;
+            NSLog(@"Break");
+        }
+    }
+        NSLog(@"Hdden %i",btnPay.hidden);
 }
 
 
@@ -1249,12 +1269,14 @@ titleForFooterInSection:(NSInteger)section
    // [scanDevice connect];
     [scanDevice addDelegate:self];
 
-    if (requestType==findRequest)
+    if (requestType==findRequest) {
         [self findItemRequestParsing:receivedData];
-    if (requestType==SOMSListRequest) 
+    } else if (requestType==SOMSListRequest){
         [self somsItemsRequestParsing:receivedData];
-    if (requestType==restaurantListRequest)
+    } else if (requestType==restaurantListRequest){
+        NSLog(@"Parse comanda");
         [self comandaItemsRequestParsing:receivedData];
+    }
 }
 
 -(void) findItemRequestParsing:(NSData*) data
@@ -1278,6 +1300,7 @@ titleForFooterInSection:(NSInteger)section
         if ([findParser.warrantiesList count]>0) {
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveSelectedWarranty:) name:WARRANTYSELECTED_NOTIFICATION object:nil];
             WarrantyViewController *warrantyVC = [[WarrantyViewController alloc] initWithNibName:@"WarrantyViewController" bundle:nil];
+            [warrantyVC setProductName:findItemModel.description];
             [warrantyVC setWarrantiesList:findParser.warrantiesList];
             [self presentViewController:warrantyVC animated:YES completion:nil];
         }
@@ -1295,17 +1318,16 @@ titleForFooterInSection:(NSInteger)section
 
 -(void) somsItemsRequestParsing:(NSData*) data
 {
+    NSLog(@"SOms parser");
     SomsListParser *somsParser=[[SomsListParser alloc] init];
 	[somsParser startParser:data];
 	
 	//if the transaction was succesful.
 	if ([somsParser getStateOfMessage]) {
 		[productList release];
-		DLog (@"sucess sale payparser */*/*/*");
 		productList=[somsParser returnSaleProductList];
         [productList retain];
 		DLog (@"sucess sale payparser productListWithPromos %@",productList);
-        
         
         for (FindItemModel *item  in productList) {
             [self setDataIntoArray:item];
@@ -1315,7 +1337,6 @@ titleForFooterInSection:(NSInteger)section
 	{
         [scanDevice removeDelegate:self];
 		[Tools displayAlert:@"Error" message:[somsParser getMessageResponse] withDelegate:self];
-	
 	}
 	[aTableView reloadData];
 	[Tools stopActivityIndicator];
@@ -1612,9 +1633,18 @@ titleForFooterInSection:(NSInteger)section
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WARRANTYSELECTED_NOTIFICATION object:nil];
     NSLog(@"Did receive notification warranty");
-    FindItemModel *findItem = [productList lastObject];
+    FindItemModel *findItem;
     Warranty *warranty = (Warranty *)[notification object];
+
+    if (saleType == SOMS_CLIENT_TYPE || saleType ==SOMS_EMPLOYEE_TYPE) {
+        findItem = somsItemModel;
+        NSLog(@"Soms find item model %@",findItem);
+    } else {
+        findItem = [productList lastObject];
+        warranty.quantity = @"1";
+    }
     findItem.warranty = warranty;
+    
     NSLog(@"Find item war %@",findItem.warranty.cost);
     [productList addObject:warranty];
     [Session verifyWarrantyPresence:productList];

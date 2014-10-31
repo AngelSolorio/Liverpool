@@ -15,6 +15,8 @@
 @synthesize sku = _sku;
 @synthesize warrantyId = _warrantyId;
 @synthesize department = _department;
+@synthesize quantity = _quantity;
+@synthesize warrantyForGift = _warrantyForGift;
 
 - (void)dealloc {
     [self.cost release];

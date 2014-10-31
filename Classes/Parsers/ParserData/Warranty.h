@@ -16,4 +16,6 @@
 @property (nonatomic, retain) NSString *sku;
 @property (nonatomic, retain) NSString *warrantyId;
 @property (nonatomic, retain) NSString *department;
+@property (nonatomic, retain) NSString *quantity;
+@property (nonatomic)         BOOL      warrantyForGift;
 @end

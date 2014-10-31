@@ -13,4 +13,5 @@
 @property (retain, nonatomic) IBOutlet UITableView *warrantiesTableView;
 @property (retain, nonatomic) IBOutlet UIButton *registerButton;
 @property (retain, nonatomic) NSMutableArray *warrantiesList;
+@property (retain, nonatomic) NSString *productName;
 @end

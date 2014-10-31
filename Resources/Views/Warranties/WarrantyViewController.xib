@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WarrantyViewController">
             <connections>
                 <outlet property="denyButton" destination="l6B-oV-Ekp" id="t8K-QQ-U8E"/>
+                <outlet property="productLabel" destination="0Yp-BH-Keu" id="80b-Rj-baJ"/>
                 <outlet property="registerButton" destination="sRd-jc-YG7" id="fqc-HR-CPX"/>
                 <outlet property="view" destination="iN0-l3-epB" id="GiE-OK-bnF"/>
                 <outlet property="warrantiesTableView" destination="JwI-3c-6Pt" id="l8Z-BV-7nz"/>
@@ -47,13 +48,19 @@
                     </items>
                 </navigationBar>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="¿Desea adquirir el programa?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9vM-Dp-BJY">
-                    <rect key="frame" x="38" y="45" width="245" height="30"/>
+                    <rect key="frame" x="38" y="80" width="245" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Yp-BH-Keu">
+                    <rect key="frame" x="60" y="51" width="200" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="JwI-3c-6Pt">
-                    <rect key="frame" x="0.0" y="78" width="320" height="338"/>
+                    <rect key="frame" x="0.0" y="110" width="320" height="306"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="5oQ-vM-Svv"/>

@@ -1003,7 +1003,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
     }
     else if (sType==DULCERIA_CLIENT_TYPE)
     {
-         pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,@"false",nil];
+         pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,@"false", nil];
          [liverpoolRequest sendRequest:saleType forParameters:pars forRequestType:buyRequest2];
     }
     else if (sType==SOMS_EMPLOYEE_TYPE||sType==SOMS_CLIENT_TYPE)
@@ -1013,7 +1013,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
         MesaDeRegalo *regalo=[[MesaDeRegalo alloc]init];
         NSString *somsOrder=[Session getSomsOrder];
         //Message Content for SOMS SALE
-        pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,regalo,somsOrder,nil];
+        pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,regalo,somsOrder,contact,nil];
         [liverpoolRequest sendRequest:saleType forParameters:pars forRequestType:SOMSRequest];
         
         [regalo release];

@@ -8,6 +8,7 @@
 #import "LineaSDK.h"
 #import "LiverPoolRequest.h"
 #import "GenericCancelViewController.h"
+#import "SomsGroup.h"
 
 @class FindItemModel;
 @interface ScanViewController : UIViewController 
@@ -26,11 +27,13 @@
 	Linea                       *scanDevice;
 
 	NSMutableArray				*productList;
+    NSMutableArray              *warrantyList;
 	NSMutableString             *status;
 	NSMutableString             *debug;
 	float                         total;
 	int							selectedItemIndex;
     NSNumber                    *warrantiesEnabled;
+    FindItemModel               *somsItemModel;
     
 }
 
@@ -43,6 +46,8 @@
 @property (retain, nonatomic) IBOutlet UIBarButtonItem   *barButtonRight;
 @property (retain, nonatomic) IBOutlet UIBarButtonItem   *barButtonLeft;
 @property (retain, nonatomic) IBOutlet UITableView       *aTableView;
+@property (retain, nonatomic) NSMutableArray *prodList;
+@property (retain, nonatomic) SomsGroup *somsGroup;
 
 //-(void)designTweaks;
 //-(IBAction)startScanBarCode:(id)sender;
@@ -76,5 +81,5 @@
 -(void) startRequestWithPrice:(NSString*) barCode :(NSString*) price;
 -(IBAction)addSKURefund:(id)sender;
 -(BOOL) isValidRefundChange:(FindItemModel*) item;
--(void)reloadTableViewWithData:(NSMutableArray *)pList;
+-(void)reloadTableViewWithData:(NSMutableArray *)pList andWarranties:(NSMutableArray *)wrrties;
 @end

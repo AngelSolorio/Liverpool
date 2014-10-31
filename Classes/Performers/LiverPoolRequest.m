@@ -236,9 +236,9 @@
                         itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#description#" withValidString:itemW.detail];
                         itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#line_type#" withValidString:@""];
                         itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#promotion#" withValidString:@"false"];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#gift#" withValidString:@"false"];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#quantity#" withValidString:@"1"];
-                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#extended_price#" withValidString:itemW.cost];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#gift#" withValidString:itemW.warrantyForGift ? @"true" : @"false"];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#quantity#" withValidString:itemW.quantity];
+                        itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#extended_price#" withValidString:[NSString stringWithFormat:@"%f",[itemW.cost floatValue]*[itemW.quantity floatValue]]];
                         itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#delivery_date#" withValidString:@""];
                         itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#warranty_flag#" withValidString:@"true"];
                         NSLog(@"Find warranty content %@",itemFindContent);
@@ -519,10 +519,12 @@
 	//call the delegate method for each class to respond and parse the received data
     switch (requestType) {
         case SOMSListRequest:
+            NSLog(@"Start soms request");
             [self somsItemsRequestParsing:receivedData];
             break;
             
         default:
+            NSLog(@"Default");
             [delegate performResults:receivedData :requestType];
             break;
     }
@@ -588,10 +590,12 @@
         NSLog(@"Dismiss tab bar c");
         
 	}
+    NSLog(@"Soms group %@",somsParser.somsGroup);
     NSDictionary *dicInfo = [NSDictionary dictionaryWithObjectsAndKeys:
                                            [NSNumber numberWithInteger:SOMSListRequest],@"request_type" ,
                                                          [somsParser returnSaleProductList],@"soms_list",
                                                               [somsParser getMessageResponse],@"message",
+                                                                      somsParser.somsGroup,@"soms_group",
                                                                                      success, @"success",
                                                                                                     nil];
     [self finishedDataTypeRequest:dicInfo];
