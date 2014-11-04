@@ -10,21 +10,23 @@
 #import "PaymentResponse.h"
 #import "FindItemModel.h"
 #import "Promotions.h"
+#import "SomsGroup.h"
 
 @interface SomsListParser : NSObject <NSXMLParserDelegate>
 {
     NSString *currentElement;
     NSString *msgResponse;
     PaymentResponse *payment;
+    Warranty        *warranty;
     NSMutableArray *productList;
-
+    BOOL            *warrantyFound;
+    NSMutableString *detail;
     FindItemModel *itemModel;
 }
 @property (nonatomic,retain) 	NSString *msgResponse;
 @property (nonatomic,retain) 	NSString *currentElement;
 @property (nonatomic,retain) 	PaymentResponse *payment;
-@property (nonatomic,retain) 	NSMutableArray *productList;
-
+@property (nonatomic, retain)   SomsGroup *somsGroup;
 @property (nonatomic,retain) 	FindItemModel *itemModel;
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict;

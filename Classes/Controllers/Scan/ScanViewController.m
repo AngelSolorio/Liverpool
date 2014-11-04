@@ -29,6 +29,7 @@
 @synthesize aTableView;
 @synthesize txtSKUManual;
 @synthesize lblSKU;
+@synthesize somsGroup;
 
 typedef enum {
 	
@@ -424,20 +425,8 @@ typedef enum {
 	//[cell.detailTextLabel setText:[[tableData objectAtIndex:indexPath.row] objectForKey:@"DetailText"]];
 	//[cell.imageView setImage:[[tableData objectAtIndex:indexPath.row] objectForKey:@"Image"]];
 	
-    FindItemModel *item=[productList objectAtIndex:indexPath.row];
-    
-    if ([item itemForGift]) {
-        UIImageView *aImageView=[[UIImageView alloc]initWithFrame:
-                                 CGRectMake(cell.frame.size.width - 320, 
-                                            cell.frame.size.height - 34, 
-                                            30, 30)];
-        [aImageView setImage:[UIImage imageNamed:@"boxgift.png"]];  
-        [[cell contentView] addSubview:aImageView];
-        [aImageView release];
-        
-
-    }
-    
+    //FindItemModel *item=[productList objectAtIndex:indexPath.row];
+    id item = [productList objectAtIndex:indexPath.row];
     
 	UILabel *aLabelNumberRow = [[UILabel alloc] initWithFrame:
 					   CGRectMake(cell.frame.size.width - 310, 
@@ -458,7 +447,6 @@ typedef enum {
 					   CGRectMake(cell.frame.size.width - 260, 
 								  cell.frame.size.height - 44, 
 								  220, 22)];
-	[aLabelName setText:[item description]];
 	[aLabelName setFont:[UIFont boldSystemFontOfSize:16]];
 	[aLabelName setBackgroundColor:[UIColor clearColor]];
 	[aLabelName setTextColor:[UIColor whiteColor]]; 
@@ -470,7 +458,6 @@ typedef enum {
 					   CGRectMake(cell.frame.size.width - 260, 
 								  cell.frame.size.height - 22, 
 								  110, 22)];
-	[aLabelDescription setText:[item barCode]];
 	[aLabelDescription setBackgroundColor:[UIColor clearColor]];
 	[aLabelDescription setTextColor:[UIColor whiteColor]]; 
 	[aLabelDescription setAdjustsFontSizeToFitWidth:YES];
@@ -483,7 +470,6 @@ typedef enum {
 					   CGRectMake(cell.frame.size.width - 70, 
 								  cell.frame.size.height - 50, 
 								  70, 30)];
-	[aLabel setText:[Tools amountCurrencyFormat:[item price]]];
 	[aLabel setFont:[UIFont boldSystemFontOfSize:16]];
 	[aLabel setBackgroundColor:[UIColor clearColor]];
 	[aLabel setTextColor:[UIColor whiteColor]]; 
@@ -495,7 +481,6 @@ typedef enum {
 					   CGRectMake(cell.frame.size.width - 50,
 								  cell.frame.size.height - 30, 
 								  50, 30)];
-	[aLabelDiscount setText:[self displayPromotionDiscount:indexPath.row]];
 	[aLabelDiscount setBackgroundColor:[UIColor clearColor]];
 	[aLabelDiscount setTextColor:[UIColor whiteColor]]; 
 	[aLabelDiscount setAdjustsFontSizeToFitWidth:YES];
@@ -507,16 +492,45 @@ typedef enum {
                                CGRectMake(cell.frame.size.width - 90,
                                           cell.frame.size.height - 30,
                                           30, 30)];
-	[aLabelQuantity setText:[Tools maskQuantityFormat:[item itemCount]]];
 	[aLabelQuantity setBackgroundColor:[UIColor clearColor]];
 	[aLabelQuantity setTextColor:[UIColor whiteColor]];
 	[aLabelQuantity setAdjustsFontSizeToFitWidth:YES];
 	[[cell contentView] addSubview:aLabelQuantity];
 	[aLabelQuantity release];
     
+    if ([item isKindOfClass:[FindItemModel class]]) {
+        FindItemModel *itemF = (FindItemModel *)item;
+        if ([itemF itemForGift]) [self addGiftinCell:cell];
+        [aLabelName setText:[itemF description]];
+        [aLabelDescription setText:[itemF barCode]];
+        
+        [aLabel setText:[Tools amountCurrencyFormat:[NSString stringWithFormat:@"%f",[[item price] floatValue]*[[item itemCount] floatValue]]]];
+        NSLog(@"Disconut");
+        [aLabelDiscount setText:[self displayPromotionDiscount:indexPath.row]];
+        [aLabelQuantity setText:[Tools maskQuantityFormat:[itemF itemCount]]];
+    } else if ([item isKindOfClass:[Warranty class]]){
+        Warranty *itemW = (Warranty *)item;
+        NSLog(@"Warranty found %@ and gift %@",itemW,[itemW warrantyForGift] ? @"YES" : @"NO");
+        if([itemW warrantyForGift]) [self addGiftinCell:cell];
+        [aLabelName setText:[item detail]];
+        [aLabelDescription setText:[item sku]];
+        [aLabel setText:[Tools amountCurrencyFormat:[NSString stringWithFormat:@"%f",[itemW.quantity floatValue]*[itemW.cost floatValue]]]];
+        [aLabelQuantity setText:[Tools maskQuantityFormat:itemW.quantity]];
+    }
+
 	
 	return cell;
 }
+
+-(void)addGiftinCell:(UITableViewCell *)cell
+{
+    UIImageView *aImageView=[[UIImageView alloc]initWithFrame: CGRectMake(cell.frame.size.width - 320, cell.frame.size.height - 34, 30, 30)];
+    [aImageView setImage:[UIImage imageNamed:@"boxgift.png"]];
+    [[cell contentView] addSubview:aImageView];
+    [aImageView release];
+        
+}
+
 -(NSString*) displayPromotionDiscount:(int) index
 {
 	NSString *discountAmount=@"";
@@ -612,6 +626,7 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 		total += [[item price] floatValue];
 		
 	}*/
+    NSLog(@"product list pay :%@",productList);
 	total=[[Tools calculateAmountToPay:productList] floatValue];
     
 	UILabel *lblTotal=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 22)];
@@ -653,12 +668,11 @@ titleForFooterInSection:(NSInteger)section
     if ([Session getSaleType]!=FOOD_CLIENT_TYPE) 
         if (selectedItemIndex==indexPath.row) {
             //detail item
-            FindItemModel *item=[productList objectAtIndex:indexPath.row];
-            [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) detailItemScreen:item];
-            
-            NSIndexPath *indexP=[NSIndexPath indexPathWithIndex:selectedItemIndex];
-            [tableView deselectRowAtIndexPath:indexP animated:YES];
-            selectedItemIndex=-1;
+            id item=[productList objectAtIndex:indexPath.row];
+                [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) detailItemScreen:item];
+                NSIndexPath *indexP=[NSIndexPath indexPathWithIndex:selectedItemIndex];
+                [tableView deselectRowAtIndexPath:indexP animated:YES];
+                selectedItemIndex=-1;
         }
 	selectedItemIndex=indexPath.row;
 }
@@ -946,6 +960,7 @@ titleForFooterInSection:(NSInteger)section
 	[pay setProductList:productList];
 	[pay changeTotalValue:total];*/
 	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) itemPromotionScreen:productList];
+    NSLog(@"Product listll %@",productList);
 
 }
 
@@ -1223,14 +1238,30 @@ titleForFooterInSection:(NSInteger)section
 	}
 }
 
--(void)reloadTableViewWithData:(NSMutableArray *)pList
+-(void)reloadTableViewWithData:(NSMutableArray *)pList andSomsGroup:(SomsGroup *)sGroup
 {
     productList = pList;
     [aTableView reloadData];
 	if ([productList count] >= 1) {
 		[btnPay setHidden:NO];
 	}
-    NSLog(@"Hdden %i",btnPay.hidden);
+    
+    NSLog(@"Warranties are: %@",sGroup.warrantyList);
+    if ([sGroup.warrantyList count]>0) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveSelectedWarranty:) name:WARRANTYSELECTED_NOTIFICATION object:nil];
+        for(WarrantyGroup *warranties in sGroup.warrantyList){
+            somsItemModel = warranties.findItemModel;
+            WarrantyViewController *warrantyVC = [[WarrantyViewController alloc] initWithNibName:@"WarrantyViewController" bundle:nil];
+            [warrantyVC setWarrantiesList:warranties.warranties];
+            [warrantyVC setProductName:somsItemModel.description];
+            [self presentViewController:warrantyVC animated:NO completion:^{
+                [sGroup.warrantyList removeObject:warranties];
+            }];
+            break;
+            NSLog(@"Break");
+        }
+    }
+        NSLog(@"Hdden %i",btnPay.hidden);
 }
 
 
@@ -1247,7 +1278,8 @@ titleForFooterInSection:(NSInteger)section
 	LiverPoolRequest *liverPoolRequest=[[LiverPoolRequest alloc] init];
 	liverPoolRequest.delegate=self;
     NSString  *terminal=[Session getTerminal];
-	NSArray *pars=[NSArray arrayWithObjects:barCode,@"",terminal,nil];
+    warrantiesEnabled = [NSNumber numberWithBool:YES];
+	NSArray *pars=[NSArray arrayWithObjects:barCode,@"",terminal,warrantiesEnabled,nil];
 	[liverPoolRequest sendRequest:@"buscaProducto" forParameters:pars forRequestType:findRequest]; //cambiar a localized string
 	[liverPoolRequest release];
     
@@ -1273,12 +1305,14 @@ titleForFooterInSection:(NSInteger)section
    // [scanDevice connect];
     //[scanDevice addDelegate:self];
 
-    if (requestType==findRequest)
+    if (requestType==findRequest) {
         [self findItemRequestParsing:receivedData];
-    if (requestType==SOMSListRequest) 
+    } else if (requestType==SOMSListRequest){
         [self somsItemsRequestParsing:receivedData];
-    if (requestType==restaurantListRequest)
+    } else if (requestType==restaurantListRequest){
+        NSLog(@"Parse comanda");
         [self comandaItemsRequestParsing:receivedData];
+    }
 }
 
 -(void) findItemRequestParsing:(NSData*) data
@@ -1288,6 +1322,7 @@ titleForFooterInSection:(NSInteger)section
 	[findParser startParser:data];
 	DLog(@"termino");
 	FindItemModel *findItemModel=findParser.findItemModel;
+    NSLog(@"Find warranty %@",findItemModel.warranty);
     findItemModel.itemForGift=[Session getIsTicketGift];
     DLog(@"finditemparsing item state %i",[Session getIsTicketGift]);
 	if ([findItemModel.description isEqualToString:@"No encontrado"] ) {
@@ -1298,6 +1333,13 @@ titleForFooterInSection:(NSInteger)section
 		if (productList == nil) {
 			productList = [[NSMutableArray alloc] init];
 		}
+        if ([findParser.warrantiesList count]>0) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveSelectedWarranty:) name:WARRANTYSELECTED_NOTIFICATION object:nil];
+            WarrantyViewController *warrantyVC = [[WarrantyViewController alloc] initWithNibName:@"WarrantyViewController" bundle:nil];
+            [warrantyVC setProductName:findItemModel.description];
+            [warrantyVC setWarrantiesList:findParser.warrantiesList];
+            [self presentViewController:warrantyVC animated:YES completion:nil];
+        }
         if ([self isValidSKU:findItemModel]) {
             [productList addObject:findItemModel];
             [self applyPromotionsToProducts:findItemModel];
@@ -1312,17 +1354,16 @@ titleForFooterInSection:(NSInteger)section
 
 -(void) somsItemsRequestParsing:(NSData*) data
 {
+    NSLog(@"SOms parser");
     SomsListParser *somsParser=[[SomsListParser alloc] init];
 	[somsParser startParser:data];
 	
 	//if the transaction was succesful.
 	if ([somsParser getStateOfMessage]) {
 		[productList release];
-		DLog (@"sucess sale payparser */*/*/*");
 		productList=[somsParser returnSaleProductList];
         [productList retain];
 		DLog (@"sucess sale payparser productListWithPromos %@",productList);
-        
         
         for (FindItemModel *item  in productList) {
             [self setDataIntoArray:item];
@@ -1332,7 +1373,6 @@ titleForFooterInSection:(NSInteger)section
 	{
         [scanDevice removeDelegate:self];
 		[Tools displayAlert:@"Error" message:[somsParser getMessageResponse] withDelegate:self];
-	
 	}
 	[aTableView reloadData];
 	[Tools stopActivityIndicator];
@@ -1441,9 +1481,9 @@ titleForFooterInSection:(NSInteger)section
 }
 
 ///********************************************************************************************
--(BOOL) isValidSKU:(FindItemModel*) item
+-(BOOL) isValidSKU:(id)item
 {
-    float sku=[[item barCode]floatValue];
+    float sku=[item isKindOfClass:[FindItemModel class]] ? [[item barCode] floatValue] : [item isKindOfClass:[Warranty class]] ? [[item sku] floatValue] : 0;
     bool isValid=NO;
     if (sku==0) {
         [scanDevice removeDelegate:self];
@@ -1525,7 +1565,7 @@ titleForFooterInSection:(NSInteger)section
         case NORMAL_EMPLOYEE_TYPE:
         case DULCERIA_CLIENT_TYPE:
             [productList removeObjectAtIndex:indexPath.row];
-            
+            [Session verifyWarrantyPresence:productList];
             [aTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
                               withRowAnimation:UITableViewRowAnimationFade];
             //[self turnOffEditing];
@@ -1611,7 +1651,7 @@ titleForFooterInSection:(NSInteger)section
 	CGPoint textFieldCord=textField.center;
 	
 	CGRect viewCords=self.view.frame;
-	
+
 	viewCords.origin.y=viewCords.origin.y+textFieldCord.y-140;
 	
 	self.view.frame=viewCords;
@@ -1622,6 +1662,29 @@ titleForFooterInSection:(NSInteger)section
 {
 	[self.view endEditing:YES];
 	
+}
+
+#pragma mark - WarrantySelectionDelegate
+-(void)didReceiveSelectedWarranty:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WARRANTYSELECTED_NOTIFICATION object:nil];
+    NSLog(@"Did receive notification warranty");
+    FindItemModel *findItem;
+    Warranty *warranty = (Warranty *)[notification object];
+
+    if (saleType == SOMS_CLIENT_TYPE || saleType ==SOMS_EMPLOYEE_TYPE) {
+        findItem = somsItemModel;
+        NSLog(@"Soms find item model %@",findItem);
+    } else {
+        findItem = [productList lastObject];
+        warranty.quantity = @"1";
+    }
+    findItem.warranty = warranty;
+    
+    NSLog(@"Find item war %@",findItem.warranty.cost);
+    [productList addObject:warranty];
+    [Session verifyWarrantyPresence:productList];
+    [self setDataIntoArray:nil];
 }
 @end
 

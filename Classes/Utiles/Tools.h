@@ -79,7 +79,7 @@ UITextField *txtField;
 +(NSString*) calculateDiscountValueAmount:(NSString*) aPrice :(NSString*)amountDiscount;
 +(void)		 calculateSuccesiveDiscounts:(FindItemModel *) item;
 +(NSString*) calculateQuantityExtendedPrice:(FindItemModel *) item;
-
++(NSString *)getCurrentDate;
 //+(NSString*) calculateDiscountValueForTicket:(NSMutableArray*) promos;
 
 //Arrays searchs
@@ -97,5 +97,6 @@ UITextField *txtField;
 +(NSMutableArray*) removePagoFijoFromList:(NSMutableArray*)testArray;
 //Arrays inserts
 +(void) applyPromotionsToTicket:(NSMutableArray*) aPromotionList :(NSMutableArray*) aProductList;
++(NSMutableArray *)popWarrantiesFromArray:(NSArray *)productList;
 
 @end

@@ -18,6 +18,8 @@
 @synthesize lblProductName,lblBarcode,lblPrice,lblDepartment,lblBgDepartment,lblBgDiscount;
 @synthesize btnDiscount,btnPromotions,itemModel,lblDiscount,lblBackground,btnGift;
 @synthesize scrollView,lblQuantity,lblBgModifiers;
+@synthesize warranty;
+@synthesize selectedItem;
 // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
 /*
  - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -242,33 +244,50 @@ numberOfRowsInSection:(NSInteger)section
 //}
 
 
--(void) displayItemInfo:(FindItemModel*) item
+-(void) displayItemInfo:(id) item
 {
-
-	itemModel=item;
-    [lblOriginalPrice setText:[Tools amountCurrencyFormat:itemModel.price]];
-	lblPrice.text=[Tools amountCurrencyFormat:itemModel.price];
-	lblBarcode.text=itemModel.barCode ;
-	lblProductName.text=itemModel.description ;
-	lblDepartment.text=itemModel.department;
-    lblQuantity.text=itemModel.itemCount;
-	[btnGift setSelected:itemModel.itemForGift];
-	if ([itemModel.discounts count]>0) {
-		
-		if ([[itemModel.discounts objectAtIndex:0] promoType]==3) {
-			lblDiscount.text=[[itemModel.discounts objectAtIndex:0] promoDiscountPercent];
+    if ([item isKindOfClass:[FindItemModel class]]) {
+        isWarranty = NO;
+        itemModel=item;
+        [lblOriginalPrice setText:[Tools amountCurrencyFormat:itemModel.price]];
+        lblPrice.text=[Tools amountCurrencyFormat:itemModel.price];
+        lblBarcode.text=itemModel.barCode ;
+        lblProductName.text=itemModel.description ;
+        lblDepartment.text=itemModel.department;
+        lblQuantity.text=itemModel.itemCount;
+        [btnGift setSelected:itemModel.itemForGift];
+        if ([itemModel.discounts count]>0) {
             
-		}
-		if ([[itemModel.discounts objectAtIndex:0] promoType]==4) {
-			lblDiscount.text=[[itemModel.discounts objectAtIndex:0] promoDiscountPercent];
-			
-		}
-	}
-    //[aTableView setFrame:CGRectMake(0, 0, 280, 280)];
-    [aTableView setFrame:CGRectMake(20, 320, 280, 100)];
-    
-    [aTableView reloadData];
-    [btnQuantity setExclusiveTouch:YES];
+            if ([[itemModel.discounts objectAtIndex:0] promoType]==3) {
+                lblDiscount.text=[[itemModel.discounts objectAtIndex:0] promoDiscountPercent];
+                
+            }
+            if ([[itemModel.discounts objectAtIndex:0] promoType]==4) {
+                lblDiscount.text=[[itemModel.discounts objectAtIndex:0] promoDiscountPercent];
+                
+            }
+        }
+        //[aTableView setFrame:CGRectMake(0, 0, 280, 280)];
+        [aTableView setFrame:CGRectMake(20, 320, 280, 100)];
+        
+        [aTableView reloadData];
+        [btnQuantity setExclusiveTouch:YES];
+    } else if ([item isKindOfClass:[Warranty class]]){
+        isWarranty = YES;
+        warranty =(Warranty *)item;
+        [lblOriginalPrice setText:[Tools amountCurrencyFormat:warranty.cost]];
+        lblPrice.text=[Tools amountCurrencyFormat:warranty.cost];
+        lblBarcode.text=warranty.sku ;
+        lblProductName.text=warranty.detail ;
+        lblDepartment.text=warranty.department;
+        lblQuantity.text=warranty.quantity;
+        [btnGift setSelected:warranty.warrantyForGift];
+        
+        btnDiscount.userInteractionEnabled = NO;
+        btnQuantity.userInteractionEnabled = NO;
+    }
+
+
 
 }
 -(IBAction) promotionScreen
@@ -283,8 +302,17 @@ numberOfRowsInSection:(NSInteger)section
 }
 -(IBAction) itemForGift:(id)sender
 {
-    itemModel.itemForGift=itemModel.itemForGift==TRUE?FALSE:TRUE;
-    [btnGift setSelected:itemModel.itemForGift];
+    if (!isWarranty) {
+        NSLog(@"Item gifting");
+        itemModel.itemForGift=itemModel.itemForGift==TRUE?FALSE:TRUE;
+        [btnGift setSelected:itemModel.itemForGift];
+    } else {
+        NSLog(@"Warranty gifting");
+        [btnGift setSelected:!btnGift.selected];
+        warranty.warrantyForGift=btnGift.selected;
+
+    }
+    isWarranty = nil;
     [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) removeDiscountScreen];
     
 }

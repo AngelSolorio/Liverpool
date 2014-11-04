@@ -14,6 +14,7 @@
 #import "Card.h"
 #import "NumberKeypadDecimalPoint.h"
 #import "RefundData.h"
+#import "Contact.h"
 
 //typedef enum {
 //    DILISA,
@@ -55,6 +56,7 @@
 	IBOutlet UITextField			   *txtAmount;
 	NSArray								*productList;
 	NSArray								*productListWithPromos;
+    Contact                             *contact;
 
 	float                                total;
     //temp vars

@@ -7,12 +7,14 @@
 //
 
 #import "SomsListParser.h"
+#import "Warranty.h"
 
 @implementation SomsListParser
 @synthesize msgResponse,currentElement;
 @synthesize payment;
-@synthesize productList;
+@synthesize somsGroup;
 @synthesize itemModel;
+
 
 #define RETURN				@"return"
 #define ISERROR				@"isError"
@@ -30,6 +32,19 @@
 #define DESCRIPTION			@"description"
 #define PROMOTION			@"promocion"
 #define FECHA_ENTREGA       @"fechaEntrega"
+
+#define WARRANTIES          @"warranties"
+#define COST                @"cost"
+#define DETAIL              @"detail"
+#define ID                  @"id"
+#define PERCENTAGE          @"percentage"
+#define SKU                 @"sku"
+
+-(SomsGroup *)somsGroup{
+    if (!somsGroup)  somsGroup = [[SomsGroup alloc] init];
+    return somsGroup;
+}
+
 
 
 -(void) startParser:(NSData*) data
@@ -83,11 +98,31 @@
 		[itemModel release];
 		DLog(@"currentelement payparser producto: %@",currentElement);
 		
-	}
+    } else if([currentElement isEqualToString:WARRANTIES]) {
+        warrantyFound = YES;
+        warranty = [[Warranty alloc] init];
+        [self.somsGroup.warrantyGroup.warranties addObject:warranty];
+        //[warranty release];
+    } else if ([currentElement isEqualToString:DETAIL]){
+        detail = [[NSMutableString alloc] init];
+    }
     	
 }
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
-{}
+{
+    if ([elementName isEqualToString:PRODUCTOS]) {
+        self.somsGroup.warrantyGroup.findItemModel = itemModel;
+        NSLog(@"Description %@",self.somsGroup.warrantyGroup.findItemModel.description);
+        [self.somsGroup.warrantyList addObject:self.somsGroup.warrantyGroup];
+        NSLog(@"PRoduct desc: %@",itemModel.description);
+        self.somsGroup.warrantyGroup = nil;
+    } else if ([elementName isEqualToString:WARRANTIES]) {
+        warranty.quantity = itemModel.itemCount;
+        warrantyFound = NO;
+    } else if ([elementName isEqualToString:DETAIL]){
+        [detail release];
+    }
+}
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
 {
 	if (!string) {
@@ -134,13 +169,30 @@
 	}
 	if ([currentElement isEqualToString:PRICE]) {
 		itemModel.price=[[string copy]autorelease];
-        itemModel.priceExtended=[[string copy]autorelease];
-		
+        itemModel.priceExtended = [NSString stringWithFormat:@"%f",[itemModel.price floatValue]*[itemModel.itemCount floatValue]];
 	}
 	if ([currentElement isEqualToString:DESCRIPTION]) {
 		itemModel.description=[[string copy]autorelease];
 		
 	}
+    if (warrantyFound) {
+        if ([currentElement isEqualToString:ID]) {
+            warranty.warrantyId =[[string copy] autorelease];
+        } else if ([currentElement isEqualToString:COST]){
+            NSLog(@"Cost %@",string);
+            warranty.cost = [[string copy] autorelease];
+        } else if ([currentElement isEqualToString:DETAIL]){
+            [detail appendString:string];
+            NSLog(@"Detail %@",detail);
+            warranty.detail =detail;
+        } else if ([currentElement isEqualToString:SKU]){
+            warranty.sku = [[string copy] autorelease];
+        } else if ([currentElement isEqualToString:PERCENTAGE]){
+            warranty.percentage = [[string copy] autorelease];
+        } else if ([currentElement isEqualToString:DEPARTMENT]){
+            warranty.department = [[string copy] autorelease];
+        }
+    }
 	if ([currentElement isEqualToString:PROMOTION]) {
 		
 		if ([string isEqualToString:@"false"])
@@ -148,13 +200,10 @@
 		if ([string isEqualToString:@"true"])
 			itemModel.promo=true;
         
-	}
-    else if ([currentElement isEqualToString:FECHA_ENTREGA]) {
+	} else if ([currentElement isEqualToString:FECHA_ENTREGA]) {
         [itemModel setDeliveryDate:string];
         
 	}
-
-
 }
 
 -(NSString*) getMessageResponse{

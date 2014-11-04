@@ -192,7 +192,7 @@
     if (success ==YES) {
         //Send to the soms screen
         [self dismissViewControllerAnimated:YES completion:nil];
-        [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) somsScreen:[dicInfo objectForKey:@"soms_list"]];
+        [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) somsScreen:[dicInfo objectForKey:@"soms_list"] andSomsGroup:[dicInfo objectForKey:@"soms_group"]];
     } else {
         [Tools displayAlert:@"Error" message:[dicInfo objectForKey:@"message"] withDelegate:self];
     }

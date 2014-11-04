@@ -25,6 +25,7 @@
     UIButton    *btnGift;
     UIScrollView *scrollView;
     BOOL        qtyFLag;
+    BOOL        isWarranty;
     
 	
 }
@@ -42,6 +43,8 @@
 @property(nonatomic, retain)	IBOutlet	UIButton	*btnGift;
 
 @property(nonatomic, assign)				FindItemModel *itemModel;
+@property(nonatomic, assign)                Warranty *warranty;
+@property (nonatomic, retain)               id selectedItem;
 @property(nonatomic, retain)	IBOutlet	UILabel     *lblBackground;
 @property(nonatomic, retain)	IBOutlet	UIScrollView *scrollView;
 @property (assign, nonatomic) IBOutlet UITableView *aTableView;
@@ -49,7 +52,7 @@
 @property (assign, nonatomic) IBOutlet UIButton *btnQuantity;
 
 
--(void) displayItemInfo:(FindItemModel*) itemModel;
+-(void) displayItemInfo:(id)itemModel;
 -(IBAction) promotionScreen;
 -(IBAction) manualDiscountScreen;
 -(IBAction) itemForGift:(id)sender;

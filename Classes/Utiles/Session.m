@@ -5,7 +5,7 @@
 
 
 #import "Session.h"
-
+#import "Warranty.h"
 
 @implementation Session
 - (id)init
@@ -82,11 +82,22 @@
 	docTo=[adocTo copy];
     
 }
+
 +(NSString*)getDocTo
 {
 	return docTo;
     
 }
+
++(void)setReferenceWarranty:(NSString *)referenceWrty{
+    [referenceWarranty release];
+    referenceWarranty = [referenceWrty copy];
+}
+
++(NSString *)getReferenceWarranty{
+    return referenceWarranty;
+}
+
 +(void) setMonederoNumber:(NSString*) amonederoNumber
 {
 	[monederoNumber release];
@@ -357,6 +368,22 @@
 }
 +(NSString*)getAmexAffNumber{
     return amexAffNumber;
+}
+
++(BOOL)hasWarranties
+{
+    return hasWarranties;
+}
+
++(void)verifyWarrantyPresence:(NSArray *)pList{
+    hasWarranties = NO;
+    int totalWarranties = 0;
+    for (id item in pList){
+        if ([item isKindOfClass:[Warranty class]]){
+            totalWarranties += totalWarranties + 1;
+        }
+    }
+    hasWarranties = (totalWarranties > 0) ? YES : NO;
 }
 
 -(void) dealloc

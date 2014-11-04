@@ -35,6 +35,7 @@ NSString *terminal;
 NSString *idStore;
 NSString *store;
 NSString *docTo;
+NSString *referenceWarranty;
 NSString *monederoNumber;
 NSString *monederoAmount;
 NSString *monederoPercentage;
@@ -54,7 +55,7 @@ BOOL isEmployeeSale;
 BOOL isTicketGift;
 BOOL addTip;
 BOOL hasDeliveryDate;
-
+BOOL hasWarranties;
 
 int		 indexPromoGroup;
 NSString *planId;
@@ -81,6 +82,7 @@ NSString *amexAffNumber;
 +(void) setStorePrint:(NSString*) aStorePrint;
 +(void) setIdStore:(NSString*) aIdStore;
 +(void) setDocTo:(NSString*) adocTo;
++(void) setReferenceWarranty:(NSString *)referenceWrty;
 +(void) setMonederoNumber:(NSString*) amonederoNumber;
 +(void) setMonederoAmount:(NSString*) amonederoAmount;
 +(void) setMonederoPercent:(NSString*) amonederoPercent;
@@ -111,6 +113,8 @@ NSString *amexAffNumber;
 +(void) setBancomerAffNumber:(NSString*) aff;
 +(void) setAmexAffNumber:(NSString*) aff;
 
++(void)verifyWarrantyPresence:(NSArray *)pList;
+
 +(NSString*)getPrinterName;
 +(NSString*)getUserName;
 +(NSString*)getPassword;
@@ -119,6 +123,7 @@ NSString *amexAffNumber;
 +(NSString*)getStorePrint;
 +(NSString*)getIdStore;
 +(NSString*)getDocTo;
++(NSString *)getReferenceWarranty;
 +(NSString*)getMonederoNumber;
 +(NSString*)getMonederoAmount;
 +(NSString*)getMonederoPercent;
@@ -139,6 +144,7 @@ NSString *amexAffNumber;
 +(NSString*)getBancomerAffNumber;
 +(NSString*)getAmexAffNumber;
 
++(BOOL)hasWarranties;
 
 +(Status) getStatus;
 +(SaleType) getSaleType;
@@ -146,7 +152,6 @@ NSString *amexAffNumber;
 +(BOOL) getIsTicketGift;
 +(BOOL) getAddTip;
 +(BOOL) getHasDeliveryDate;
-
 +(void) resetValues;
 
 

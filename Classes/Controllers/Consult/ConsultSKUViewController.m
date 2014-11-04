@@ -112,7 +112,8 @@
 	LiverPoolRequest *liverPoolRequest=[[LiverPoolRequest alloc] init];
 	liverPoolRequest.delegate=self;
     NSString *terminal=[Session getTerminal];
-	NSArray *pars=[NSArray arrayWithObjects:barCode,@"",terminal,nil];
+    warrantiesEnabled= [NSNumber numberWithBool:NO];
+	NSArray *pars=[NSArray arrayWithObjects:barCode,@"",terminal,warrantiesEnabled, nil];
 	[liverPoolRequest sendRequest:@"buscaProducto" forParameters:pars forRequestType:consultSKURequest]; //cambiar a localized string
 	[liverPoolRequest release];
 	//[Tools startActivityIndicator:self.view];

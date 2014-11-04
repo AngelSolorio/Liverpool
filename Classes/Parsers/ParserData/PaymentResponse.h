@@ -48,5 +48,5 @@
 @property (nonatomic,retain)	NSString* totalToPay;
 @property (nonatomic,retain)	NSString* amountPayed;
 @property (nonatomic,retain)	NSString* totalAmountWithdrawn;
-
+@property (nonatomic, retain)   NSString* referenceWarranty;
 @end

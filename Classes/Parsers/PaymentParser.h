@@ -7,6 +7,8 @@
 #import "FindItemModel.h"
 #import "Promotions.h"
 #import "RefundData.h"
+#import "Warranty.h"
+
 @interface PaymentParser : NSObject <NSXMLParserDelegate> {
 
 	NSString *currentElement;
@@ -18,7 +20,9 @@
 	FindItemModel *itemModel;
 	Promotions *promo;
     RefundData *refundD;
-    
+    NSMutableString *detail;
+    NSString *referenceWarranty;
+
 }
 @property (nonatomic,retain) 	NSString *msgResponse;
 @property (nonatomic,retain) 	NSString *currentElement;

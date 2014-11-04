@@ -228,6 +228,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
     [self.view endEditing:YES];
     [super viewWillDisappear:animated];
 }
+
 //
 //-(void)viewDidUnload
 //{
@@ -992,30 +993,40 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 
 - (IBAction)okCardReadAction:(id)sender {
      
-     if ([self validatePaymentData])
-     {
-          [self authorization:nil];
-          [self removeAllSubviews:nil];
+     if ([self validatePaymentData]) {
+          if ([Session hasWarranties] && contact == NULL) {
+               [self presentContactVC];
+          } else {
+               [self authorization:nil];
+               [self removeAllSubviews:nil];
+          }
      }
 
 }
 - (IBAction)okAmountBtn:(id)sender {
-//     if (![self isValidAmountValue]&&cardType!=50) {
-//          [Tools displayAlert:@"Error" message:@"Monto invalido"];
-//          return;
-//     }
      [amountReaderView removeFromSuperview];
+     if ([Session hasWarranties] && contact == NULL) {
+          [self presentContactVC];
+     } else {
+          [self continueThePaymentProcess];
+     }
+}
+
+-(void)continueThePaymentProcess
+{
      //if cash
      if (cardType==4) {
           //start the payment with Cash and monedo abono
           [self authorization:nil];
+          NSLog(@"Autorize");
      }
      else{ //dilisa, externa, monedero
           //show the cardread
           [self showCardReadview];
+          NSLog(@"Show card");
      }
-
 }
+
 -(void) showAmountView
 {
      [[self view] addSubview:amountReaderView];
@@ -1141,15 +1152,15 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 	DLog(@"accountemployee %@",accountEmployee);
     
     SaleType sType=[Session getSaleType];
-
     if (sType==NORMAL_EMPLOYEE_TYPE||sType==NORMAL_CLIENT_TYPE)
     {    //Message Content
-        pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,@"true",nil];
-        [liverpoolRequest sendRequest:saleType forParameters:pars forRequestType:buyRequest2];
+         pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,@"true",contact,nil];
+         NSLog(@"Has warranties %@",[Session hasWarranties] ? @"YES" : @"NO");
+         [liverpoolRequest sendRequest:saleType forParameters:pars forRequestType:buyRequest2];
     }
     else if (sType==DULCERIA_CLIENT_TYPE)
     {
-         pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,@"false",nil];
+         pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,@"false", nil];
          [liverpoolRequest sendRequest:saleType forParameters:pars forRequestType:buyRequest2];
     }
     else if (sType==SOMS_EMPLOYEE_TYPE||sType==SOMS_CLIENT_TYPE)
@@ -1159,7 +1170,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
         MesaDeRegalo *regalo=[[MesaDeRegalo alloc]init];
         NSString *somsOrder=[Session getSomsOrder];
         //Message Content for SOMS SALE
-        pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,regalo,somsOrder,nil];
+        pars=[NSArray arrayWithObjects:productList,promoGroup,ca,seller,accountEmployee,regalo,somsOrder,contact,nil];
         [liverpoolRequest sendRequest:saleType forParameters:pars forRequestType:SOMSRequest];
         
         [regalo release];
@@ -1200,6 +1211,15 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 
     //falta agregar el pago
 }
+
+-(void)presentContactVC
+{
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveContactNotification:) name:CONTACTINFOFILLEDUP_NOTIFICATION object:nil];
+     ContactViewController *contactVC=[[ContactViewController alloc] initWithNibName:@"ContactViewController" bundle:nil];
+     [contactVC.view setUserInteractionEnabled:YES];
+     [self presentViewController:contactVC animated:NO completion:nil];
+}
+
 -(NSString*) selectTypeOfSale
 {
     SaleType sType=[Session getSaleType];
@@ -1267,6 +1287,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
                
 
                [Session setDocTo:payParser.payment.docto];
+               if([Session hasWarranties]) [Session setReferenceWarranty:payParser.payment.referenceWarranty];
                [lblBalance setText:[Tools amountCurrencyFormatFloat:balance]];
                
                [productListWithPromos release];
@@ -1320,6 +1341,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
                [self resetLabels];
                
                [Session setDocTo:payParser.payment.docto];
+               if([Session hasWarranties]) [Session setReferenceWarranty:payParser.payment.referenceWarranty];
               // [Session setMonthyInterest:payParser.payment.monthlyInterest];
                //[Session setBank:payParser.payment.bank];
                [lblTitle setText:[[payParser payment] totalToPay]];
@@ -1678,8 +1700,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 	//if the transaction was succesful.
 	if ([payParser getStateOfMessage]) {
 		
-		[barBtnCancel setEnabled:NO];
-         [barBtnBack setEnabled:NO];
+		//[barBtnCancel setEnabled:NO];
+         //[barBtnBack setEnabled:NO];
 		
 		float balance=[payParser.payment.balanceToPay floatValue];
 		if ( balance==0) { // si el saldo del monedero fue suficiente para pagar el cobro
@@ -1690,6 +1712,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 			[barBtnSMS setEnabled:YES];
 			
 			[Session setDocTo:payParser.payment.docto];
+             if([Session hasWarranties]) [Session setReferenceWarranty:payParser.payment.referenceWarranty];
 			//[Session setMonthyInterest:payParser.payment.monthlyInterest];
 			//[Session setBank:payParser.payment.bank];
 			[btnPromo setHidden:YES];
@@ -1881,6 +1904,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
      TicketGeneratorViewController *tk=[[TicketGeneratorViewController alloc]init];
      tk.printGiftTicket=[Session getIsTicketGift];
      [tk setProductList:productListWithPromos];
+     NSLog(@"PRoduct list with promos %@",productListWithPromos);
      [tk setPaymentType:cardType];
      [tk setSOMSDeliveryType:somsDeliveryType];
      [tk setSomsOrderDeliveryDate:somsDeliveryDate];
@@ -1990,6 +2014,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
      DLog(@"termino");
      
      if ([[logoutParser returnErrorMessage]isEqualToString:@"OK"]) {
+          [Session verifyWarrantyPresence:nil];
           [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) loginScreen];
      }
 
@@ -2034,7 +2059,10 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 //////////////////////////////////////////////////////
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+     CGPoint locationPoint = [[touches anyObject] locationInView:self.view];
+     NSLog(@"Touch happend at location %f, %f",locationPoint.x,locationPoint.y);
 	[self.view endEditing:YES];
+     
 }
 
 //------------------------------------------------------
@@ -2160,6 +2188,15 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 	[textField resignFirstResponder];
 	
 	return YES;
+}
+
+-(void)didReceiveContactNotification:(NSNotification *)notification
+{
+     [[NSNotificationCenter defaultCenter] removeObserver:self name:CONTACTINFOFILLEDUP_NOTIFICATION object:nil];
+     NSDictionary *contactInfo = [notification userInfo];
+     contact = (Contact *)[contactInfo objectForKey:@"contact"];
+     NSLog(@"Contact info %@",contactInfo);
+     [self continueThePaymentProcess];
 }
 
 -(void) dealloc

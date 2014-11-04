@@ -583,7 +583,7 @@ numberOfRowsInSection:(NSInteger)section {
 	//Account employee
 	NSString *accountEmployee=[Session getEmployeeAccount];
 	DLog(@"accounemplotyee itemdisc %@", accountEmployee);
-	
+    NSMutableArray *pList = [[NSMutableArray alloc] init];
 	NSArray *pars=[NSArray arrayWithObjects:productList,seller,accountEmployee,nil];
 	[liverPoolRequest sendRequest:@"ticketTotalize" forParameters:pars forRequestType:totalizeRequest]; //cambiar a localized string
 	[liverPoolRequest release];

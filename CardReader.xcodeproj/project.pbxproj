@@ -1025,6 +1025,12 @@
 				AB92566C1873498D00E1B2E5 /* CardDataList.m */,
 				ABD7A3B3189318BD0092EEB9 /* AffiliationCodes.h */,
 				ABD7A3B4189318BD0092EEB9 /* AffiliationCodes.m */,
+				26C7EC9A19EEC3FC003D6248 /* Warranty.h */,
+				26C7EC9B19EEC3FC003D6248 /* Warranty.m */,
+				2687391B1A01A94A00A7029E /* SomsGroup.h */,
+				2687391C1A01A94A00A7029E /* SomsGroup.m */,
+				268739241A029A6100A7029E /* WarrantyGroup.h */,
+				268739251A029A6100A7029E /* WarrantyGroup.m */,
 			);
 			name = ParserData;
 			sourceTree = "<group>";
@@ -1100,6 +1106,7 @@
 				ABEB615319D2F7570081C39A /* itemConstructorFindRequest.xml */,
 				ABEB615419D2F7570081C39A /* itemPromotionsRequest.xml */,
 				ABEB615519D2F7570081C39A /* xmlConstructor.xml */,
+				26BAF98119F16B64004C5E60 /* warrantyBodyRequest.xml */,
 			);
 			name = "Item Files";
 			sourceTree = "<group>";
@@ -1182,6 +1189,8 @@
 		C07E09B213D4EB280022B68C /* Utiles */ = {
 			isa = PBXGroup;
 			children = (
+				26A79EDE19F5746E008E9284 /* Contact.h */,
+				26A79EDF19F5746E008E9284 /* Contact.m */,
 				4D5909A51486C3AF00A36D48 /* Rules.h */,
 				4D5909A61486C3AF00A36D48 /* Rules.m */,
 				4D32C3E2140E9F72008B5925 /* Session.h */,
@@ -1280,6 +1289,7 @@
 		DF18F94213CDFE7900001371 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				26C7EC9319EEBB0F003D6248 /* Warranties */,
 				04C3ADF5161A4486005EBDD2 /* Generics */,
 				4DC0549E14CD05C500ACC6D9 /* KeyBoard */,
 				85215C74143A274B00B44512 /* Balance */,
@@ -1301,6 +1311,8 @@
 			children = (
 				DF18F94413CDFE7900001371 /* CardReaderAppDelegate.h */,
 				DF18F94513CDFE7900001371 /* CardReaderAppDelegate.m */,
+				268739181A012E0600A7029E /* PbNavigationController.h */,
+				268739191A012E0600A7029E /* PbNavigationController.m */,
 				DF18F97113CE08C100001371 /* Records */,
 			);
 			path = Delegates;
@@ -1309,6 +1321,7 @@
 		DF18F94613CDFE7900001371 /* Performers */ = {
 			isa = PBXGroup;
 			children = (
+				263D7A9A19F8573900A1D49A /* Warranties */,
 				AB29BE1119B7484E00D893EA /* CardDataList Files */,
 				AB29BE0E19B7466A00D893EA /* WithdrawData Files */,
 				AB29BE0719B73ECA00D893EA /* Promotion Group Files */,
@@ -1438,6 +1451,7 @@
 		DF18F95413CDFE7900001371 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				26C7EC9019EEB9AC003D6248 /* Warranties */,
 				04C3ADFC161A4495005EBDD2 /* Generics */,
 				85215C78143A277000B44512 /* Balance */,
 				4D054609143A1A8500C2EBD7 /* Printer */,
@@ -1653,6 +1667,7 @@
 				859E21C613FC3D7400D0A0F9 /* logo_liverpool.png in Resources */,
 				859E21C713FC3D7400D0A0F9 /* LogoEncabezado.png in Resources */,
 				859E221F13FC4B9300D0A0F9 /* sign-in.png in Resources */,
+				26BAF98319F16B64004C5E60 /* warrantyBodyRequest.xml in Resources */,
 				859E222013FC4B9300D0A0F9 /* sign-out.png in Resources */,
 				ABEB614D19D2F6970081C39A /* giftTableRequest.xml in Resources */,
 				859E22A513FC679F00D0A0F9 /* IntroViewController.xib in Resources */,
@@ -1665,6 +1680,7 @@
 				4D13AB1014193B7D00F04794 /* ConsultSKUViewController.xib in Resources */,
 				ABEB615819D2F7570081C39A /* itemPromotionsRequest.xml in Resources */,
 				ABEB615919D2F7570081C39A /* xmlConstructor.xml in Resources */,
+				26C7EC9219EEBA62003D6248 /* WarrantyViewController.xib in Resources */,
 				4DDC2DAF141FFBCB00E53FF4 /* AirtimeViewController.xib in Resources */,
 				4DDC2DC81420116300E53FF4 /* amounts.plist in Resources */,
 				4D4CF74814225613006A11D8 /* ItemDiscountsViewController.xib in Resources */,
@@ -1708,6 +1724,7 @@
 				4D7555DF14DC3F9A00C63371 /* CenterCellSingle.png in Resources */,
 				4D7555E014DC3F9A00C63371 /* CenterCellSingleSelected.png in Resources */,
 				AB97C13E184000E500B3FD04 /* ScreenShot-568h@2x.png in Resources */,
+				26C2CCCC19F7EE2000A6769C /* ContactViewController.xib in Resources */,
 				4D7555E114DC3F9A00C63371 /* TopCell.png in Resources */,
 				4D7555E214DC3F9A00C63371 /* TopCellSelected.png in Resources */,
 				ABEB614919D2F67F0081C39A /* promotionsConstructorGroupRequest.xml in Resources */,
@@ -1790,6 +1807,7 @@
 				049A86B4183D385200BAA54C /* topTable.png in Resources */,
 				049A86B8183D717500BAA54C /* middleTable1.png in Resources */,
 				0442888D183EA24A00EC2B9A /* ScreenShot.png in Resources */,
+				263D7A9C19F8578700A1D49A /* contactDataRequest.xml in Resources */,
 				ABEB614319D2F6670081C39A /* withdrawDataListRequest.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1808,6 +1826,7 @@
 				DF18F97613CE098A00001371 /* ScanViewController.m in Sources */,
 				DF15DC6713D3CCDA009E7438 /* PaymentViewController.m in Sources */,
 				C07E09B813D4EC2D0022B68C /* Tools.m in Sources */,
+				268739261A029A6100A7029E /* WarrantyGroup.m in Sources */,
 				8574734613F1B6F0004407C4 /* LiverPoolRequest.m in Sources */,
 				4D4AB8E613F321A100F00CD7 /* FindItemParser.m in Sources */,
 				859E21C013FC3D1D00D0A0F9 /* LoginViewController.m in Sources */,
@@ -1830,11 +1849,13 @@
 				4DDC2DAB141FFB0C00E53FF4 /* AirtimeViewController.m in Sources */,
 				4DDC2DC41420100E00E53FF4 /* AmountsViewController.m in Sources */,
 				4D4CF737142255C2006A11D8 /* ItemDiscountsViewController.m in Sources */,
+				2687391A1A012E0600A7029E /* PbNavigationController.m in Sources */,
 				4D4CF73A142255D0006A11D8 /* LoginParser.m in Sources */,
 				4D4CF74F14225653006A11D8 /* PromotionInstallmentViewController.m in Sources */,
 				4D9FD70E142A4F9500E4BF62 /* Card.m in Sources */,
 				AB16AA05186A0D35004467AE /* GenericCardReaderViewController.m in Sources */,
 				4D9FD70F142A4F9500E4BF62 /* Seller.m in Sources */,
+				26A79EE019F5746E008E9284 /* Contact.m in Sources */,
 				4D9FD717142A4FA600E4BF62 /* Styles.m in Sources */,
 				4D861719143A199E00E44118 /* Settings.m in Sources */,
 				4D861720143A19CD00E44118 /* CardDataViewController.m in Sources */,
@@ -1851,6 +1872,7 @@
 				4DA1862E1448E0590083AD78 /* Error.m in Sources */,
 				4DA1862F1448E0590083AD78 /* Store.m in Sources */,
 				AB29BE1619B8966600D893EA /* NSString+XML.m in Sources */,
+				26A79EDC19F56423008E9284 /* ContactViewController.m in Sources */,
 				4DA186421448E08E0083AD78 /* PaymentResponse.m in Sources */,
 				4D83BB691458BDEA00DED488 /* MonederoCardViewController.m in Sources */,
 				4DE84047147889D500F59262 /* ConfigurationAuthorization.m in Sources */,
@@ -1860,6 +1882,8 @@
 				4D5909A71486C3AF00A36D48 /* Rules.m in Sources */,
 				4D35CE25148E84D20075AF8A /* EmployeeSaleViewController.m in Sources */,
 				4DB012A5149AAEEF00A2CB97 /* PaymentPlanViewController.m in Sources */,
+				26C7EC9919EEBBEE003D6248 /* WarrantyViewController.m in Sources */,
+				26C7EC9C19EEC3FC003D6248 /* Warranty.m in Sources */,
 				4DC054A114CD05C500ACC6D9 /* NumberKeypadDecimalPoint.m in Sources */,
 				AB031B6A18BE6EB7009E3C85 /* CancelParser.m in Sources */,
 				4DD374B714CDFB1400E97EC2 /* PromotionGroup.m in Sources */,
@@ -1868,6 +1892,7 @@
 				C5C7E9A5190AF3D000792588 /* StarBitmap.m in Sources */,
 				04519C4515A34CD8009841F7 /* SaleOptionsViewController.m in Sources */,
 				045CE90115C050FB0082FD96 /* MesaDeRegalo.m in Sources */,
+				2687391D1A01A94A00A7029E /* SomsGroup.m in Sources */,
 				04994D3115CAC89A008CE2FE /* CloseTerminalParser.m in Sources */,
 				04994D3515CAC99C008CE2FE /* CloseTerminalData.m in Sources */,
 				04994D3915CAD69B008CE2FE /* CloseTerminalViewController.m in Sources */,

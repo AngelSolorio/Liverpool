@@ -5,7 +5,6 @@
 
 #import "PaymentParser.h"
 
-
 @implementation PaymentParser
 @synthesize msgResponse,currentElement;
 @synthesize payment;
@@ -41,6 +40,9 @@
 #define FECHA_ENTREGA       @"fechaEntrega"
 #define ORDER_DELIVERY_DATE @"orderDeliveryDate"
 
+#define WARRANTY            @"garantia"
+#define REFERNCEWARRANTY    @"referenceWarranty"
+
 #define PROMOCION			@"promocion"
 #define PROMODESCRIPCION	@"promoDescripcion"
 #define PLANID				@"planId"
@@ -53,7 +55,7 @@
 
 #define CAMBIO_EFECTIVO     @"cashReturned"
 
-#define TOTAL_A_PAGAR     @"totalToPay"
+#define TOTAL_A_PAGAR       @"totalToPay"
 #define CANTIDAD_PAGADA     @"amountPayed"
 
 //Refund data
@@ -139,11 +141,15 @@
 		[promo release];
 		DLog(@"currentelement payparser promocion: %@",currentElement);
 
-	}
+    } else if ([currentElement isEqualToString:WARRANTY]) {
+        NSLog(@"Did start warranty %@",currentElement);
+    }
 	
 }
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
-{}
+{
+    NSLog(@"end current element %@",elementName);
+}
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
 {
 	if (!string) {
@@ -235,8 +241,10 @@
 	}
     else if ([currentElement isEqualToString:PRECIO_EXTENDIDO]) {
         [itemModel setPriceExtended:string];
-        
 	}
+    else if ([currentElement isEqualToString:WARRANTY]) {
+        [itemModel setIsWarranty:[string boolValue]];
+    }
 	else if ([currentElement isEqualToString:LINETYPE]) {
 		[itemModel setLineType:string];
 	}
@@ -252,9 +260,11 @@
 	}
     else if ([currentElement isEqualToString:FECHA_ENTREGA]) {
         [itemModel setDeliveryDate:string];
-        
-	}
- 
+    }
+    else if ([currentElement isEqualToString:REFERNCEWARRANTY]){
+        [payment setReferenceWarranty:[[string copy] autorelease]];
+    }
+    
 	//----------------promo------------------------------------
 	else if ([currentElement isEqualToString:PROMODESCRIPCION]) {
 		[promo setPromoDescription:string];
