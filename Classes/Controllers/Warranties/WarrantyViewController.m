@@ -8,6 +8,7 @@
 
 #import "WarrantyViewController.h"
 #import "Warranty.h"
+#import "Styles.h"
 
 @interface WarrantyViewController ()
 @property (retain, nonatomic) IBOutlet UIButton *denyButton;
@@ -29,6 +30,11 @@
     [super viewDidLoad];
     self.registerButton.userInteractionEnabled = NO;
     self.productLabel.text = self.productName;
+    self.warrantiesTableView.backgroundColor=[UIColor clearColor];
+    [Styles bgGradientColorPurple:self.view];
+    [Styles silverButtonStyle:self.denyButton];
+    [Styles silverButtonStyle:self.registerButton];
+
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -61,8 +67,10 @@
     // Configure the cell...    
     if (cell==nil){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-
+        cell.textLabel.textColor=[UIColor whiteColor];
+        cell.textLabel.backgroundColor=[UIColor clearColor];
     }
+    
     Warranty *warranty = (Warranty *)[self.warrantiesList objectAtIndex:indexPath.row];
     cell.textLabel.text = warranty.detail;
     return cell;
@@ -115,8 +123,63 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSInteger catIndex = [self.warrantiesList indexOfObject:self.selectedWarranty];
+    if (catIndex == indexPath.row) {
+        return;
+    }
+    NSIndexPath *oldIndexPath = [NSIndexPath indexPathForRow:catIndex inSection:0];
+    
+    UITableViewCell *newCell = [tableView cellForRowAtIndexPath:indexPath];
+    if (newCell.accessoryType == UITableViewCellAccessoryNone) {
+        newCell.accessoryType = UITableViewCellAccessoryCheckmark;
+        self.selectedWarranty = [self.warrantiesList objectAtIndex:indexPath.row]; //Holds the selected warranty
+    }
+    
+    UITableViewCell *oldCell = [tableView cellForRowAtIndexPath:oldIndexPath];
+    if (oldCell.accessoryType == UITableViewCellAccessoryCheckmark) {
+        oldCell.accessoryType = UITableViewCellAccessoryNone;
+    }
     self.registerButton.userInteractionEnabled = YES;
-    self.selectedWarranty = [self.warrantiesList objectAtIndex:indexPath.row]; //Holds the selected warranty
+}
+
+-(void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    NSString *cellImage;
+    NSString *cellImageSelected;
+    // first cell check
+    if ([indexPath length]==1) {
+        cellImage=@"oneCell.png";
+        cellImageSelected=@"oneCell.ong";
+    }
+    else if (indexPath.row == 0) {
+        cellImage=@"topTable.png";
+        cellImageSelected=@"topTable.png";
+        
+    }
+    // last cell check
+    else if (indexPath.row ==[self.warrantiesTableView numberOfRowsInSection:indexPath.section] - 1) {
+        cellImage=@"bottomTable.png";
+        cellImageSelected=@"bottomTable.png";
+        // middle cells
+    } else {
+        cellImage=@"middleTable1.png";
+        cellImageSelected=@"bottomTable.png";
+    }
+    
+    UIImageView *backgroundNormal;
+    UIImageView *backgroundSelected;
+    
+    backgroundNormal = [[UIImageView alloc] initWithImage:
+                        [UIImage imageNamed:cellImage]];
+    
+    backgroundSelected = [[UIImageView alloc] initWithImage:
+                          [UIImage imageNamed:cellImageSelected]];
+    
+    [cell setBackgroundView:backgroundNormal];
+    [cell setSelectedBackgroundView:backgroundSelected];
+    
+    [backgroundNormal release];
+    [backgroundSelected release];
 }
 
 - (IBAction)registerWarranty:(id)sender{

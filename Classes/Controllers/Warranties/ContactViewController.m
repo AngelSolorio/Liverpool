@@ -8,13 +8,17 @@
 
 #import "ContactViewController.h"
 #import "Contact.h"
+#import "Styles.h"
 @interface ContactViewController ()
 @end
 
 @implementation ContactViewController
+@synthesize registerBtn = _registerBtn;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [Styles bgGradientColorPurple:self.view];
+    [Styles silverButtonStyle:self.registerBtn];
     UITapGestureRecognizer *dismissKeyboardTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
     [self.view addGestureRecognizer:dismissKeyboardTap];
     [self registerForKeyboardNotifications];
@@ -50,9 +54,10 @@
     UIAlertView *error;
     Contact *contact = [[Contact alloc] initWithTelephone:self.telephoneFld.text telephoneConfirmation:self.telephoneConfirmationFld.text birthday:self.birthdayFld.text];
     if ([contact valid]) {
-        NSDictionary *contactInfo = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact",nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTINFOFILLEDUP_NOTIFICATION object:nil userInfo:contactInfo];
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:^{
+            NSDictionary *contactInfo = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact",nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTINFOFILLEDUP_NOTIFICATION object:nil userInfo:contactInfo];
+        }];
     } else{
         error = [[UIAlertView alloc] initWithTitle:@"Error" message:[contact completeErrors] delegate:self cancelButtonTitle:nil otherButtonTitles:@"Aceptar", nil];
         [error show];
@@ -98,6 +103,7 @@
     [_telephoneFld release];
     [_telephoneConfirmationFld release];
     [_birthdayFld release];
+    [_registerBtn release];
     [super dealloc];
 }
 @end

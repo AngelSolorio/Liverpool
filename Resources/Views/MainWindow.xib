@@ -33,7 +33,7 @@
             <extendedEdge key="edgesForExtendedLayout"/>
             <nil key="simulatedBottomBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
-            <tabBar key="tabBar" contentMode="scaleToFill" id="6" customClass="CustomUITabBar">
+            <tabBar key="tabBar" contentMode="scaleToFill" selectedItem="14" id="6" customClass="CustomUITabBar">
                 <rect key="frame" x="0.0" y="431" width="320" height="49"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                 <color key="selectedImageTintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>

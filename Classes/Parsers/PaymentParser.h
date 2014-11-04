@@ -20,8 +20,6 @@
 	FindItemModel *itemModel;
 	Promotions *promo;
     RefundData *refundD;
-    BOOL *warrantyFound;
-    Warranty *warranty;
     NSMutableString *detail;
     NSString *referenceWarranty;
 

@@ -41,12 +41,6 @@
 #define ORDER_DELIVERY_DATE @"orderDeliveryDate"
 
 #define WARRANTY            @"garantia"
-#define COST                @"cost"
-#define DETAIL              @"detail"
-#define ID                  @"id"
-#define PERCENTAGE          @"percentage"
-#define SKU                 @"sku"
-#define DEPARTMENT			@"department"
 #define REFERNCEWARRANTY    @"referenceWarranty"
 
 #define PROMOCION			@"promocion"
@@ -149,22 +143,12 @@
 
     } else if ([currentElement isEqualToString:WARRANTY]) {
         NSLog(@"Did start warranty %@",currentElement);
-        warrantyFound = YES;
-        itemModel.warranty = [[Warranty alloc] init];
-        [warranty release];
-    } else if ([currentElement isEqualToString:DETAIL]){
-        detail = [[NSMutableString alloc] init];
     }
 	
 }
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
 {
     NSLog(@"end current element %@",elementName);
-    if ([elementName isEqualToString:WARRANTY]) {
-        warrantyFound = NO;
-    } else if ([elementName isEqualToString:DETAIL]){
-        [detail release];
-    }
 }
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
 {
@@ -257,8 +241,10 @@
 	}
     else if ([currentElement isEqualToString:PRECIO_EXTENDIDO]) {
         [itemModel setPriceExtended:string];
-        
 	}
+    else if ([currentElement isEqualToString:WARRANTY]) {
+        [itemModel setIsWarranty:[string boolValue]];
+    }
 	else if ([currentElement isEqualToString:LINETYPE]) {
 		[itemModel setLineType:string];
 	}
@@ -274,30 +260,11 @@
 	}
     else if ([currentElement isEqualToString:FECHA_ENTREGA]) {
         [itemModel setDeliveryDate:string];
-        
-    }
-    ///******************warranties************************************
-    else if (warrantyFound) {
-        if ([currentElement isEqualToString:ID]) {
-          itemModel.warranty.warrantyId =[[string copy] autorelease];
-        } else if ([currentElement isEqualToString:COST]){
-           itemModel.warranty.cost = [[string copy] autorelease];
-        } else if ([currentElement isEqualToString:DETAIL]){
-            [detail appendString:string];
-            NSLog(@"Detail %@",detail);
-           itemModel.warranty.detail =detail;
-        } else if ([currentElement isEqualToString:SKU]){
-            itemModel.warranty.sku = [[string copy] autorelease];
-        } else if ([currentElement isEqualToString:PERCENTAGE]){
-           itemModel.warranty.percentage = [[string copy] autorelease];
-        } else if ([currentElement isEqualToString:DEPARTMENT]){
-          itemModel.warranty.department = [[string copy] autorelease];
-        }
     }
     else if ([currentElement isEqualToString:REFERNCEWARRANTY]){
         [payment setReferenceWarranty:[[string copy] autorelease]];
     }
- 
+    
 	//----------------promo------------------------------------
 	else if ([currentElement isEqualToString:PROMODESCRIPCION]) {
 		[promo setPromoDescription:string];

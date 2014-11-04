@@ -205,7 +205,7 @@
                             itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#quantity#" withValidString:itemF.itemCount];
                             itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#extended_price#" withValidString:itemF.priceExtended];
                             itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#delivery_date#" withValidString:itemF.deliveryDate];
-                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#warranty_flag#" withValidString:@""];
+                            itemFindContent = [itemFindContent stringByReplacingXMLOcurrencesOfString:@"#warranty_flag#" withValidString:@"false"];
                             NSLog(@"Find item content %@",itemFindContent);
                             [itemBody appendString:itemFindContent];
                             

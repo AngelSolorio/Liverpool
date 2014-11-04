@@ -7,7 +7,7 @@
 
 @implementation FindItemModel
 @synthesize barCode,brand,department,generic,itemCount,itemType,priceExtended;
-@synthesize lineType,price,description,discounts,promo,itemForGift,deliveryDate,warranty;
+@synthesize lineType,price,description,discounts,promo,itemForGift,deliveryDate,warranty,isWarranty;
 -(id)init
 {
 	if ((self = [super init])) {

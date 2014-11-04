@@ -1542,8 +1542,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 	//if the transaction was succesful.
 	if ([payParser getStateOfMessage]) {
 		
-		[barBtnCancel setEnabled:NO];
-         [barBtnBack setEnabled:NO];
+		//[barBtnCancel setEnabled:NO];
+         //[barBtnBack setEnabled:NO];
 		
 		float balance=[payParser.payment.balanceToPay floatValue];
 		if ( balance==0) { // si el saldo del monedero fue suficiente para pagar el cobro
@@ -1856,6 +1856,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
      DLog(@"termino");
      
      if ([[logoutParser returnErrorMessage]isEqualToString:@"OK"]) {
+          [Session verifyWarrantyPresence:nil];
           [(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) loginScreen];
      }
 

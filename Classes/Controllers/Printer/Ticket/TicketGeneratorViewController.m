@@ -2673,21 +2673,36 @@
     NSString *installmentSelected=@"";
     NSMutableString *products=[[[NSMutableString alloc] init] autorelease];
 
-    for (FindItemModel *item in productList) {
-        
+    int i = 0;
+    int productListCount = [productList count];
+    int lastItemIndex = productListCount-1;
+    while (i<=productListCount) {
+        FindItemModel *item = [productList objectAtIndex:i];
         [Tools calculateSuccesiveDiscounts:item];
         
         //backup lines no muestran cantidad
         //[products appendFormat:@"%@\t         SECC %@\n ",item.description,item.department];
         //[products appendFormat:@"%@         %@\n ",[self generateItemBarcodeWithZeros:item.barCode],[self getExtendedPrice:item]];
-        
-        [products appendFormat:@"%@                 SECC %@\n ",item.description,item.department];
-        [products appendFormat:@"%@       %@          %@\n ",[self generateItemBarcodeWithZeros:item.barCode],[self getQuantityTicket:item],[self getExtendedPrice:item]];
-        
-        if (item.warranty.warrantyId != NULL) {
 
-            [products appendFormat:@"%@                 SECC %@\n ",item.warranty.detail,item.warranty.department];
-            [products appendFormat:@"%@       %@          %@\n ",[item.warranty.sku substringFromIndex:8],[NSNumber numberWithInt:1],item.warranty.cost];
+        if (item.isWarranty == NO) {
+            int nextItemIndex = i+1;
+            if (!(nextItemIndex>lastItemIndex)) {
+                FindItemModel *nextItem = [productList objectAtIndex:nextItemIndex];
+                if (nextItem.isWarranty == YES) {
+                    [products appendFormat:@"%@                 SECC %@\n ",item.description,item.department];
+                    [products appendFormat:@"%@       %@          %@\n ",[self generateItemBarcodeWithZeros:item.barCode],[self getQuantityTicket:item],[self getExtendedPrice:item]];
+
+                    [products appendFormat:@"%@                 SECC %@\n ",nextItem.description,item.department];
+                    [products appendFormat:@"%@       %@          %@\n ",[self generateItemBarcodeWithZeros:nextItem.barCode],[self getQuantityTicket:nextItem],[self getExtendedPrice:nextItem]];
+                    i+=2;
+                } else{
+                    i+=1;
+                }
+            } else{
+                break;
+            }
+        } else{
+            i+=1;
         }
         
         float baseAmount=0;
