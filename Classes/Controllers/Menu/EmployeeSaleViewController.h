@@ -9,7 +9,7 @@
 #import "LineaSDK.h"
 
 
-@interface EmployeeSaleViewController : UIViewController<LineaDelegate,VFIPinpadDelegate> {
+@interface EmployeeSaleViewController : UIViewController<LineaDelegate,VFIPinpadDelegate,UIBarPositioningDelegate> {
 	Linea                       *scanDevice;
 	UITextField					*txtCardNumber;
 	UIButton					*btnOk;

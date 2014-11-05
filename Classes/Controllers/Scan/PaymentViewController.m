@@ -1031,12 +1031,12 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 -(void) showAmountView
 {
      [[self view] addSubview:amountReaderView];
-     [amountReaderView setFrame:CGRectMake(0, 37, amountReaderView.frame.size.width, amountReaderView.frame.size.height)];
+     [amountReaderView setFrame:CGRectMake(0, 0, amountReaderView.frame.size.width, amountReaderView.frame.size.height)];
 }
 -(void) showCardReadview
 {
      [[self view] addSubview:cardReaderView];
-     [cardReaderView setFrame:CGRectMake(0, 37, cardReaderView.frame.size.width, cardReaderView.frame.size.height)];
+     [cardReaderView setFrame:CGRectMake(0, 0, cardReaderView.frame.size.width, cardReaderView.frame.size.height)];
 
 }
 
@@ -2193,10 +2193,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 
 -(void)didReceiveContactNotification:(NSNotification *)notification
 {
+     contact = (Contact *)[notification object];
      [[NSNotificationCenter defaultCenter] removeObserver:self name:CONTACTINFOFILLEDUP_NOTIFICATION object:nil];
-     NSDictionary *contactInfo = [notification userInfo];
-     contact = (Contact *)[contactInfo objectForKey:@"contact"];
-     NSLog(@"Contact info %@",contactInfo);
+     NSLog(@"Contact info %@",contact);
      [self continueThePaymentProcess];
 }
 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">2048</int>
-		<string key="IBDocument.SystemVersion">13F34</string>
-		<string key="IBDocument.InterfaceBuilderVersion">6245</string>
-		<string key="IBDocument.AppKitVersion">1265.21</string>
-		<string key="IBDocument.HIToolboxVersion">698.00</string>
+		<int key="IBDocument.SystemTarget">1536</int>
+		<string key="IBDocument.SystemVersion">14A389</string>
+		<string key="IBDocument.InterfaceBuilderVersion">6250</string>
+		<string key="IBDocument.AppKitVersion">1343.14</string>
+		<string key="IBDocument.HIToolboxVersion">755.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">6238</string>
+			<string key="NS.object.0">6244</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBNSLayoutConstraint</string>
@@ -53,7 +53,7 @@
 					<object class="IBUIImageView" id="566026981">
 						<reference key="NSNextResponder" ref="122806036"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, -17}, {290, 72}}</string>
+						<string key="NSFrame">{{20, -17}, {320, 44}}</string>
 						<reference key="NSSuperview" ref="122806036"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>

@@ -33,7 +33,8 @@
 @synthesize aTabBar;
 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{	
+{
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 	[self loginScreen];
     [self.window makeKeyAndVisible];
 

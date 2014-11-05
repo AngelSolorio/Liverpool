@@ -12,6 +12,8 @@
 -(id)initWithTelephone:(id)telephone telephoneConfirmation:(NSString *)telephoneConfirmation birthday:(NSString *)birthday;
 -(BOOL)valid;
 -(NSMutableString *)completeErrors;
--(NSString *)telephone;
--(NSString *)birthday;
+@property (retain , nonatomic) NSString *telephone;
+@property (retain, nonatomic) NSString *telephoneConfirmation;
+@property (retain, nonatomic) NSString *birthday;
+
 @end

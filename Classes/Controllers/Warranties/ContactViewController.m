@@ -14,6 +14,7 @@
 
 @implementation ContactViewController
 @synthesize registerBtn = _registerBtn;
+@synthesize contactInfo = _contactInfo;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -55,8 +56,7 @@
     Contact *contact = [[Contact alloc] initWithTelephone:self.telephoneFld.text telephoneConfirmation:self.telephoneConfirmationFld.text birthday:self.birthdayFld.text];
     if ([contact valid]) {
         [self dismissViewControllerAnimated:YES completion:^{
-            NSDictionary *contactInfo = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact",nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTINFOFILLEDUP_NOTIFICATION object:nil userInfo:contactInfo];
+            [[NSNotificationCenter defaultCenter] postNotificationName:CONTACTINFOFILLEDUP_NOTIFICATION  object:contact];
         }];
     } else{
         error = [[UIAlertView alloc] initWithTitle:@"Error" message:[contact completeErrors] delegate:self cancelButtonTitle:nil otherButtonTitles:@"Aceptar", nil];
@@ -92,7 +92,7 @@
     // the keyboard is hiding reset the table's height
     NSTimeInterval animationDuration = [[[aNotification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     CGRect frame = self.view.frame;
-    frame.origin.y = 20;
+    frame.origin.y = 0;
     [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
     [UIView setAnimationDuration:animationDuration];
     self.view.frame = frame;

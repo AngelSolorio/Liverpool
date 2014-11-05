@@ -33,9 +33,10 @@
             <extendedEdge key="edgesForExtendedLayout"/>
             <nil key="simulatedBottomBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
-            <tabBar key="tabBar" contentMode="scaleToFill" selectedItem="14" id="6" customClass="CustomUITabBar">
+            <tabBar key="tabBar" contentMode="scaleToFill" selectedItem="21" id="6" customClass="CustomUITabBar">
                 <rect key="frame" x="0.0" y="431" width="320" height="49"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                <color key="barTintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 <color key="selectedImageTintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
             </tabBar>
             <viewControllers>
@@ -44,7 +45,11 @@
                     <tabBarItem key="tabBarItem" title="Scan" image="POS.png" id="14"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="11">
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </textAttributes>
                     </navigationBar>
                     <viewControllers>
                         <viewController title="Scan View" nibName="ScanView" id="12" userLabel="View Controller - Scan View" customClass="ScanViewController">
@@ -64,7 +69,11 @@
                     <tabBarItem key="tabBarItem" title="Salir" image="logout.png" id="16"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="17">
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <viewControllers>
                         <viewController id="109">
@@ -79,7 +88,11 @@
                     <tabBarItem key="tabBarItem" title="Conf" image="Configuration.png" id="21"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="22">
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <viewControllers>
                         <viewController id="98" customClass="ConfigurationAuthorization">
@@ -95,10 +108,15 @@
         </tabBarController>
         <navigationController title="Login" wantsFullScreenLayout="YES" navigationBarHidden="YES" id="93" customClass="PbNavigationController">
             <extendedEdge key="edgesForExtendedLayout"/>
-            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <size key="freeformSize" width="320" height="480"/>
             <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="95">
                 <autoresizingMask key="autoresizingMask"/>
-                <color key="tintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                <color key="barTintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                <textAttributes key="titleTextAttributes">
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                </textAttributes>
             </navigationBar>
             <viewControllers>
                 <viewController id="94" customClass="LoginViewController">

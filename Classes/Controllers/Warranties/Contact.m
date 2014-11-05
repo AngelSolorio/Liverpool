@@ -13,10 +13,7 @@
 #define BIRTHDAYISBLANK_ERROR @"Cumpleaños no puede estar en blanco."
 
 @interface Contact ()
-@property (strong , nonatomic) NSString *telephone;
-@property (strong, nonatomic) NSString *telephoneConfirmation;
-@property (strong, nonatomic) NSString *birthday;
-@property (strong, nonatomic) NSMutableString *errors;
+@property (retain, nonatomic) NSMutableString *errors;
 @end
 
 @implementation Contact
@@ -33,26 +30,26 @@
 -(id)initWithTelephone:(id)telephone telephoneConfirmation:(NSString *)telephoneConfirmation birthday:(NSString *)birthday;
 {
     if (self = [super init]) {
-        _birthday = birthday;
-        _telephone = telephone;
-        _telephoneConfirmation = telephoneConfirmation;
+        self.birthday = birthday;
+        self.telephone = telephone;
+        self.telephoneConfirmation = telephoneConfirmation;
     }
     return self;
 }
 
 -(BOOL)valid{
     BOOL isValid;
-    if (_birthday.length>0 && _telephone.length>0 && _telephoneConfirmation.length>0) {
-        if ([_telephone isEqualToString:_telephoneConfirmation]) {
+    if (self.birthday.length>0 && self.telephone.length>0 && self.telephoneConfirmation.length>0) {
+        if ([self.telephone isEqualToString:self.telephoneConfirmation]) {
             isValid = YES;
         } else{
             [self.errors appendString:TELEPHONEMISMATCH_ERROR];
             isValid =NO;
         }
     } else {
-        if(_telephone.length == 0) [self.errors appendString:[NSString stringWithFormat:@"%@\n",TELEPHONEISBLANK_ERROR]];
-        if(_telephoneConfirmation.length == 0) [self.errors appendString:[NSString stringWithFormat:@"%@\n", TELEPHONECONFIRMATIONISBLANK_ERROR]];
-        if(_birthday.length == 0) [self.errors appendString:[NSString stringWithFormat:@"%@\n", BIRTHDAYISBLANK_ERROR]];
+        if(self.telephone.length == 0) [self.errors appendString:[NSString stringWithFormat:@"%@\n",TELEPHONEISBLANK_ERROR]];
+        if(self.telephoneConfirmation.length == 0) [self.errors appendString:[NSString stringWithFormat:@"%@\n", TELEPHONECONFIRMATIONISBLANK_ERROR]];
+        if(self.birthday.length == 0) [self.errors appendString:[NSString stringWithFormat:@"%@\n", BIRTHDAYISBLANK_ERROR]];
         isValid = NO;
         NSLog(@"errors %@",self.errors);
     }
@@ -60,10 +57,12 @@
 }
 
 -(NSString *)birthday{
+    if (!_birthday) _birthday = [[NSString alloc] init];
     return _birthday;
 }
 
 -(NSString *)telephone{
+    if(!_telephone) _telephone = [[NSString alloc] init];
     return _telephone;
 }
 

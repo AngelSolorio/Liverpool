@@ -13,4 +13,5 @@
 @property (retain, nonatomic) IBOutlet UITextField *telephoneConfirmationFld;
 @property (retain, nonatomic) IBOutlet UITextField *birthdayFld;
 @property (retain, nonatomic) IBOutlet UIButton *registerBtn;
+@property (retain, nonatomic) NSDictionary *contactInfo;
 @end
