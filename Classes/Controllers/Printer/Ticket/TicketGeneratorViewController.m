@@ -2676,7 +2676,7 @@
     int i = 0;
     int productListCount = [productList count];
     int lastItemIndex = productListCount-1;
-    while (i<=productListCount) {
+    while (i<productListCount) {
         FindItemModel *item = [productList objectAtIndex:i];
         [Tools calculateSuccesiveDiscounts:item];
         
