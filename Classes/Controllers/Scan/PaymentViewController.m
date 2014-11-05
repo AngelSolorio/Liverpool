@@ -24,6 +24,7 @@
 #import "RefundData.h"
 #import "LogoutParser.h"
 #import "VFDevice.h"
+#import "ContactViewController.h"
 
 @implementation PaymentViewController
 

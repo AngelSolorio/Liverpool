@@ -26,11 +26,13 @@
 	</dict>
 	<key>IDESourceControlProjectRepositoryRootDictionary</key>
 	<dict>
+		<key>194E7A740B6B3143367263C10EAB8894AE6347F1</key>
+		<string>https://glpos.plan.io/svn/glpos</string>
 		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
 		<string>https://glpos.plan.io/svn/glpos</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://glpos.plan.io/svn/glpos</string>
+	<string>https://glpos.plan.io/svn/glpos/CardReaderLiverpool/CardReader.xcodeproj</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
@@ -39,7 +41,7 @@
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
+			<string>public.vcs.subversion</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
 			<key>IDESourceControlWCCName</key>
@@ -47,7 +49,7 @@
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
+			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
 			<key>IDESourceControlWCCName</key>

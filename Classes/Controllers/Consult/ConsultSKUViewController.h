@@ -22,6 +22,7 @@
 	UITextField					*txtBarcode;
 	UIButton					*btnRegister;
     NSTimer                     *myTimer;
+    NSNumber                    *warrantiesEnabled;
 }
 @property (nonatomic,retain) FindItemModel *itemModel;
 @property (nonatomic,retain) IBOutlet ItemDetailViewController *itemDetailView;

@@ -36,6 +36,8 @@
 	float                         total;
 	int							selectedItemIndex;
     NSTimer                     *myTimer;
+    NSNumber                    *warrantiesEnabled;
+    FindItemModel               *somsItemModel;
 }
 
 @property (retain, nonatomic) IBOutlet UITextView   *textDescription;

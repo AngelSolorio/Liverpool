@@ -19,6 +19,8 @@
 #import "SomsListParser.h"
 #import "Rules.h"
 #import "VFDevice.h"
+#import "WarrantyViewController.h"
+
 @implementation ScanViewController
 
 @synthesize textDescription;
