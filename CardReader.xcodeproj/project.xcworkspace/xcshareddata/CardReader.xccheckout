@@ -11,9 +11,7 @@
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>194E7A740B6B3143367263C10EAB8894AE6347F1</key>
-		<string>https://glpos.plan.io/svn/glpos</string>
-		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
-		<string>https://glpos.plan.io/svn/glpos/CardReaderLiverpool</string>
+		<string>https://github.com/AngelSolorio/Liverpool.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>CardReader.xcodeproj</string>
@@ -21,14 +19,10 @@
 	<dict>
 		<key>194E7A740B6B3143367263C10EAB8894AE6347F1</key>
 		<string>../..</string>
-		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
-		<string>../.. VillaHermosa</string>
 	</dict>
 	<key>IDESourceControlProjectRepositoryRootDictionary</key>
 	<dict>
 		<key>194E7A740B6B3143367263C10EAB8894AE6347F1</key>
-		<string>https://glpos.plan.io/svn/glpos</string>
-		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
 		<string>https://glpos.plan.io/svn/glpos</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -54,14 +48,6 @@
 			<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Liverpool</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>66989A6C-2247-4E75-A4FB-D9484830B6FA</string>
-			<key>IDESourceControlWCCName</key>
-			<string>Liverpool VillaHermosa</string>
 		</dict>
 	</array>
 </dict>
