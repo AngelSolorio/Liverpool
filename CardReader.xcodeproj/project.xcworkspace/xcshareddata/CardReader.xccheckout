@@ -11,7 +11,7 @@
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>194E7A740B6B3143367263C10EAB8894AE6347F1</key>
-		<string>https://glpos.plan.io/svn/glpos/https://github.com/AngelSolorio/Liverpool.git</string>
+		<string>https://glpos.plan.io/svn/glpos</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>CardReader.xcodeproj</string>
@@ -26,7 +26,7 @@
 		<string>https://glpos.plan.io/svn/glpos</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://glpos.plan.io/svn/glpos</string>
+	<string>https://glpos.plan.io/svn/glpos/https:/github.com/AngelSolorio/Liverpool.git/CardReader.xcodeproj</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
@@ -35,7 +35,7 @@
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
+			<string>public.vcs.subversion</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
 			<key>IDESourceControlWCCName</key>
@@ -43,7 +43,7 @@
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
+			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
 			<key>IDESourceControlWCCName</key>
