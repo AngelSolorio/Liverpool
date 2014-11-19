@@ -39,6 +39,7 @@
 #define HAS_DELIVERY_DATE   @"hasDeliveryDate"
 #define FECHA_ENTREGA       @"fechaEntrega"
 #define ORDER_DELIVERY_DATE @"orderDeliveryDate"
+#define FREE                @"free"
 
 #define WARRANTY            @"garantia"
 #define REFERNCEWARRANTY    @"referenceWarranty"
@@ -263,6 +264,12 @@
     }
     else if ([currentElement isEqualToString:REFERNCEWARRANTY]){
         [payment setReferenceWarranty:[[string copy] autorelease]];
+    }
+    else if ([currentElement isEqualToString:FREE]) {
+        if ([string isEqualToString:@"false"]) //patch 1.4.5 rev3 shorter response time
+            itemModel.isFree = false;
+        if ([string isEqualToString:@"true"])
+            itemModel.isFree = true;
     }
     
 	//----------------promo------------------------------------

@@ -9,3 +9,4 @@
     <precioExtendido>#extended_price#</precioExtendido>
     <fechaEntrega>#delivery_date#</fechaEntrega>
     <garantia>#warranty_flag#</garantia>
+    <free>#free#</free>

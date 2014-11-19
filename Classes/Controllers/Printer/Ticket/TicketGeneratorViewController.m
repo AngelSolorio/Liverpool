@@ -436,6 +436,8 @@
 		
         [products appendFormat:@"%@                 SECC %@\n ",item.description,item.department];
 		[products appendFormat:@"%@       %@          %@\n ",[self generateItemBarcodeWithZeros:item.barCode],[self getQuantityTicket:item],[self getExtendedPrice:item]];
+        if(item.isFree) [products appendFormat:@"       REBAJA              %@-\n ",item.price];
+        
         NSLog(@"Warranty for item %@",item.warranty);
         if (item.warranty.warrantyId != NULL) {
             [products appendFormat:@"%@                 SECC %@\n ",item.warranty.detail,item.warranty.department];
@@ -512,7 +514,7 @@
         
 		[products appendString:@"\n"];
 		
-        total+=[item.priceExtended floatValue];
+        total = item.isFree ? total : total + [item.priceExtended floatValue];
 	}
 	//calculate the total amount for ticket with discounts
     total = [Session hasWarranties] ? total-totalDiscounts+totalWarranties : total-totalDiscounts;

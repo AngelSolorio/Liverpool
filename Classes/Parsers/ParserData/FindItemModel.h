@@ -42,6 +42,7 @@
 @property (nonatomic)			BOOL	  itemForGift;
 @property (nonatomic, retain)   Warranty *warranty;
 @property (nonatomic)           BOOL      isWarranty;
+@property (nonatomic)           BOOL      isFree;
 
 -(NSString*) getXMLdescription;
 -(void)initWarranty;
