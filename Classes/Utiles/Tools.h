@@ -4,6 +4,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "FindItemModel.h"
 
 UIActivityIndicatorView *activityIndicator;
@@ -34,11 +35,11 @@ UITextField *txtField;
 +(BOOL) isValidNumber:(NSString *) string;
 //+(NSString*) getUniqueID;
 +(NSString*) convertImageToBase64String:(UIImage*) aImage;
-+(UIImage*) captureSign:(UIView*) aView;
-+(UIImage*) captureScreen:(UIView*) aView;
-+(NSInteger) string:(NSString*)actual indexOf:(NSString*)buscado;
-+(UIView *) inputAccessoryView:(UITextField*) aTxtField;
-+(BOOL) isValidAmountToPay:(UITextField*) discount :(NSNumber*) maxAmount :(int) paymentType;
++(UIImage*)captureSign:(UIView *)aView;
++(UIImage*)captureScreen:(UIView *)aView;
++(NSInteger)string:(NSString *)actual indexOf:(NSString*)buscado;
++(UIView *)inputAccessoryView:(UITextField*)aTxtField;
++(BOOL)isValidAmountToPay:(UITextField *)discount :(NSNumber*)maxAmount :(int)paymentType;
 +(void) saveStoreToPlist:(NSMutableArray*) storeList;
 +(void) restartVoucherNumber;
 +(void) increaseVoucherNumber;

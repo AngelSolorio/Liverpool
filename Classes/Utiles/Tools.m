@@ -806,7 +806,7 @@
                         totalDiscounts+=[promo.promoDiscountPercent floatValue];
                     }
                 }
-            total+=([itemF.price floatValue]*[[itemF itemCount] floatValue]);
+            total = itemF.isFree ? total : total + ([itemF.price floatValue]*[[itemF itemCount] floatValue]);
         } else if ([item isKindOfClass:[Warranty class]]){
             Warranty *itemW = item;
             totalWarranties += ([itemW.cost floatValue] *[itemW.quantity floatValue]);
@@ -1392,7 +1392,7 @@
                 }
             }
             //total+=[item.price floatValue];
-            totalItems = totalItems - itemKeyDiscounts;
+            totalItems = itemF.isFree ? 0 : totalItems - itemKeyDiscounts;
             
             if (promos!=nil)
                 for (Promotions *promo in promos) {

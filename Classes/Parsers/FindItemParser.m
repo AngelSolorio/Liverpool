@@ -15,6 +15,7 @@
 #define PRICE				@"price"
 #define DESCRIPTION			@"description"
 #define PROMOTION			@"promocion"
+#define FREE                @"free"
 
 #define WARRANTIES          @"warranties"
 #define COST                @"cost"
@@ -107,6 +108,12 @@
 	if ([currentElement isEqualToString:ITEMTYPE]) {
 		findItemModel.itemType=[[string copy]autorelease];
 	}
+    if ([currentElement isEqualToString:FREE]) {
+        if ([string isEqualToString:@"false"]) //patch 1.4.5 rev3 shorter response time
+            findItemModel.isFree = false;
+        if ([string isEqualToString:@"true"])
+            findItemModel.isFree = true;
+    }
 	if ([currentElement isEqualToString:LINETYPE]) {
 		findItemModel.lineType=[[string copy]autorelease];
         //[string stringbyadd

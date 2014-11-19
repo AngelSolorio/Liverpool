@@ -145,7 +145,7 @@
     [Session setDocTo:closeData.cierreDocto];
     
     if ([closeData isError]) {
-        [Tools displayAlert:@"Error" message:[closeData errorCode]];
+        [Tools displayAlert:@"Error" message:[closeData message]];
     }
     else {
         //if the flag is marked as true, must print the ticket 
