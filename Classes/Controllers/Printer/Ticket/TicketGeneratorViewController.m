@@ -752,6 +752,9 @@
                 {
                     //NSString *totalS=[NSString stringWithFormat:@"%.02f",total];
                     NSString *div=[Tools calculateDivisionValueAmount:cards.planInstallment:cards.amountToPay];
+                    float fDiv=[div floatValue];
+                    fDiv=ceilf(fDiv);
+                    div=[NSString stringWithFormat:@"%0.2f",fDiv];
                     div=[Tools amountCurrencyFormat:div];
                     monthlyPaymentMessage=[monthlyPaymentMessage stringByAppendingString:div];
                     [totalCopyComprobant appendString:@"\t"];
