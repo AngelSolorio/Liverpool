@@ -2023,7 +2023,7 @@
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Resources/CardReader-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/CardReaderSDK\"",
@@ -2032,10 +2032,10 @@
 				);
 				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = "armv7 armv7f armv7k";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Ad-Hoc";
@@ -2122,21 +2122,22 @@
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Resources/CardReader-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/CardReaderSDK\"",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/Classes/CardReaderSDK/Library\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DDEBUG";
 				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=*]" = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = "armv7 armv7f armv7k";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2159,7 +2160,7 @@
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Resources/CardReader-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/CardReaderSDK\"",
@@ -2168,10 +2169,10 @@
 				);
 				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = "armv7 armv7f armv7k";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

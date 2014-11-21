@@ -57,4 +57,6 @@
 {
     [[self pinPad] enableMSRDualTrack];
 }
+
++(void)clearPheri
 @end

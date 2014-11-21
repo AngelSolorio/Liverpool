@@ -126,7 +126,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
      //scanDevice = [Linea sharedDevice];
      //[scanDevice setDelegate:self];
      //[scanDevice connect];
-     [scanDevice barcodeEnableBarcode:BAR_ALL enabled:YES error:nil];
+     //[scanDevice barcodeEnableBarcode:BAR_ALL enabled:YES error:nil];
      [Styles bgGradientColorPurple:self.view];
      [Styles bgGradientColorPurple:amountReaderView];
      [Styles bgGradientColorPurple:cardReaderView];
