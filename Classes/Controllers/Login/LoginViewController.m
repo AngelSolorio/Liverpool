@@ -110,6 +110,7 @@
     //Tenemos que deslogear
 	if ([Session getStatus]==VALID_SESSION) {
 		DLog(@"Voy a deslogear");
+        [Session verifyWarrantyPresence:nil];
 		[self logout];
 	}
     [self evaluationActivePOS];
