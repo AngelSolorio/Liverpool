@@ -224,8 +224,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
 	DLog(@"viewwilldisappear payment");
 	[(CardReaderAppDelegate*)([UIApplication sharedApplication].delegate) hideTabBar];
 
-	[scanDevice removeDelegate:self];
-	scanDevice = nil;
+	//[scanDevice removeDelegate:self];
+	//scanDevice = nil;
     [self.view endEditing:YES];
     [super viewWillDisappear:animated];
 }

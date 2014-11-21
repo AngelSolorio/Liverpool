@@ -331,7 +331,7 @@ typedef enum {
 {
     [super viewDidAppear:animated];
     DLog(@"viewDidappear scan");
-    myTimer = [NSTimer scheduledTimerWithTimeInterval:0.001
+    myTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                target:self
                                              selector:@selector(targetMethod:)
                                              userInfo:nil

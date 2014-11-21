@@ -45,7 +45,7 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    myTimer = [NSTimer scheduledTimerWithTimeInterval:0.001
+    myTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                target:self
                                              selector:@selector(targetMethod:)
                                              userInfo:nil

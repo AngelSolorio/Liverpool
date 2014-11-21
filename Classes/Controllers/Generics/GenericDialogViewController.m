@@ -40,8 +40,8 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    myTimer = [NSTimer scheduledTimerWithTimeInterval:0.001
-                                               target:self
+    myTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                             target:self
                                              selector:@selector(targetMethod:)
                                              userInfo:nil
                                               repeats:NO];
@@ -138,7 +138,11 @@
 
 -(void)barcodeInitialized:(BOOL)isInitialized
 {
-    if (isInitialized) [VFDevice setBarcodeInitialization];
+    if (isInitialized) {
+        [VFDevice setBarcodeInitialization];
+    } else{
+        NSLog(@"Is not initialized");
+    }
 }
 
 //----------------------------------------
