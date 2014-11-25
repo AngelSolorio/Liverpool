@@ -2023,7 +2023,7 @@
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Resources/CardReader-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/CardReaderSDK\"",
@@ -2122,7 +2122,7 @@
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Resources/CardReader-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/CardReaderSDK\"",
@@ -2160,7 +2160,7 @@
 				GCC_PREFIX_HEADER = "OtherSources/CardReader-Prefix.pch";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "Resources/CardReader-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/CardReaderSDK\"",

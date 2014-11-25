@@ -561,7 +561,7 @@
 	NSArray *array = [track1 componentsSeparatedByCharactersInSet:
                       [NSCharacterSet characterSetWithCharactersInString:@"^"]];
 	
-	NSString *username=[array objectAtIndex:1];
+    NSString *username = [array count]>=2 ? [array objectAtIndex:1] : @"";
 	
 	username = [username stringByTrimmingCharactersInSet:
                 [NSCharacterSet whitespaceAndNewlineCharacterSet]];
