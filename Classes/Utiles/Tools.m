@@ -1184,7 +1184,7 @@
 +(NSString*) calculateQuantityExtendedPrice:(FindItemModel *) item
 {
     //[Tools calculateSuccesiveDiscounts:item];
-    float price=[[item priceExtended] floatValue]; //fix 1.4.3.2
+    float price=[[item price] floatValue]; //fix 1.4.3.2
     float quantity= [[item itemCount] floatValue];
 	
     DLog(@"extended price :%f",price);
