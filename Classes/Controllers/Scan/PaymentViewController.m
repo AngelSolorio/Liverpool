@@ -209,6 +209,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
      //[self connectionState:scanDevice.connstate];
      
 	[super viewDidAppear:animated];
+}
+
+-(void)initPheripherals{
      if ([VFDevice pinPad].initialized) [[VFDevice pinPad] setDelegate:self];
      if ([VFDevice control].initialized) [[VFDevice control] setDelegate:self];
      if ([VFDevice barcode].initialized) [[VFDevice barcode] setDelegate:self];
@@ -1372,7 +1375,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT =162;
                DLog(@"1er pago BANK: %@",card.bank);
 
                //if the transaction was sucessful but its waiting for the next payment connect the cardReader
-               [scanDevice connect];
+               //[scanDevice connect];
+               [self initPheripherals];
                
                firstPaymentDone=YES;
                //assign the amount left to the next payment

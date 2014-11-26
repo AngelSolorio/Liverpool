@@ -116,6 +116,7 @@
 		269FCE5519E5B25500A232BC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269FCE5419E5B25500A232BC /* CFNetwork.framework */; };
 		269FCE5719E5B27800A232BC /* VMF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269FCE5619E5B27800A232BC /* VMF.framework */; };
 		269FD59B19E89E7D00A232BC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 269FD59A19E89E7D00A232BC /* Images.xcassets */; };
+		26C34B121A255882005CD37B /* PbNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26C34B111A255882005CD37B /* PbNavigationController.m */; };
 		4D05460B143A1A8500C2EBD7 /* TicketGeneratorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D05460A143A1A8500C2EBD7 /* TicketGeneratorViewController.xib */; };
 		4D13AB0D14193B7500F04794 /* ConsultSKUViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D13AB0C14193B7500F04794 /* ConsultSKUViewController.m */; };
 		4D13AB1014193B7D00F04794 /* ConsultSKUViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D13AB0F14193B7D00F04794 /* ConsultSKUViewController.xib */; };
@@ -425,6 +426,8 @@
 		269FCE5619E5B27800A232BC /* VMF.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VMF.framework; sourceTree = "<group>"; };
 		269FD59919E6CDB100A232BC /* LineaSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineaSDK.h; sourceTree = "<group>"; };
 		269FD59A19E89E7D00A232BC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Liverpool/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		26C34B101A255882005CD37B /* PbNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PbNavigationController.h; sourceTree = "<group>"; };
+		26C34B111A255882005CD37B /* PbNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PbNavigationController.m; sourceTree = "<group>"; };
 		4D05460A143A1A8500C2EBD7 /* TicketGeneratorViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketGeneratorViewController.xib; sourceTree = "<group>"; };
 		4D13AB0B14193B7500F04794 /* ConsultSKUViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsultSKUViewController.h; sourceTree = "<group>"; };
 		4D13AB0C14193B7500F04794 /* ConsultSKUViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsultSKUViewController.m; sourceTree = "<group>"; };
@@ -1363,6 +1366,8 @@
 		DF18F94313CDFE7900001371 /* Delegates */ = {
 			isa = PBXGroup;
 			children = (
+				26C34B101A255882005CD37B /* PbNavigationController.h */,
+				26C34B111A255882005CD37B /* PbNavigationController.m */,
 				DF18F94413CDFE7900001371 /* CardReaderAppDelegate.h */,
 				DF18F94513CDFE7900001371 /* CardReaderAppDelegate.m */,
 				DF18F97113CE08C100001371 /* Records */,
@@ -1877,6 +1882,7 @@
 				DF18F95E13CDFF6900001371 /* ProjectConstants.m in Sources */,
 				DF18F97613CE098A00001371 /* ScanViewController.m in Sources */,
 				DF15DC6713D3CCDA009E7438 /* PaymentViewController.m in Sources */,
+				26C34B121A255882005CD37B /* PbNavigationController.m in Sources */,
 				C07E09B813D4EC2D0022B68C /* Tools.m in Sources */,
 				2622C63C1A099055000DEAF8 /* WarrantyGroup.m in Sources */,
 				8574734613F1B6F0004407C4 /* LiverPoolRequest.m in Sources */,
