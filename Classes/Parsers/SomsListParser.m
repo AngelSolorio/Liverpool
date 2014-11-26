@@ -112,9 +112,7 @@
 {
     if ([elementName isEqualToString:PRODUCTOS]) {
         self.somsGroup.warrantyGroup.findItemModel = itemModel;
-        NSLog(@"Description %@",self.somsGroup.warrantyGroup.findItemModel.description);
         [self.somsGroup.warrantyList addObject:self.somsGroup.warrantyGroup];
-        NSLog(@"PRoduct desc: %@",itemModel.description);
         self.somsGroup.warrantyGroup = nil;
     } else if ([elementName isEqualToString:WARRANTIES]) {
         warranty.quantity = itemModel.itemCount;

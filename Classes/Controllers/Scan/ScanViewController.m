@@ -340,7 +340,7 @@ typedef enum {
 	//scanDevice = [Linea sharedDevice];
     //[scanDevice setDelegate:self];
 	//[scanDevice connect];
-    
+    if(self.somsGroup.warrantyList.count>0 && (saleType == SOMS_CLIENT_TYPE || saleType ==SOMS_EMPLOYEE_TYPE)) [self reloadTableViewWithData:self.prodList andSomsGroup:somsGroup];
 
     
 }

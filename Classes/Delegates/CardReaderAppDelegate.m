@@ -66,7 +66,7 @@
     [aNavigationControllerLogin pushViewController:aTabBarController animated:YES completion:^{
         [scanViewController setProdList:productList];
         [scanViewController setSomsGroup:sGroup];
-        //[scanViewController reloadTableViewWithData:productList andWarranties:warranties];
+       // [scanViewController reloadTableViewWithData:productList andWarranties:warranties];
         [aTabBarController setSelectedIndex:0];
     }];
 
