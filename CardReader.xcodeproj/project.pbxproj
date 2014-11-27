@@ -1761,8 +1761,8 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)/Classes\\\"",
@@ -1782,8 +1782,8 @@
 					"\"$(SRCROOT)/Classes/CardReaderSDK/Library\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CBDEC0A3-8D5D-44EF-918D-29206FAB66D3";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "378a7727-a088-42bc-b5b1-aef054d53f91";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7f armv7k";
 				WRAPPER_EXTENSION = app;
@@ -1857,9 +1857,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Servicios Liverpool S. A. de C. V.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)/Classes\\\"",
@@ -1881,8 +1881,8 @@
 				OTHER_CFLAGS = "-DDEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=*]" = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=*]" = "378a7727-a088-42bc-b5b1-aef054d53f91";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "378a7727-a088-42bc-b5b1-aef054d53f91";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7f armv7k";
 				WRAPPER_EXTENSION = app;
@@ -1893,8 +1893,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Anibal Gurria (K3DKME95DZ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\"$(SRCROOT)/Classes\\\"",
@@ -1915,7 +1915,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "378a7727-a088-42bc-b5b1-aef054d53f91";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7f armv7k";
 				WRAPPER_EXTENSION = app;

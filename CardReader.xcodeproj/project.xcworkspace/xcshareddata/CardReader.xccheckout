@@ -10,36 +10,39 @@
 	<string>CardReader</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
-		<string>https://glpos.plan.io/svn/glpos/CardReaderLiverpool</string>
-	</dict>
-	<key>IDESourceControlProjectPath</key>
-	<string>CardReader.xcodeproj/project.xcworkspace</string>
-	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
-	<dict>
-		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
-		<string>../..</string>
-	</dict>
-	<key>IDESourceControlProjectRepositoryRootDictionary</key>
-	<dict>
-		<key>66989A6C-2247-4E75-A4FB-D9484830B6FA</key>
+		<key>194E7A740B6B3143367263C10EAB8894AE6347F1</key>
 		<string>https://glpos.plan.io/svn/glpos</string>
 	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>CardReader.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>194E7A740B6B3143367263C10EAB8894AE6347F1</key>
+		<string>../..</string>
+	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://glpos.plan.io/svn/glpos/CardReaderLiverpool/CardReader.xcodeproj</string>
+	<string>https://glpos.plan.io/svn/glpos</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>66989A6C-2247-4E75-A4FB-D9484830B6FA</string>
+	<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Liverpool</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.subversion</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>66989A6C-2247-4E75-A4FB-D9484830B6FA</string>
+			<string>194E7A740B6B3143367263C10EAB8894AE6347F1</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Liverpool VillaHermosa</string>
+			<string>Liverpool</string>
 		</dict>
 	</array>
 </dict>

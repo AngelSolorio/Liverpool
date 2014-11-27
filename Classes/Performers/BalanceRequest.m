@@ -19,7 +19,7 @@
 	//http://172.27.203.25:7080/wbi/cicstran // produccion
 	//http://172.16.204.79:7080/wbi/cicstran //otro
 	
-    NSURL *url=[NSURL URLWithString:@"http://172.16.204.79:7080/wbi/cicstran"];//Web Services desarrollo
+    NSURL *url=[NSURL URLWithString:@"http://172.27.203.25:7080/wbi/cicstran"];//Web Services desarrollo
 
     //NSURL *url=[NSURL URLWithString:@"  "];//Web Services produccion
 	
